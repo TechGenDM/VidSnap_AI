@@ -49,4 +49,4 @@ def gallery():
     return render_template("gallery.html", reels = reels)
 
 if __name__ == "__main__":
-    pass
+    app.run(debug=True)
