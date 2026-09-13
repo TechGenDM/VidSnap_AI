@@ -41,3 +41,20 @@ def render_single_slide(
         f"{caption_filter}[vout]"
     )
 
+    cmd = [
+        "ffmpeg", "-y",
+        "-loop", "1",
+        "-t", f"{duration:.3f}",
+        "-i", str(image_path),
+        "-filter_complex", filter_complex,
+        "-map", "[vout]",
+        "-c:v", "libx264",
+        "-t", f"{duration:.3f}",
+        "-pix_fmt", "yuv420p",
+        "-r", str(fps),
+        str(output_segment_path),
+    ]
+
+    subprocess.run(cmd, check=True, capture_output=True)
+    return output_segment_path
+
