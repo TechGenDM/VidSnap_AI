@@ -368,4 +368,64 @@ function CreatePageContent() {
 
       {/* RENDERING STATE MODAL */}
       {isSubmitting && (
-return <div>Music selector configured</div>;}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
+          <div className="glass-card rounded-2xl max-w-lg w-full p-8 border-indigo-500/40 shadow-2xl relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 animate-pulse">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white">YOUR REEL</h3>
+                <p className="text-xs text-zinc-400">{jobStep}</p>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full bg-zinc-800 h-2 rounded-full mb-6 overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-300"
+                style={{ width: `${jobProgress}%` }}
+              />
+            </div>
+
+            {/* Step-by-Step Checklist */}
+            <div className="space-y-3.5 mb-8">
+              {RENDER_STEPS.map((step, idx) => {
+                const status = getStepStatus(idx);
+                return (
+                  <div key={step.key} className="flex items-center gap-3 text-sm">
+                    {status === "completed" ? (
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                    ) : status === "active" ? (
+                      <div className="h-5 w-5 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin flex-shrink-0" />
+                    ) : (
+                      <Circle className="h-5 w-5 text-zinc-700 flex-shrink-0" />
+                    )}
+                    <span
+                      className={
+                        status === "completed"
+                          ? "text-zinc-300 line-through decoration-zinc-600"
+                          : status === "active"
+                          ? "text-white font-semibold"
+                          : "text-zinc-500"
+                      }
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-center text-zinc-500">
+              VidSnap is rendering 1080×1920 MP4 with speech-driven slide synchronization...
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* RESULT EXPERIENCE (When Reel is Completed) */}
+      {jobStatus === "completed" && renderedVideoUrl && (
+        <div className="mb-12 glass-card rounded-2xl p-8 border-emerald-500/40 bg-zinc-950/80">
+          <div className="flex flex-col lg:flex-row items-center gap-10">
+return <div>Presets configured</div>;}
