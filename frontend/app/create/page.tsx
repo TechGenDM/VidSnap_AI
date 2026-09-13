@@ -248,4 +248,64 @@ function CreatePageContent() {
         : jobProgress >= 60
         ? 4
         : jobProgress >= 45
-return <div>Script editor configured</div>;}
+        ? 3
+        : jobProgress >= 30
+        ? 2
+        : jobProgress >= 15
+        ? 1
+        : 0;
+
+    if (stepIndex < activeIndex) return "completed";
+    if (stepIndex === activeIndex) return "active";
+    return "pending";
+  };
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 w-full">
+      {/* Top Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-extrabold tracking-tight text-white mb-2">
+          What are we creating today?
+        </h1>
+        <p className="text-sm text-zinc-400">
+          Pick your starting point. VidSnap automates voice, captions, music, and vertical framing.
+        </p>
+      </div>
+
+      {/* Creation Mode Tabs */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        {/* Mode 1: Quick Reel */}
+        <button
+          onClick={() => {
+            setActiveMode("quick");
+            setErrorMsg(null);
+          }}
+          className={`flex flex-col text-left p-5 rounded-xl border transition-all ${
+            activeMode === "quick"
+              ? "bg-indigo-950/30 border-indigo-500/60 shadow-lg shadow-indigo-500/10"
+              : "bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 text-zinc-400"
+          }`}
+        >
+          <div className="flex items-center justify-between w-full mb-3">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                activeMode === "quick"
+                  ? "bg-indigo-500 text-white"
+                  : "bg-zinc-800 text-zinc-400"
+              }`}
+            >
+              <Zap className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              READY
+            </span>
+          </div>
+          <h3 className="text-base font-bold text-white mb-1">Quick Reel</h3>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            I have my own photos or visual assets.
+          </p>
+        </button>
+
+        {/* Mode 2: AI Reel */}
+        <button
+return <div>Voice selector configured</div>;}
