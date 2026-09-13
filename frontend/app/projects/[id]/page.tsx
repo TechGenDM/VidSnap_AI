@@ -21,6 +21,11 @@ import {
   Sliders,
   AlertCircle,
   RefreshCw,
+  ArrowUp,
+  ArrowDown,
+  RotateCcw,
+  Eye,
+  Flame,
 } from "lucide-react";
 
 interface SceneItem {
@@ -28,6 +33,7 @@ interface SceneItem {
   order: number;
   visual_filename: string;
   visual_url: string;
+  visual_direction?: string;
   narration: string;
   caption: string;
   duration_seconds: number;
@@ -46,6 +52,11 @@ interface ProjectDetail {
   style: string;
   script: string;
   mode: string;
+  source_type?: string;
+  original_prompt?: string;
+  audience?: string;
+  tone?: string;
+  target_length?: string;
   scenes: SceneItem[];
 }
 
@@ -63,6 +74,8 @@ export default function ProjectDetailPage() {
   const [assistantPrompt, setAssistantPrompt] = useState("");
   const [assistantFeedback, setAssistantFeedback] = useState<string | null>(null);
   const [isAssistantWorking, setIsAssistantWorking] = useState(false);
+  const [regeneratingSceneId, setRegeneratingSceneId] = useState<string | null>(null);
+  const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
 
   useEffect(() => {
     if (!projectId) return;
@@ -89,7 +102,7 @@ export default function ProjectDetailPage() {
 
   const handleSceneChange = (
     sceneId: string,
-    field: "narration" | "caption",
+    field: "narration" | "caption" | "visual_direction",
     value: string
   ) => {
     if (!project) return;
@@ -97,6 +110,92 @@ export default function ProjectDetailPage() {
       ...project,
       scenes: project.scenes.map((s) => (s.id === sceneId ? { ...s, [field]: value } : s)),
     });
+  };
+
+  const handleRegenerateScene = async (sceneOrder: number, sceneId: string) => {
+    if (!project) return;
+    setRegeneratingSceneId(sceneId);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/regenerate`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            scenes: prev.scenes.map((s) => (s.order === sceneOrder ? { ...s, ...data.scene } : s)),
+          };
+        });
+        setAssistantFeedback(`✨ Scene #${sceneOrder} regenerated!`);
+        setTimeout(() => setAssistantFeedback(null), 3000);
+      }
+    } catch (e) {
+      console.error("Regenerate scene failed", e);
+    } finally {
+      setRegeneratingSceneId(null);
+    }
+  };
+
+  const handleDeleteScene = async (sceneOrder: number) => {
+    if (!project) return;
+    if (project.scenes.length <= 1) {
+      alert("A Reel must have at least one scene.");
+      return;
+    }
+    if (!confirm(`Delete Scene #${sceneOrder}?`)) return;
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setAssistantFeedback(`Deleted Scene #${sceneOrder}.`);
+        setTimeout(() => setAssistantFeedback(null), 3000);
+      }
+    } catch (e) {
+      console.error("Failed to delete scene", e);
+    }
+  };
+
+  const moveScene = (index: number, direction: "up" | "down") => {
+    if (!project) return;
+    const newScenes = [...project.scenes];
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newScenes.length) return;
+
+    const temp = newScenes[index];
+    newScenes[index] = newScenes[targetIndex];
+    newScenes[targetIndex] = temp;
+
+    // Re-index orders
+    newScenes.forEach((s, idx) => {
+      s.order = idx + 1;
+    });
+
+    setProject({ ...project, scenes: newScenes });
+  };
+
+  const handleRegenerateStory = async () => {
+    if (!project) return;
+    setIsRegeneratingStory(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/regenerate-story`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setAssistantFeedback("✨ Story regenerated with a new hook & angle!");
+        setTimeout(() => setAssistantFeedback(null), 4000);
+      }
+    } catch (e) {
+      console.error("Regenerate story error", e);
+    } finally {
+      setIsRegeneratingStory(false);
+    }
   };
 
   const saveScenes = async (): Promise<boolean> => {
@@ -111,6 +210,7 @@ export default function ProjectDetailPage() {
             id: s.id,
             narration: s.narration,
             caption: s.caption,
+            visual_direction: s.visual_direction,
           })),
         }),
       });
@@ -347,9 +447,17 @@ export default function ProjectDetailPage() {
               <Layers className="h-4 w-4 text-indigo-400" />
               <h2 className="text-base font-bold text-white">Story Scenes</h2>
             </div>
-            <span className="text-xs text-zinc-500">
-              Edit text or captions directly. Durations re-sync automatically.
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRegenerateStory}
+                disabled={isRegeneratingStory || isRendering}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-300 hover:text-white bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-50"
+              >
+                <RefreshCw className={`h-3 w-3 ${isRegeneratingStory ? "animate-spin" : ""}`} />
+                <span>{isRegeneratingStory ? "Regenerating..." : "Regenerate Full Story"}</span>
+              </button>
+            </div>
           </div>
 
           {/* Scene Cards */}
@@ -357,55 +465,130 @@ export default function ProjectDetailPage() {
             {project.scenes.map((scene, idx) => (
               <div
                 key={scene.id}
-                className="glass-card rounded-2xl p-5 border-zinc-800 hover:border-zinc-700 transition-all flex flex-col sm:flex-row items-start gap-4"
+                className="glass-card rounded-2xl p-5 border-zinc-800 hover:border-zinc-700 transition-all flex flex-col gap-4"
               >
-                {/* Visual Thumbnail */}
-                <div className="relative w-full sm:w-28 aspect-[9/16] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
-                  <img
-                    src={scene.visual_url}
-                    alt={`Scene ${scene.order}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
-                    #{scene.order}
+                <div className="flex items-center justify-between border-b border-zinc-800/60 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                      Scene #{scene.order}
+                    </span>
+                    {scene.duration_seconds > 0 && (
+                      <span className="text-[11px] text-zinc-400 font-mono">
+                        ~{scene.duration_seconds}s
+                      </span>
+                    )}
                   </div>
-                  {scene.duration_seconds > 0 && (
-                    <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-300">
-                      {scene.duration_seconds}s
-                    </div>
-                  )}
+
+                  <div className="flex items-center gap-1">
+                    {/* Move Up */}
+                    <button
+                      type="button"
+                      disabled={idx === 0}
+                      onClick={() => moveScene(idx, "up")}
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 transition-all"
+                      title="Move Scene Up"
+                    >
+                      <ArrowUp className="h-3.5 w-3.5" />
+                    </button>
+
+                    {/* Move Down */}
+                    <button
+                      type="button"
+                      disabled={idx === project.scenes.length - 1}
+                      onClick={() => moveScene(idx, "down")}
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 transition-all"
+                      title="Move Scene Down"
+                    >
+                      <ArrowDown className="h-3.5 w-3.5" />
+                    </button>
+
+                    {/* Regenerate Scene */}
+                    <button
+                      type="button"
+                      disabled={regeneratingSceneId === scene.id}
+                      onClick={() => handleRegenerateScene(scene.order, scene.id)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-40 ml-1"
+                      title="Regenerate this scene narration & caption"
+                    >
+                      <RotateCcw className={`h-3 w-3 ${regeneratingSceneId === scene.id ? "animate-spin" : ""}`} />
+                      <span>{regeneratingSceneId === scene.id ? "Regenerating..." : "Regen Scene"}</span>
+                    </button>
+
+                    {/* Delete Scene */}
+                    {project.scenes.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteScene(scene.order)}
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all ml-1"
+                        title="Delete Scene"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {/* Text Fields */}
-                <div className="flex-1 w-full flex flex-col gap-3">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                      Narration
-                    </label>
-                    <textarea
-                      rows={2}
-                      value={scene.narration || scene.caption}
-                      onChange={(e) =>
-                        handleSceneChange(scene.id, "narration", e.target.value)
-                      }
-                      placeholder="Scene narration text..."
-                      className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 p-2.5 text-xs text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none resize-none"
+                <div className="flex flex-col sm:flex-row items-start gap-4">
+                  {/* Visual Thumbnail */}
+                  <div className="relative w-full sm:w-28 aspect-[9/16] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
+                    <img
+                      src={scene.visual_url}
+                      alt={`Scene ${scene.order}`}
+                      className="w-full h-full object-cover"
                     />
+                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
+                      #{scene.order}
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                      Screen Caption Overlay
-                    </label>
-                    <input
-                      type="text"
-                      value={scene.caption}
-                      onChange={(e) =>
-                        handleSceneChange(scene.id, "caption", e.target.value)
-                      }
-                      placeholder="Caption text displayed in video..."
-                      className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 px-2.5 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
-                    />
+                  {/* Text & Direction Fields */}
+                  <div className="flex-1 w-full flex flex-col gap-3">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                        Narration Script
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={scene.narration || scene.caption}
+                        onChange={(e) =>
+                          handleSceneChange(scene.id, "narration", e.target.value)
+                        }
+                        placeholder="Scene voiceover text..."
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-xs text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none resize-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          Screen Caption
+                        </label>
+                        <input
+                          type="text"
+                          value={scene.caption}
+                          onChange={(e) =>
+                            handleSceneChange(scene.id, "caption", e.target.value)
+                          }
+                          placeholder="Kinetic caption in video..."
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 px-2.5 py-1.5 text-xs font-semibold text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          Visual Direction
+                        </label>
+                        <input
+                          type="text"
+                          value={scene.visual_direction || ""}
+                          onChange={(e) =>
+                            handleSceneChange(scene.id, "visual_direction", e.target.value)
+                          }
+                          placeholder="Scene visual guidance..."
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 px-2.5 py-1.5 text-xs text-zinc-300 placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -419,7 +602,7 @@ export default function ProjectDetailPage() {
               <h3 className="text-sm font-bold text-white">Ask VidSnap (AI Assistant)</h3>
             </div>
             <p className="text-xs text-zinc-400 mb-4">
-              Give instructions in natural language to refine your story, tone, or hook.
+              Direct the story with natural language. VidSnap modifies the canonical scenes and pacing.
             </p>
 
             {/* Quick Prompt Chips */}
@@ -427,7 +610,10 @@ export default function ProjectDetailPage() {
               {[
                 "Make the intro more attention-grabbing",
                 "Make the tone more energetic",
+                "Make this shorter",
+                "Remove the last scene",
                 "Change the voice to Rachel",
+                "Change the voice to Josh",
               ].map((chip) => (
                 <button
                   key={chip}
@@ -447,16 +633,21 @@ export default function ProjectDetailPage() {
                 value={assistantPrompt}
                 onChange={(e) => setAssistantPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAskAssistant()}
-                placeholder="e.g. “Make the second scene shorter and more emotional”"
-                className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                placeholder="e.g. “Make the intro more attention-grabbing” or “Make this shorter”"
+                className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => handleAskAssistant()}
                 disabled={isAssistantWorking || !assistantPrompt.trim()}
-                className="p-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white disabled:opacity-40 transition-colors"
+                className="rounded-xl bg-purple-600 hover:bg-purple-500 px-4 py-2.5 text-xs font-semibold text-white disabled:opacity-40 transition-all flex items-center gap-1.5"
               >
-                <Send className="h-3.5 w-3.5" />
+                {isAssistantWorking ? (
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Send className="h-3.5 w-3.5" />
+                )}
+                <span>Send</span>
               </button>
             </div>
 

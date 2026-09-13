@@ -18,9 +18,11 @@ class Settings(BaseSettings):
     REELS_DIR: Path = PROJECT_ROOT / "media" / "reels"
     THUMBNAILS_DIR: Path = PROJECT_ROOT / "media" / "thumbnails"
     SONGS_DIR: Path = PROJECT_ROOT / "media" / "songs"
+    TEMPLATES_DIR: Path = PROJECT_ROOT / "media" / "templates"
     
     # API Secrets
     ELEVENLABS_API_KEY: str = ""
+    OPENAI_API_KEY: str = ""
     
     # Video & Audio defaults
     VIDEO_WIDTH: int = 1080

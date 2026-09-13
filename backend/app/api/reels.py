@@ -113,68 +113,68 @@ async def create_quick_reel(
         "message": "Quick Reel job enqueued successfully.",
     }
 
+from app.services.story_generation import get_story_provider
+from app.services.visual_provider import local_visual_provider
+
 @router.post("/ai")
 async def create_ai_reel(payload: AIReelCreate):
     """
-    AI Reel Foundation endpoint:
-    Accepts idea prompt and configuration, generates story scenes & script breakdown.
+    AI Reel Creation endpoint:
+    Accepts idea prompt and parameters, produces structured Story, matches local visuals,
+    and returns canonical project state for human review without auto-rendering.
     """
     project_id = str(uuid.uuid4())
     now = now_iso()
 
-    # Formulate structured script and hook based on user prompt
-    hook = f"Here is why {payload.prompt.strip().rstrip('.')} matters right now."
-    body = f"When we look closer at {payload.prompt.strip()}, the underlying shift becomes undeniable. Everything is moving towards autonomous workflows."
-    cta = "Follow for more daily breakthroughs."
-    generated_script = f"{hook} {body} {cta}"
+    # 1. Generate structured story via provider
+    story_provider = get_story_provider()
+    story = story_provider.generate_story(
+        prompt=payload.prompt,
+        audience=payload.audience,
+        tone=payload.tone,
+        length=payload.length,
+        style=payload.visual_style,
+        variation_seed=0,
+    )
 
+    # 2. Match visuals via LocalAssetProvider
+    scenes = local_visual_provider.match_visuals_for_scenes(
+        scenes=story.scenes,
+        visual_style=payload.visual_style,
+        project_id=project_id,
+    )
+
+    # 3. Formulate narration script from scenes
+    full_script = " ".join([s.narration for s in story.scenes if s.narration])
+
+    # 4. Save canonical Project
     project = Project(
         id=project_id,
-        title=payload.prompt[:35] + ("..." if len(payload.prompt) > 35 else ""),
+        title=story.title,
         created_at=now,
         status=JobStatus.QUEUED,
-        duration_seconds=0.0,
+        duration_seconds=story.estimated_duration,
         voice=payload.voice,
-        music="upbeat_pulse",
+        music=payload.music or "ambient_chill",
         style=payload.visual_style,
-        script=generated_script,
-        scenes=[
-            Scene(
-                id="scene_1",
-                order=1,
-                visual_filename="placeholder_1.jpg",
-                visual_url="/media/templates/1.jpg",
-                narration=hook,
-                caption=hook,
-                duration_seconds=3.0,
-            ),
-            Scene(
-                id="scene_2",
-                order=2,
-                visual_filename="placeholder_2.jpg",
-                visual_url="/media/templates/2.jpg",
-                narration=body,
-                caption=body,
-                duration_seconds=5.0,
-            ),
-            Scene(
-                id="scene_3",
-                order=3,
-                visual_filename="placeholder_3.jpg",
-                visual_url="/media/templates/3.jpg",
-                narration=cta,
-                caption=cta,
-                duration_seconds=3.0,
-            ),
-        ],
+        script=full_script,
+        scenes=scenes,
         mode="ai",
+        source_type="ai",
+        original_prompt=payload.prompt,
+        audience=payload.audience,
+        tone=payload.tone,
+        target_length=payload.length,
+        generated_story=story,
+        render_history=[],
     )
     db.save_project(project)
 
     return {
         "project_id": project_id,
         "status": "planned",
-        "script": generated_script,
+        "story": story.model_dump(),
         "scenes": [s.model_dump() for s in project.scenes],
-        "message": "AI Story planned. Connect visuals or approve script to render.",
+        "script": full_script,
+        "message": "AI Story generated successfully. Review and edit before rendering.",
     }

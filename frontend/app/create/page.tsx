@@ -25,7 +25,29 @@ import {
   ArrowRight,
   AlertCircle,
   Eye,
+  RefreshCw,
+  Edit3,
+  Flame,
+  Check,
+  ChevronRight,
+  Layers,
 } from "lucide-react";
+
+interface StorySceneItem {
+  order: number;
+  narration: string;
+  caption: string;
+  visual_direction: string;
+  estimated_duration: number;
+}
+
+interface PlannedStory {
+  title: string;
+  hook: string;
+  scenes: StorySceneItem[];
+  cta: string;
+  estimated_duration: number;
+}
 
 interface UploadedFileItem {
   id: string;
@@ -87,12 +109,20 @@ function CreatePageContent() {
   const [style, setStyle] = useState(defaultTemplate?.style || "cinematic");
 
   // AI Reel State
-  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiPrompt, setAiPrompt] = useState(
+    "Explain why AI agents are changing software development."
+  );
   const [aiAudience, setAiAudience] = useState("Tech Creators");
-  const [aiTone, setAiTone] = useState("Thought-Provoking");
+  const [aiTone, setAiTone] = useState("Educational");
   const [aiLength, setAiLength] = useState("30s");
-  const [aiStyle, setAiStyle] = useState("Cinematic Photography");
+  const [aiStyle, setAiStyle] = useState("Minimal Tech");
   const [aiVoice, setAiVoice] = useState("adam");
+  const [aiMusic, setAiMusic] = useState("ambient_chill");
+
+  const [isPlanning, setIsPlanning] = useState(false);
+  const [plannedStory, setPlannedStory] = useState<PlannedStory | null>(null);
+  const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
+  const [reviewFeedback, setReviewFeedback] = useState<string | null>(null);
 
   // Rendering & Job State
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
@@ -264,15 +294,16 @@ function CreatePageContent() {
     }
   };
 
-  // Submit AI Reel
+  // Submit AI Reel Idea -> Generates Story for Review
   const handleAiReelSubmit = async () => {
     if (!aiPrompt.trim()) {
       setErrorMsg("Please describe what you want to create.");
       return;
     }
 
-    setIsSubmitting(true);
+    setIsPlanning(true);
     setErrorMsg(null);
+    setReviewFeedback(null);
 
     try {
       const res = await fetch("/api/reels/ai", {
@@ -285,18 +316,103 @@ function CreatePageContent() {
           length: aiLength,
           visual_style: aiStyle,
           voice: aiVoice,
+          music: aiMusic,
         }),
       });
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.detail || "Failed to create AI Reel plan.");
+        throw new Error(err.detail || "Failed to generate AI story.");
       }
 
       const data = await res.json();
-      router.push(`/projects/${data.project_id}`);
+      setPlannedStory(data.story);
+      setActiveProjectId(data.project_id);
     } catch (err: any) {
       setErrorMsg(err.message || "Could not plan AI Reel.");
+    } finally {
+      setIsPlanning(false);
+    }
+  };
+
+  // Regenerate Entire Story
+  const handleRegenerateStory = async () => {
+    if (!activeProjectId) return;
+    setIsRegeneratingStory(true);
+    setErrorMsg(null);
+    setReviewFeedback(null);
+    try {
+      const res = await fetch(`/api/projects/${activeProjectId}/regenerate-story`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to regenerate story.");
+      }
+      const data = await res.json();
+      setPlannedStory(data.story);
+      setReviewFeedback("✨ Story regenerated with a fresh angle & hook!");
+      setTimeout(() => setReviewFeedback(null), 3500);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Could not regenerate story.");
+    } finally {
+      setIsRegeneratingStory(false);
+    }
+  };
+
+  // Handle inline scene edits during Story Review
+  const handlePlannedSceneChange = (
+    order: number,
+    field: "narration" | "caption" | "visual_direction",
+    val: string
+  ) => {
+    if (!plannedStory) return;
+    setPlannedStory({
+      ...plannedStory,
+      scenes: plannedStory.scenes.map((s) =>
+        s.order === order ? { ...s, [field]: val } : s
+      ),
+    });
+  };
+
+  // Approve Story & Trigger Video Rendering
+  const handleApproveAndRender = async () => {
+    if (!activeProjectId || !plannedStory) return;
+    setIsSubmitting(true);
+    setErrorMsg(null);
+    try {
+      // First persist any inline edits to backend scenes
+      await fetch(`/api/projects/${activeProjectId}/scenes`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scenes: plannedStory.scenes.map((s) => ({
+            id: `scene_${s.order}`,
+            narration: s.narration,
+            caption: s.caption,
+            visual_direction: s.visual_direction,
+          })),
+        }),
+      });
+
+      // Launch render pipeline
+      const res = await fetch(`/api/projects/${activeProjectId}/render`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to enqueue video render.");
+      }
+      const data = await res.json();
+      setActiveJobId(data.job_id);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("vidsnap_active_job_id", data.job_id);
+        sessionStorage.setItem("vidsnap_active_project_id", activeProjectId);
+      }
+      setJobStatus("queued");
+      setJobProgress(5);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to start render.");
       setIsSubmitting(false);
     }
   };
@@ -846,106 +962,361 @@ function CreatePageContent() {
 
       {/* AI REEL INTERFACE */}
       {activeMode === "ai" && jobStatus !== "completed" && (
-        <div className="max-w-3xl mx-auto glass-card rounded-2xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400">
-              <Bot className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">What do you want to create?</h2>
-              <p className="text-xs text-zinc-400">
-                Describe your topic or idea. VidSnap structures the hook, script, and scenes.
-              </p>
-            </div>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          {!plannedStory ? (
+            /* STEP 1 — IDEA INPUT */
+            <div className="glass-card rounded-2xl p-6 sm:p-8 border-purple-500/20 shadow-2xl">
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 text-purple-400 border border-purple-500/30">
+                  <Bot className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white tracking-tight">What do you want to create?</h2>
+                  <p className="text-xs text-zinc-400">
+                    VidSnap structures your idea into a high-retention hook, scenes, captions, and visual plan.
+                  </p>
+                </div>
+              </div>
 
-          {/* Idea Input */}
-          <div className="mb-6">
-            <textarea
-              rows={4}
-              value={aiPrompt}
-              onChange={(e) => setAiPrompt(e.target.value)}
-              placeholder="e.g. “Explain why AI agents are changing software development in 2026.”"
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 resize-none transition-all"
-            />
-          </div>
+              {/* Idea Prompt Input */}
+              <div className="mb-6">
+                <label className="block text-xs font-semibold text-zinc-300 mb-2">
+                  Your Idea / Topic
+                </label>
+                <textarea
+                  rows={4}
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  placeholder="e.g. “Explain why AI agents are changing software development.”"
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 p-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 resize-none transition-all"
+                />
+              </div>
 
-          {/* Configuration Parameters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Target Audience
-              </label>
-              <select
-                value={aiAudience}
-                onChange={(e) => setAiAudience(e.target.value)}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              {/* Optional Controls Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Target Audience
+                  </label>
+                  <select
+                    value={aiAudience}
+                    onChange={(e) => setAiAudience(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="Tech Creators">Tech Creators</option>
+                    <option value="General Audience">General Audience</option>
+                    <option value="Startup Founders">Startup Founders</option>
+                    <option value="Students & Beginners">Students & Beginners</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Narrative Tone
+                  </label>
+                  <select
+                    value={aiTone}
+                    onChange={(e) => setAiTone(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="Educational">Educational & Calm</option>
+                    <option value="High Energy">High Energy (Punchy)</option>
+                    <option value="Thought-Provoking">Thought-Provoking</option>
+                    <option value="Documentary Story">Documentary Story</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Target Length
+                  </label>
+                  <select
+                    value={aiLength}
+                    onChange={(e) => setAiLength(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="15s">15 seconds (Viral Hook)</option>
+                    <option value="30s">30 seconds (Standard Reel)</option>
+                    <option value="60s">60 seconds (Deep Dive)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Visual Style
+                  </label>
+                  <select
+                    value={aiStyle}
+                    onChange={(e) => setAiStyle(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="Minimal Tech">Minimal Tech</option>
+                    <option value="Cinematic Photography">Cinematic Photography</option>
+                    <option value="Vibrant Modern">Vibrant Modern</option>
+                    <option value="Documentary">Documentary</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Narrator Voice
+                  </label>
+                  <select
+                    value={aiVoice}
+                    onChange={(e) => setAiVoice(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="adam">Adam (Deep & Narrative)</option>
+                    <option value="rachel">Rachel (Warm & Engaging)</option>
+                    <option value="josh">Josh (Young & Energetic)</option>
+                    <option value="antoni">Antoni (Crisp & Thoughtful)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Background Music
+                  </label>
+                  <select
+                    value={aiMusic}
+                    onChange={(e) => setAiMusic(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="ambient_chill">Ambient Chill (Ducked)</option>
+                    <option value="upbeat_pulse">Upbeat Pulse (Ducked)</option>
+                    <option value="lofi_beat">Lo-Fi Dream (Ducked)</option>
+                    <option value="none">None (Voice Only)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Primary CTA */}
+              <button
+                type="button"
+                onClick={handleAiReelSubmit}
+                disabled={!aiPrompt.trim() || isPlanning}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 py-4 text-sm font-bold text-white shadow-xl shadow-purple-500/25 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-98"
               >
-                <option value="Tech Creators">Tech Creators</option>
-                <option value="General Audience">General Audience</option>
-                <option value="Startup Founders">Startup Founders</option>
-                <option value="Students & Beginners">Students & Beginners</option>
-              </select>
+                {isPlanning ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin text-purple-200" />
+                    <span>Structuring Your Story...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4" />
+                    <span>Build My Reel →</span>
+                  </>
+                )}
+              </button>
             </div>
+          ) : (
+            /* STEP 2 — SCRIPT REVIEW STEP (HUMAN APPROVAL POINT) */
+            <div className="space-y-6">
+              {/* Review Header Banner */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 glass-card rounded-2xl border-purple-500/30 bg-gradient-to-r from-purple-950/20 via-zinc-900/60 to-indigo-950/20 shadow-xl">
+                <div>
+                  <div className="flex items-center gap-2.5 mb-1.5">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      <Sparkles className="h-3 w-3" />
+                      Human Review Step
+                    </span>
+                    <span className="text-xs text-zinc-400 font-mono">
+                      ~{plannedStory.estimated_duration}s est. • {plannedStory.scenes.length} scenes
+                    </span>
+                  </div>
+                  <h1 className="text-2xl font-extrabold text-white tracking-tight">
+                    Your Story
+                  </h1>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Review and fine-tune your hook, narration, and scene captions before generating video.
+                  </p>
+                </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Narrative Tone
-              </label>
-              <select
-                value={aiTone}
-                onChange={(e) => setAiTone(e.target.value)}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
-              >
-                <option value="Thought-Provoking">Thought-Provoking</option>
-                <option value="High Energy">High Energy</option>
-                <option value="Educational">Educational & Calm</option>
-                <option value="Documentary Story">Documentary Story</option>
-              </select>
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setPlannedStory(null)}
+                    className="px-3 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all"
+                  >
+                    ← Edit Idea
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleRegenerateStory}
+                    disabled={isRegeneratingStory}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-purple-300 hover:text-white bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-50"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${isRegeneratingStory ? "animate-spin" : ""}`} />
+                    <span>{isRegeneratingStory ? "Regenerating..." : "Regenerate Story"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Feedback toast banner if present */}
+              {reviewFeedback && (
+                <div className="flex items-center gap-2 p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-xs font-medium text-emerald-300 animate-fadeIn">
+                  <Check className="h-4 w-4 text-emerald-400" />
+                  <span>{reviewFeedback}</span>
+                </div>
+              )}
+
+              {/* Story Title & Hook Section */}
+              <div className="glass-card rounded-2xl p-6 border-zinc-800 space-y-4">
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-1">
+                    Reel Title
+                  </label>
+                  <input
+                    type="text"
+                    value={plannedStory.title}
+                    onChange={(e) => setPlannedStory({ ...plannedStory, title: e.target.value })}
+                    className="w-full text-base font-bold text-white bg-zinc-900/60 border border-zinc-800 rounded-xl px-3.5 py-2 focus:border-purple-500 focus:outline-none"
+                  />
+                </div>
+
+                <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/25">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-purple-300 mb-1.5">
+                    <Flame className="h-3.5 w-3.5 text-amber-400" />
+                    <span>Opening Hook (First 2 Seconds)</span>
+                  </div>
+                  <p className="text-sm font-medium text-purple-100 leading-relaxed">
+                    “{plannedStory.hook}”
+                  </p>
+                </div>
+              </div>
+
+              {/* Story Scenes Flow */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                  <div className="flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-purple-400" />
+                    <h3 className="text-sm font-bold text-white">Scene Flow</h3>
+                  </div>
+                  <span className="text-xs text-zinc-500">
+                    Durations dynamically re-sync to spoken audio length
+                  </span>
+                </div>
+
+                {plannedStory.scenes.map((s) => (
+                  <div
+                    key={s.order}
+                    className="glass-card rounded-2xl p-5 border-zinc-800 hover:border-zinc-700 transition-all space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-zinc-800 text-zinc-200 border border-zinc-700">
+                          Scene #{s.order}
+                        </span>
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          Est. ~{s.estimated_duration}s
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-zinc-500 italic">
+                        Visual matched via Local Asset Library
+                      </span>
+                    </div>
+
+                    {/* Narration Field */}
+                    <div>
+                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                        Narration Script
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={s.narration}
+                        onChange={(e) => handlePlannedSceneChange(s.order, "narration", e.target.value)}
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 p-3 text-xs text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none resize-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Caption Overlay */}
+                      <div>
+                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          Screen Caption
+                        </label>
+                        <input
+                          type="text"
+                          value={s.caption}
+                          onChange={(e) => handlePlannedSceneChange(s.order, "caption", e.target.value)}
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-xs font-semibold text-white focus:border-purple-500 focus:outline-none"
+                        />
+                      </div>
+
+                      {/* Visual Direction */}
+                      <div>
+                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          Visual Direction
+                        </label>
+                        <input
+                          type="text"
+                          value={s.visual_direction}
+                          onChange={(e) => handlePlannedSceneChange(s.order, "visual_direction", e.target.value)}
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-xs text-zinc-300 focus:border-purple-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Call to Action Card */}
+              <div className="glass-card rounded-2xl p-5 border-zinc-800 flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
+                  <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">
+                    Ending Call To Action (CTA)
+                  </span>
+                  <input
+                    type="text"
+                    value={plannedStory.cta}
+                    onChange={(e) => setPlannedStory({ ...plannedStory, cta: e.target.value })}
+                    className="w-full text-xs font-semibold text-white bg-zinc-900/60 border border-zinc-800 rounded-lg px-3 py-1.5 focus:border-purple-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Sticky Action Bar */}
+              <div className="glass-card rounded-2xl p-4 border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xl">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleRegenerateStory}
+                    disabled={isRegeneratingStory}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all disabled:opacity-50"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${isRegeneratingStory ? "animate-spin" : ""}`} />
+                    <span>Regenerate Story</span>
+                  </button>
+
+                  {activeProjectId && (
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/projects/${activeProjectId}`)}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all"
+                    >
+                      <Edit3 className="h-3.5 w-3.5" />
+                      <span>Edit in Project Editor</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Primary CTA: Generate Reel */}
+                <button
+                  type="button"
+                  onClick={handleApproveAndRender}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-sm font-bold text-white shadow-xl shadow-purple-500/25 transition-all active:scale-98"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>Generate Reel →</span>
+                </button>
+              </div>
             </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Target Length
-              </label>
-              <select
-                value={aiLength}
-                onChange={(e) => setAiLength(e.target.value)}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
-              >
-                <option value="15s">15 seconds (Viral Hook)</option>
-                <option value="30s">30 seconds (Standard Reel)</option>
-                <option value="60s">60 seconds (Deep Dive)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Narrator Voice
-              </label>
-              <select
-                value={aiVoice}
-                onChange={(e) => setAiVoice(e.target.value)}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
-              >
-                <option value="adam">Adam (Deep & Narrative)</option>
-                <option value="rachel">Rachel (Warm & Engaging)</option>
-                <option value="josh">Josh (Young & Energetic)</option>
-                <option value="antoni">Antoni (Crisp & Thoughtful)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Primary CTA */}
-          <button
-            type="button"
-            onClick={handleAiReelSubmit}
-            disabled={!aiPrompt.trim()}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 py-3.5 text-sm font-bold text-white shadow-xl shadow-purple-500/25 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-98"
-          >
-            <Sparkles className="h-4 w-4" />
-            <span>Plan & Generate with AI →</span>
-          </button>
+          )}
         </div>
       )}
     </div>

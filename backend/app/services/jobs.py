@@ -91,6 +91,10 @@ def process_quick_reel_job(job_id: str):
         if not image_paths:
             raise ValueError("No uploaded images found in project directory.")
 
+        # Ensure project script exists
+        if not project.script or len(project.script.strip()) < 3:
+            project.script = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
+
         # STEP 2: Generating Voice Narration
         job.status = JobStatus.GENERATING_VOICE
         job.step = "Synthesizing voice narration"
@@ -129,7 +133,12 @@ def process_quick_reel_job(job_id: str):
         job.updated_at = now_iso()
         db.save_job(job)
 
-        captions = split_script_into_captions(project.script, len(image_paths))
+        # Respect explicit scene captions if already present (AI Story or user edit)
+        existing_captions = [s.caption.strip() for s in project.scenes if s.caption and s.caption.strip()]
+        if len(existing_captions) == len(image_paths):
+            captions = existing_captions
+        else:
+            captions = split_script_into_captions(project.script, len(image_paths))
 
         # STEP 5: Video Rendering
         job.status = JobStatus.RENDERING
@@ -173,6 +182,13 @@ def process_quick_reel_job(job_id: str):
         project.video_filename = f"{project.id}.mp4"
         project.video_url = f"/media/reels/{project.id}.mp4"
         project.thumbnail_url = f"/media/thumbnails/{project.id}.jpg"
+        project.render_history.append({
+            "rendered_at": now_iso(),
+            "duration_seconds": round(final_audio_duration, 2),
+            "video_filename": f"{project.id}.mp4",
+            "voice": project.voice,
+            "music": project.music,
+        })
         db.save_project(project)
 
         # Mark Job Completed
