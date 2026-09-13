@@ -128,4 +128,64 @@ function CreatePageContent() {
   const handleQuickReelSubmit = async () => {
     if (uploadedImages.length === 0) {
       setErrorMsg("Please upload at least one image.");
-return <div>Upload configured</div>;}
+      return;
+    }
+    if (!script.trim()) {
+      setErrorMsg("Please provide a narration script.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("script", script);
+      formData.append("voice", voice);
+      formData.append("music", music);
+      formData.append("style", style);
+
+      // Append files
+      uploadedImages.forEach((item) => {
+        formData.append("images", item.file);
+      });
+
+      const res = await fetch("/api/reels/quick", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to submit Quick Reel.");
+      }
+
+      const data = await res.json();
+      setActiveJobId(data.job_id);
+      setActiveProjectId(data.project_id);
+      setJobStatus("queued");
+      setJobProgress(5);
+    } catch (err: any) {
+      setErrorMsg(err.message || "An error occurred while creating reel.");
+      setIsSubmitting(false);
+    }
+  };
+
+  // Submit AI Reel
+  const handleAiReelSubmit = async () => {
+    if (!aiPrompt.trim()) {
+      setErrorMsg("Please describe what you want to create.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      const res = await fetch("/api/reels/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: aiPrompt,
+          audience: aiAudience,
+return <div>Image preview configured</div>;}
