@@ -18,3 +18,20 @@ def test_quick_reel_pipeline():
     with open(img1, "rb") as f1, open(img2, "rb") as f2:
         files = [
             ("images", ("slide_1.jpg", f1, "image/jpeg")),
+            ("images", ("slide_2.jpg", f2, "image/jpeg")),
+        ]
+        data = {
+            "script": "Welcome to VidSnap AI. Creating vertical videos has never been faster.",
+            "voice": "adam",
+            "music": "ambient_chill",
+            "style": "cinematic",
+        }
+        response = client.post("/api/reels/quick", data=data, files=files)
+
+    assert response.status_code == 200
+    res_data = response.json()
+    assert "project_id" in res_data
+    assert "job_id" in res_data
+    project_id = res_data["project_id"]
+    job_id = res_data["job_id"]
+
