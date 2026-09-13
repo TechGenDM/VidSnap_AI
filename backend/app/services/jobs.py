@@ -98,3 +98,33 @@ def process_quick_reel_job(job_id: str):
         db.save_job(job)
 
         raw_voice_path = project_dir / "voice_raw.mp3"
+        tts_service.generate_speech(
+            text=project.script,
+            voice_key=project.voice,
+            output_path=raw_voice_path,
+        )
+
+        # Detect real narration audio duration
+        voice_duration = get_audio_duration(raw_voice_path)
+        logger.info(f"Generated voiceover duration: {voice_duration:.2f} seconds")
+
+        # STEP 3: Audio Balancing & Ducking
+        job.step = "Balancing speech & background music"
+        job.progress_percent = 50
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        final_audio_path = project_dir / "audio_final.aac"
+        mix_voice_and_music(
+            voice_path=raw_voice_path,
+            music_key=project.music,
+            output_path=final_audio_path,
+        )
+
+        # STEP 4: Captions & Story Timing
+        job.status = JobStatus.GENERATING_CAPTIONS
+        job.step = "Designing kinetic captions & scene timing"
+        job.progress_percent = 65
+        job.updated_at = now_iso()
+        db.save_job(job)
+
