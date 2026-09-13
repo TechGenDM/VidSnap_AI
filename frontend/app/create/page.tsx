@@ -428,4 +428,409 @@ function CreatePageContent() {
       {jobStatus === "completed" && renderedVideoUrl && (
         <div className="mb-12 glass-card rounded-2xl p-8 border-emerald-500/40 bg-zinc-950/80">
           <div className="flex flex-col lg:flex-row items-center gap-10">
-return <div>Presets configured</div>;}
+            {/* Phone Player Preview */}
+            <div className="phone-mockup flex-shrink-0">
+              <div className="phone-notch" />
+              <video
+                src={renderedVideoUrl}
+                controls
+                autoPlay
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Result Info & Actions */}
+            <div className="flex-1 flex flex-col items-start">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400 mb-4">
+                <CheckCircle2 className="h-4 w-4" />
+                <span>1080×1920 HD Ready</span>
+              </div>
+
+              <h2 className="text-3xl font-extrabold text-white mb-3">
+                Your Reel is ready 🎉
+              </h2>
+
+              <p className="text-sm text-zinc-300 mb-6 max-w-lg leading-relaxed">
+                Your vertical Reel was rendered with blurred background padding, dynamic narration sync, and background music ducking.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 w-full max-w-md mb-8">
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-left">
+                  <span className="text-[11px] text-zinc-400 block mb-1">Duration</span>
+                  <span className="text-base font-bold text-white">{estimatedDurationSecs}s</span>
+                </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-left">
+                  <span className="text-[11px] text-zinc-400 block mb-1">Scenes / Slides</span>
+                  <span className="text-base font-bold text-white">{uploadedImages.length}</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3 w-full max-w-md">
+                <a
+                  href={renderedVideoUrl}
+                  download="vidsnap_reel.mp4"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Download MP4</span>
+                </a>
+
+                {activeProjectId && (
+                  <Link
+                    href={`/projects/${activeProjectId}`}
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-750 px-5 py-3 text-sm font-semibold text-white transition-all"
+                  >
+                    <Sliders className="h-4 w-4" />
+                    <span>Edit Story</span>
+                  </Link>
+                )}
+
+                <button
+                  onClick={() => {
+                    setJobStatus(null);
+                    setRenderedVideoUrl(null);
+                    setUploadedImages([]);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-zinc-850 hover:border-zinc-750 py-2.5 text-xs text-zinc-400 hover:text-white transition-colors"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  <span>Create Another Reel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QUICK REEL INTERFACE */}
+      {activeMode === "quick" && jobStatus !== "completed" && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Upload Your Visuals */}
+          <div className="lg:col-span-6 flex flex-col gap-6">
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <ImageIcon className="h-5 w-5 text-indigo-400" />
+                  <h2 className="text-lg font-bold text-white">Upload your visuals</h2>
+                </div>
+                <span className="text-xs font-semibold text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded-full">
+                  {uploadedImages.length} {uploadedImages.length === 1 ? "image" : "images"}
+                </span>
+              </div>
+
+              {/* Drag and Drop Zone */}
+              <label className="relative flex flex-col items-center justify-center w-full min-h-[160px] rounded-xl border-2 border-dashed border-zinc-800 hover:border-indigo-500/50 bg-zinc-900/40 hover:bg-zinc-900/80 cursor-pointer transition-all p-6 text-center group">
+                <UploadCloud className="h-10 w-10 text-zinc-500 group-hover:text-indigo-400 transition-colors mb-3" />
+                <span className="text-sm font-semibold text-zinc-200 mb-1">
+                  Drop your photos here, or browse
+                </span>
+                <span className="text-xs text-zinc-500">
+                  Supports JPG, PNG, WebP up to 25MB each
+                </span>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                />
+              </label>
+
+              {/* Uploaded Thumbnails List with Reordering */}
+              {uploadedImages.length > 0 && (
+                <div className="mt-6 flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between text-xs text-zinc-400 px-1">
+                    <span>Scene Order</span>
+                    <span>Use arrows to reorder slides</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
+                    {uploadedImages.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-2.5 rounded-xl border border-zinc-800 bg-zinc-900/70 hover:border-zinc-700 transition-all"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-mono font-bold text-zinc-500 w-5 text-center">
+                            #{idx + 1}
+                          </span>
+                          <img
+                            src={item.previewUrl}
+                            alt="Preview"
+                            className="h-12 w-12 rounded-lg object-cover border border-zinc-700"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-xs font-medium text-white truncate max-w-[160px] sm:max-w-[220px]">
+                              {item.file.name}
+                            </span>
+                            <span className="text-[10px] text-zinc-500">
+                              {(item.file.size / 1024).toFixed(0)} KB
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Reorder & Delete Buttons */}
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => moveImage(idx, "up")}
+                            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30"
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === uploadedImages.length - 1}
+                            onClick={() => moveImage(idx, "down")}
+                            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30"
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeImage(idx)}
+                            className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/10 ml-1"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Tell the Story */}
+          <div className="lg:col-span-6 flex flex-col gap-6">
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <Mic className="h-5 w-5 text-indigo-400" />
+                  <h2 className="text-lg font-bold text-white">Tell the story</h2>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-zinc-400">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>Est. ~{estimatedDurationSecs}s duration</span>
+                </div>
+              </div>
+
+              {/* Script Textarea */}
+              <div className="relative mb-6">
+                <textarea
+                  rows={5}
+                  value={script}
+                  onChange={(e) => setScript(e.target.value)}
+                  placeholder="Enter your voiceover narration script here..."
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none transition-all"
+                />
+                <div className="flex justify-between text-[11px] text-zinc-500 px-1 mt-1">
+                  <span>{wordCount} words</span>
+                  <span>Audio duration auto-syncs to slide count</span>
+                </div>
+              </div>
+
+              {/* Voice, Music, Style Selectors */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                {/* Voice */}
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Narration Voice
+                  </label>
+                  <select
+                    value={voice}
+                    onChange={(e) => setVoice(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="adam">Adam (Deep & Narrative)</option>
+                    <option value="rachel">Rachel (Warm & Engaging)</option>
+                    <option value="josh">Josh (Young & Energetic)</option>
+                    <option value="antoni">Antoni (Crisp & Thoughtful)</option>
+                  </select>
+                </div>
+
+                {/* Music */}
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                    Background Music
+                  </label>
+                  <select
+                    value={music}
+                    onChange={(e) => setMusic(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="ambient_chill">Ambient Chill (Ducked)</option>
+                    <option value="upbeat_pulse">Upbeat Pulse (Ducked)</option>
+                    <option value="lofi_beat">Lo-Fi Dream (Ducked)</option>
+                    <option value="none">None (Voice Only)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Style Selector */}
+              <div className="mb-8">
+                <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                  Visual Presentation Style
+                </label>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {[
+                    { id: "cinematic", label: "Cinematic" },
+                    { id: "dynamic", label: "Dynamic Pop" },
+                    { id: "minimal", label: "Clean Minimal" },
+                  ].map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setStyle(s.id)}
+                      className={`py-2 px-3 rounded-lg text-xs font-medium border text-center transition-all ${
+                        style === s.id
+                          ? "bg-indigo-600 text-white border-indigo-500 shadow-sm"
+                          : "border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Primary CTA */}
+              <button
+                type="button"
+                onClick={handleQuickReelSubmit}
+                disabled={uploadedImages.length === 0 || !script.trim()}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 py-3.5 text-sm font-bold text-white shadow-xl shadow-indigo-500/25 hover:from-indigo-600 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-98"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Generate Reel →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI REEL INTERFACE */}
+      {activeMode === "ai" && jobStatus !== "completed" && (
+        <div className="max-w-3xl mx-auto glass-card rounded-2xl p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400">
+              <Bot className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white">What do you want to create?</h2>
+              <p className="text-xs text-zinc-400">
+                Describe your topic or idea. VidSnap structures the hook, script, and scenes.
+              </p>
+            </div>
+          </div>
+
+          {/* Idea Input */}
+          <div className="mb-6">
+            <textarea
+              rows={4}
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="e.g. “Explain why AI agents are changing software development in 2026.”"
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 resize-none transition-all"
+            />
+          </div>
+
+          {/* Configuration Parameters */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                Target Audience
+              </label>
+              <select
+                value={aiAudience}
+                onChange={(e) => setAiAudience(e.target.value)}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              >
+                <option value="Tech Creators">Tech Creators</option>
+                <option value="General Audience">General Audience</option>
+                <option value="Startup Founders">Startup Founders</option>
+                <option value="Students & Beginners">Students & Beginners</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                Narrative Tone
+              </label>
+              <select
+                value={aiTone}
+                onChange={(e) => setAiTone(e.target.value)}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              >
+                <option value="Thought-Provoking">Thought-Provoking</option>
+                <option value="High Energy">High Energy</option>
+                <option value="Educational">Educational & Calm</option>
+                <option value="Documentary Story">Documentary Story</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                Target Length
+              </label>
+              <select
+                value={aiLength}
+                onChange={(e) => setAiLength(e.target.value)}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              >
+                <option value="15s">15 seconds (Viral Hook)</option>
+                <option value="30s">30 seconds (Standard Reel)</option>
+                <option value="60s">60 seconds (Deep Dive)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                Narrator Voice
+              </label>
+              <select
+                value={aiVoice}
+                onChange={(e) => setAiVoice(e.target.value)}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              >
+                <option value="adam">Adam (Deep & Narrative)</option>
+                <option value="rachel">Rachel (Warm & Engaging)</option>
+                <option value="josh">Josh (Young & Energetic)</option>
+                <option value="antoni">Antoni (Crisp & Thoughtful)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Primary CTA */}
+          <button
+            type="button"
+            onClick={handleAiReelSubmit}
+            disabled={!aiPrompt.trim()}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 py-3.5 text-sm font-bold text-white shadow-xl shadow-purple-500/25 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-98"
+          >
+            <Sparkles className="h-4 w-4" />
+            <span>Plan & Generate with AI →</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={
+      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+        <div className="h-8 w-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin mx-auto mb-4" />
+        <p className="text-sm text-zinc-400">Loading creator...</p>
+      </div>
+    }>
+      <CreatePageContent />
+    </Suspense>
+  );
+}
