@@ -150,11 +150,13 @@ async def regenerate_project_story(project_id: str):
         variation_seed=seed,
     )
 
-    # Match visuals
+    # Match visuals with structured visual intelligence
     scenes = local_visual_provider.match_visuals_for_scenes(
         scenes=story.scenes,
         visual_style=style,
         project_id=project_id,
+        domain=story.domain or "technology",
+        tone=tone,
     )
 
     full_script = " ".join([s.narration for s in story.scenes if s.narration])

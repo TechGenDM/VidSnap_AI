@@ -168,8 +168,111 @@ class TopicInterpreter:
 
 
 # ---------------------------------------------------------------------------
-# 2. Hard Quality Validator
+# 2. Title Quality Validator & Hard Quality Validator
 # ---------------------------------------------------------------------------
+
+AWKWARD_TITLE_PATTERNS = [
+    r"^the\s+truth\s+about\s+(why|how|what|when|where|is|are|do|does)\b",
+    r"^you\s+won'?t\s+believe\b",
+    r"shocking\s+secrets?\b",
+    r"mind[- ]blowing\s+truth\b",
+]
+
+MINOR_WORDS = {
+    "a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into",
+    "nor", "of", "on", "or", "so", "the", "to", "with", "yet"
+}
+
+ACRONYMS = {"ai", "ui", "ux", "api", "b2b", "b2c", "llm", "ml", "gpu", "cpu", "tts"}
+
+
+class TitleQualityValidator:
+    """
+    Validates and standardizes titles.
+    Rejects awkward, ungrammatical, or clickbait formulations (e.g. 'The Truth About Why Is The Sky Blue').
+    Produces natural, concise, and engaging titles (e.g. 'Why Is the Sky Blue?').
+    """
+
+    @classmethod
+    def to_natural_title_case(cls, text: str) -> str:
+        words = text.strip().split()
+        if not words:
+            return ""
+        result = []
+        for i, raw_word in enumerate(words):
+            clean = raw_word.strip(",.!?\"'()")
+            punct_after = raw_word[len(clean):] if raw_word.startswith(clean) else ""
+            clean_lower = clean.lower()
+
+            if clean_lower in ACRONYMS:
+                cased = clean_lower.upper()
+            elif i == 0 or i == len(words) - 1:
+                cased = clean.capitalize()
+            elif clean_lower in MINOR_WORDS:
+                cased = clean_lower
+            else:
+                cased = clean.capitalize()
+            result.append(cased + punct_after)
+        return " ".join(result)
+
+    @classmethod
+    def clean_title(cls, prompt: str, topic: str) -> str:
+        p = prompt.strip().rstrip(".!?")
+
+        # If prompt contains "what i learned" (declarative narrative, no question mark)
+        if re.search(r"\bwhat\s+i\s+learned\b", p, re.I):
+            return cls.to_natural_title_case(p).rstrip(".!?")
+
+        # If prompt is already a natural question
+        if re.match(r"^(why|how|what|where|when|is|can|do|does)\b", p, re.I):
+            title = cls.to_natural_title_case(p)
+            if not title.endswith("?"):
+                title += "?"
+            return title
+
+        # If prompt starts with "explain why / how" or "tell me about"
+        match_q = re.match(r"^(?:explain|tell me(?:\s+about)?)\s+(why|how|what)\s+(.*)$", p, re.I)
+        if match_q:
+            q_word = match_q.group(1).capitalize()
+            rest = match_q.group(2).strip()
+            title = cls.to_natural_title_case(f"{q_word} {rest}")
+            if not title.endswith("?"):
+                title += "?"
+            return title
+
+        # Otherwise clean topic
+        cleaned_topic = topic.strip().rstrip(".!?")
+        if re.match(r"^(why|how|what)\b", cleaned_topic, re.I):
+            title = cls.to_natural_title_case(cleaned_topic)
+            if not title.endswith("?"):
+                title += "?"
+            return title
+
+        words = cleaned_topic.split()
+        if len(words) <= 2:
+            title = f"Understanding {cls.to_natural_title_case(cleaned_topic)}"
+        else:
+            title = cls.to_natural_title_case(cleaned_topic)
+            
+        return title
+
+    @classmethod
+    def validate_title(cls, title: str) -> tuple[bool, list[str]]:
+        errors: list[str] = []
+        t_lower = title.strip().lower()
+
+        if len(title.strip()) < 4:
+            errors.append(f"Title '{title}' is too short.")
+        elif len(title.strip()) > 90:
+            errors.append(f"Title '{title}' is too long.")
+
+        for pat in AWKWARD_TITLE_PATTERNS:
+            if re.search(pat, t_lower):
+                errors.append(f"Awkward formulation detected in title: '{title}' matching '{pat}'.")
+
+        is_valid = len(errors) == 0
+        return is_valid, errors
+
 
 GENERIC_HOOK_PATTERNS = [
     r"today\s+we('re|\s+are)\s+going\s+to\s+talk\s+about",
@@ -198,13 +301,18 @@ class StoryQualityValidator:
     """
     Deterministic hard quality checks.
     Rejects generic hooks, literal prompt repetition, filler phrases, overlong captions,
-    run-on sentences, duplicate visuals, and lack of narrative progression.
+    run-on sentences, duplicate visuals, awkward titles, and lack of narrative progression.
     """
 
     @classmethod
     def validate_candidate(cls, story: Story, prompt: str, target_length: str = "30s") -> tuple[bool, list[str]]:
         errors: list[str] = []
         clean_prompt = TopicInterpreter.clean_topic(prompt).lower()
+
+        # 0. Title quality validation
+        is_title_valid, title_errs = TitleQualityValidator.validate_title(story.title)
+        if not is_title_valid:
+            errors.extend(title_errs)
 
         # 1. Generic hook check
         hook_lower = story.hook.lower().strip()
@@ -362,7 +470,7 @@ class CandidateStoryGenerator:
             est_total = 28.0
             per_scene_dur = 7.0
 
-        title = f"The Truth About {topic.title()}" if len(topic.split()) <= 4 else topic.title()
+        title = TitleQualityValidator.clean_title(prompt=interpretation.raw_prompt, topic=topic)
 
         # Build candidate based on angle
         if hook_strategy == "contrarian":
@@ -655,6 +763,7 @@ class CandidateStoryGenerator:
             cta=cta,
             estimated_duration=est_total,
             hook_strategy=hook_strategy,
+            domain=domain,
         )
 
 

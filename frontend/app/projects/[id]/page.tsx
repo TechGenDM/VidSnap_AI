@@ -28,6 +28,17 @@ import {
   Flame,
 } from "lucide-react";
 
+interface VisualPlanData {
+  visual_type?: string;
+  subject?: string;
+  environment?: string;
+  composition?: string;
+  mood?: string;
+  motion?: string;
+  transition?: string;
+  emphasis?: string;
+}
+
 interface SceneItem {
   id: string;
   order: number;
@@ -39,6 +50,9 @@ interface SceneItem {
   duration_seconds: number;
   scene_role?: string;
   match_quality?: string;
+  visual_plan?: VisualPlanData;
+  motion?: string;
+  transition?: string;
 }
 
 interface ProjectDetail {
@@ -470,13 +484,23 @@ export default function ProjectDetailPage() {
                 className="glass-card rounded-2xl p-5 border-zinc-800 hover:border-zinc-700 transition-all flex flex-col gap-4"
               >
                 <div className="flex items-center justify-between border-b border-zinc-800/60 pb-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                       Scene #{scene.order}
                     </span>
                     {scene.scene_role && (
                       <span className="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20">
                         {scene.scene_role}
+                      </span>
+                    )}
+                    {(scene.visual_plan?.motion || scene.motion) && (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-blue-500/10 text-blue-300 border border-blue-500/20 capitalize">
+                        {(scene.visual_plan?.motion || scene.motion || "").replace(/_/g, " ")}
+                      </span>
+                    )}
+                    {(scene.visual_plan?.transition || scene.transition) && (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 capitalize">
+                        {(scene.visual_plan?.transition || scene.transition || "").replace(/_/g, " ")}
                       </span>
                     )}
                     {scene.match_quality && (

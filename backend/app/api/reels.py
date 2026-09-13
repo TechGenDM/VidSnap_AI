@@ -137,11 +137,13 @@ async def create_ai_reel(payload: AIReelCreate):
         variation_seed=0,
     )
 
-    # 2. Match visuals via LocalAssetProvider
+    # 2. Match visuals via LocalAssetProvider with structured visual intelligence
     scenes = local_visual_provider.match_visuals_for_scenes(
         scenes=story.scenes,
         visual_style=payload.visual_style,
         project_id=project_id,
+        domain=story.domain or "technology",
+        tone=payload.tone,
     )
 
     # 3. Formulate narration script from scenes

@@ -55,3 +55,7 @@ test_final.mp4
 # Operating System
 .DS_Store
 Thumbs.db
+
+# Scratch and test artifacts
+scratch/
+scratch_test/

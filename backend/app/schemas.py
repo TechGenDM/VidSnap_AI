@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, Field
-from app.models import JobStatus, Scene, Story, StoryScene
+from app.models import JobStatus, Scene, Story, StoryScene, VisualPlan, CaptionSegment
 
 class QuickReelCreate(BaseModel):
     script: str = Field(..., min_length=3, max_length=5000)
@@ -25,6 +25,9 @@ class SceneUpdate(BaseModel):
     visual_direction: Optional[str] = None
     visual_filename: Optional[str] = None
     scene_role: Optional[str] = None
+    motion: Optional[str] = None
+    transition: Optional[str] = None
+    visual_plan: Optional[VisualPlan] = None
 
 class UpdateProjectScenes(BaseModel):
     scenes: list[SceneUpdate]

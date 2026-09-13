@@ -11,6 +11,24 @@ class JobStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
 
+class VisualPlan(BaseModel):
+    scene_id: int
+    visual_type: str = "developer_workstation"
+    subject: str = "creator"
+    environment: str = "modern workspace"
+    composition: str = "medium_close_up"
+    mood: str = "focused"
+    motion: str = "slow_zoom_in"
+    transition: str = "crossfade"
+    emphasis: str = "key insight"
+
+class CaptionSegment(BaseModel):
+    text: str
+    start_time: float = 0.0
+    end_time: float = 0.0
+    emphasis_words: list[str] = Field(default_factory=list)
+    style: str = "emphasis"
+
 class StoryScene(BaseModel):
     order: int
     narration: str = Field(..., min_length=3)
@@ -18,6 +36,8 @@ class StoryScene(BaseModel):
     visual_direction: str = Field(..., min_length=3)
     estimated_duration: float = Field(default=4.0, ge=0.5, le=60.0)
     scene_role: Optional[str] = "insight"
+    visual_plan: Optional[VisualPlan] = None
+    caption_segment: Optional[CaptionSegment] = None
 
 class Story(BaseModel):
     title: str = Field(..., min_length=3)
@@ -27,6 +47,7 @@ class Story(BaseModel):
     estimated_duration: float = Field(default=0.0, ge=0.0)
     hook_strategy: Optional[str] = None
     quality_score: Optional[float] = None
+    domain: Optional[str] = None
 
 class Scene(BaseModel):
     id: str
@@ -39,6 +60,10 @@ class Scene(BaseModel):
     duration_seconds: float = 0.0
     scene_role: Optional[str] = "insight"
     match_quality: Optional[str] = "approximate"
+    visual_plan: Optional[VisualPlan] = None
+    caption_segment: Optional[CaptionSegment] = None
+    motion: Optional[str] = "slow_zoom_in"
+    transition: Optional[str] = "crossfade"
 
 class Project(BaseModel):
     id: str

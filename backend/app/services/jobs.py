@@ -139,27 +139,79 @@ def process_quick_reel_job(job_id: str):
             captions = existing_captions
         else:
             captions = split_script_into_captions(project.script, len(image_paths))
+            for idx, c in enumerate(captions):
+                if idx < len(project.scenes):
+                    project.scenes[idx].caption = c
 
-        # STEP 5: Video Rendering
-        job.status = JobStatus.RENDERING
-        job.step = "Compositing 1080x1920 Reel with motion & blurred framing"
-        job.progress_percent = 80
+        # STEP 5: Visual Planning & RenderPlan Construction
+        job.step = "Constructing cinematic render plan with camera motion"
+        job.progress_percent = 75
         job.updated_at = now_iso()
         db.save_job(job)
+
+        from app.services.visual_planning import VisualPlanningEngine
+        from app.services.render_plan import RenderPlanBuilder
+        from app.services.video import composite_render_plan, inspect_rendered_frames
+
+        # Ensure visual plan and motions are populated on every scene
+        for scene in project.scenes:
+            if not scene.visual_plan:
+                scene.visual_plan = VisualPlanningEngine.plan_scene_visuals(
+                    scene=scene,
+                    visual_style=project.style,
+                )
+            if not scene.motion:
+                scene.motion = scene.visual_plan.motion
+            if not scene.transition:
+                scene.transition = scene.visual_plan.transition
 
         output_video_path = settings.REELS_DIR / f"{project.id}.mp4"
         final_audio_duration = get_audio_duration(final_audio_path)
 
-        _, scene_durations = render_reel_video(
-            image_paths=image_paths,
+        render_plan = RenderPlanBuilder.build_from_project(
+            project=project,
             audio_path=final_audio_path,
-            captions=captions,
             total_audio_duration=final_audio_duration,
             output_video_path=output_video_path,
+            fps=settings.VIDEO_FPS,
+        )
+
+        # STEP 6: Video Rendering with Cinematic Motion & Transitions
+        job.status = JobStatus.RENDERING
+        job.step = "Compositing 1080x1920 Reel with cinematic motion & transitions"
+        job.progress_percent = 85
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        _, scene_durations = composite_render_plan(
+            plan=render_plan,
             temp_dir=temp_dir,
         )
 
-        # STEP 6: Thumbnail Generation
+        # STEP 7: Quality Frame Inspection (15%, 50%, 85%)
+        job.step = "Inspecting rendered frames for cinematic quality standards"
+        job.progress_percent = 92
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        inspection_dir = project_dir / "inspections"
+        inspection_result = inspect_rendered_frames(
+            video_path=output_video_path,
+            output_dir=inspection_dir,
+        )
+
+        if not inspection_result.passed:
+            critical_issues = "; ".join(inspection_result.issues)
+            err_msg = f"Fatal render quality failure during frame inspection: {critical_issues}"
+            logger.error(err_msg)
+            raise RuntimeError(err_msg)
+
+        logger.info(
+            f"Frame inspection passed successfully for {project.id}. "
+            f"Resolution: {inspection_result.resolution}, Metrics: {inspection_result.metrics}"
+        )
+
+        # STEP 8: Thumbnail Generation
         thumbnail_path = settings.THUMBNAILS_DIR / f"{project.id}.jpg"
         generate_video_thumbnail(
             video_path=output_video_path,
@@ -188,6 +240,11 @@ def process_quick_reel_job(job_id: str):
             "video_filename": f"{project.id}.mp4",
             "voice": project.voice,
             "music": project.music,
+            "inspection": {
+                "passed": inspection_result.passed,
+                "resolution": inspection_result.resolution,
+                "metrics": inspection_result.metrics,
+            },
         })
         db.save_project(project)
 
