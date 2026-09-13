@@ -68,3 +68,63 @@ async def create_quick_reel(
                 narration="",
                 caption="",
                 duration_seconds=0.0,
+            )
+        )
+
+    # Derive clean title from first few words of script
+    words = script.strip().split()
+    title = " ".join(words[:5]) + ("..." if len(words) > 5 else "")
+    if not title:
+        title = "Quick Reel"
+
+    project = Project(
+        id=project_id,
+        title=title,
+        created_at=now,
+        status=JobStatus.QUEUED,
+        duration_seconds=0.0,
+        voice=voice,
+        music=music,
+        style=style,
+        script=script.strip(),
+        scenes=saved_scenes,
+        mode="quick",
+    )
+    db.save_project(project)
+
+    job = Job(
+        id=job_id,
+        project_id=project_id,
+        status=JobStatus.QUEUED,
+        step="Job enqueued in render pipeline",
+        progress_percent=5,
+        created_at=now,
+        updated_at=now,
+    )
+    db.save_job(job)
+
+    # Launch background rendering pipeline
+    background_tasks.add_task(process_quick_reel_job, job_id)
+
+    return {
+        "project_id": project_id,
+        "job_id": job_id,
+        "status": JobStatus.QUEUED,
+        "message": "Quick Reel job enqueued successfully.",
+    }
+
+@router.post("/ai")
+async def create_ai_reel(payload: AIReelCreate):
+    """
+    AI Reel Foundation endpoint:
+    Accepts idea prompt and configuration, generates story scenes & script breakdown.
+    """
+    project_id = str(uuid.uuid4())
+    now = now_iso()
+
+    # Formulate structured script and hook based on user prompt
+    hook = f"Here is why {payload.prompt.strip().rstrip('.')} matters right now."
+    body = f"When we look closer at {payload.prompt.strip()}, the underlying shift becomes undeniable. Everything is moving towards autonomous workflows."
+    cta = "Follow for more daily breakthroughs."
+    generated_script = f"{hook} {body} {cta}"
+
