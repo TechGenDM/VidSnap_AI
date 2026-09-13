@@ -158,3 +158,33 @@ def process_quick_reel_job(job_id: str):
         # Update Project Scenes with durations and captions
         for idx, scene in enumerate(project.scenes):
             if idx < len(scene_durations):
+                scene.duration_seconds = round(scene_durations[idx], 2)
+            if idx < len(captions):
+                scene.caption = captions[idx]
+
+        project.status = JobStatus.COMPLETED
+        project.duration_seconds = round(voice_duration, 2)
+        project.video_filename = f"{project.id}.mp4"
+        project.video_url = f"/media/reels/{project.id}.mp4"
+        project.thumbnail_url = f"/media/thumbnails/{project.id}.jpg"
+        db.save_project(project)
+
+        # Mark Job Completed
+        job.status = JobStatus.COMPLETED
+        job.step = "Your Reel is ready 🎉"
+        job.progress_percent = 100
+        job.completed_at = now_iso()
+        job.updated_at = now_iso()
+        db.save_job(job)
+        logger.info(f"Job {job_id} successfully completed for Project {project.id}!")
+
+    except Exception as e:
+        logger.exception(f"Job {job_id} failed: {e}")
+        job.status = JobStatus.FAILED
+        job.step = "Render failed"
+        job.error_message = str(e)
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        project.status = JobStatus.FAILED
+        db.save_project(project)
