@@ -128,3 +128,53 @@ async def create_ai_reel(payload: AIReelCreate):
     cta = "Follow for more daily breakthroughs."
     generated_script = f"{hook} {body} {cta}"
 
+    project = Project(
+        id=project_id,
+        title=payload.prompt[:35] + ("..." if len(payload.prompt) > 35 else ""),
+        created_at=now,
+        status=JobStatus.QUEUED,
+        duration_seconds=0.0,
+        voice=payload.voice,
+        music="upbeat_pulse",
+        style=payload.visual_style,
+        script=generated_script,
+        scenes=[
+            Scene(
+                id="scene_1",
+                order=1,
+                visual_filename="placeholder_1.jpg",
+                visual_url="/media/templates/1.jpg",
+                narration=hook,
+                caption=hook,
+                duration_seconds=3.0,
+            ),
+            Scene(
+                id="scene_2",
+                order=2,
+                visual_filename="placeholder_2.jpg",
+                visual_url="/media/templates/2.jpg",
+                narration=body,
+                caption=body,
+                duration_seconds=5.0,
+            ),
+            Scene(
+                id="scene_3",
+                order=3,
+                visual_filename="placeholder_3.jpg",
+                visual_url="/media/templates/3.jpg",
+                narration=cta,
+                caption=cta,
+                duration_seconds=3.0,
+            ),
+        ],
+        mode="ai",
+    )
+    db.save_project(project)
+
+    return {
+        "project_id": project_id,
+        "status": "planned",
+        "script": generated_script,
+        "scenes": [s.model_dump() for s in project.scenes],
+        "message": "AI Story planned. Connect visuals or approve script to render.",
+    }
