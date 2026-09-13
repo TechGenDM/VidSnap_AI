@@ -89,3 +89,48 @@ class TTSProvider:
             except Exception as e:
                 logger.warning(f"ElevenLabs TTS failed ({e}). Falling back to local TTS engine...")
 
+        # Fallback Engine (macOS 'say' command converted to MP3 via ffmpeg)
+        logger.info(f"Using local TTS fallback (Voice: {voice_info['macos_voice']})...")
+        temp_aiff = output_path.with_suffix(".aiff")
+        try:
+            # Generate AIFF
+            subprocess.run(
+                ["say", "-v", voice_info["macos_voice"], "-o", str(temp_aiff), text],
+                check=True,
+                capture_output=True,
+            )
+            # Convert to MP3
+            subprocess.run(
+                [
+                    "ffmpeg", "-y",
+                    "-i", str(temp_aiff),
+                    "-c:a", "libmp3lame",
+                    "-b:a", "128k",
+                    "-ar", "44100",
+                    str(output_path),
+                ],
+                check=True,
+                capture_output=True,
+            )
+            temp_aiff.unlink(missing_ok=True)
+            return output_path
+        except Exception as e:
+            temp_aiff.unlink(missing_ok=True)
+            logger.error(f"Fallback TTS failed: {e}. Generating tone fallback...")
+            # Emergency fallback: generate a silent/subtle audio tone so the video pipeline still succeeds
+            subprocess.run(
+                [
+                    "ffmpeg", "-y",
+                    "-f", "lavfi",
+                    "-i", "anullsrc=r=44100:cl=mono",
+                    "-t", "5",
+                    "-c:a", "libmp3lame",
+                    "-b:a", "128k",
+                    str(output_path),
+                ],
+                check=True,
+                capture_output=True,
+            )
+            return output_path
+
+tts_service = TTSProvider()
