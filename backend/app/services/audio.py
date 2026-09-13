@@ -65,32 +65,36 @@ def mix_voice_and_music(
     Ducks background music beneath speech and fades out music smoothly at narration end.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    voice_duration = get_audio_duration(voice_path)
+    raw_voice_duration = get_audio_duration(voice_path)
+    total_duration = raw_voice_duration + 0.4
 
     music_info = MUSIC_CATALOG.get(music_key.lower()) if music_key else None
     music_file = settings.SONGS_DIR / music_info["filename"] if music_info else None
 
-    # If no music or music file missing, just copy/normalize voice
+    # If no music or music file missing, pad voice with 0.4s natural tail
     if not music_file or not music_file.exists():
         cmd = [
             "ffmpeg", "-y",
             "-i", str(voice_path),
+            "-filter_complex", "[0:a]volume=1.0,apad=pad_dur=0.4[aout]",
+            "-map", "[aout]",
             "-c:a", "aac",
             "-b:a", "192k",
+            "-t", f"{total_duration:.3f}",
             str(output_path),
         ]
         subprocess.run(cmd, check=True, capture_output=True)
         return output_path
 
     # Smooth fade out for background music in the last 1.5 seconds
-    fade_start = max(0.0, voice_duration - 1.5)
+    fade_start = max(0.0, total_duration - 1.5)
 
     # Filtergraph:
-    # 1. Voice at 100% volume
-    # 2. Music looped / trimmed, volume reduced to ~14% (-17dB), fade out at end
-    # 3. amix duration=first (stops when voice stops)
+    # 1. Voice with 0.4s tail pad
+    # 2. Ducked music looped with 1.5s fadeout
+    # 3. amix duration=first (stops when padded voice stops)
     filtergraph = (
-        f"[0:a]volume=1.0[voice];"
+        f"[0:a]volume=1.0,apad=pad_dur=0.4[voice];"
         f"[1:a]volume={music_volume},afade=t=out:st={fade_start:.2f}:d=1.5[music];"
         f"[voice][music]amix=inputs=2:duration=first:dropout_transition=2[aout]"
     )
@@ -103,10 +107,10 @@ def mix_voice_and_music(
         "-map", "[aout]",
         "-c:a", "aac",
         "-b:a", "192k",
-        "-t", f"{voice_duration:.3f}",
+        "-t", f"{total_duration:.3f}",
         str(output_path),
     ]
 
-    logger.info(f"Mixing voice ({voice_duration:.2f}s) with music '{music_info['title']}'...")
+    logger.info(f"Mixing voice ({raw_voice_duration:.2f}s + 0.4s pad) with music '{music_info['title']}' (fadeout at {fade_start:.2f}s)...")
     subprocess.run(cmd, check=True, capture_output=True)
     return output_path

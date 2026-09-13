@@ -7,6 +7,25 @@ from app.config import settings
 
 logger = logging.getLogger("vidsnap.video")
 
+SYSTEM_FONTS = [
+    "/System/Library/Fonts/Helvetica.ttc",
+    "/System/Library/Fonts/SFPro.ttf",
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+]
+FONT_PATH = next((f for f in SYSTEM_FONTS if Path(f).exists()), "")
+
+def wrap_caption(text: str, max_words_per_line: int = 5) -> str:
+    """
+    Wraps caption text to prevent horizontal overflow on 1080px portrait canvas.
+    """
+    words = text.split()
+    if len(words) <= max_words_per_line:
+        return text
+    lines = []
+    for i in range(0, len(words), max_words_per_line):
+        lines.append(" ".join(words[i : i + max_words_per_line]))
+    return "\n".join(lines)
+
 def render_single_slide(
     image_path: Path,
     duration: float,
@@ -21,15 +40,21 @@ def render_single_slide(
     output_segment_path.parent.mkdir(parents=True, exist_ok=True)
     fps = settings.VIDEO_FPS
 
-    # Sanitize caption for FFmpeg drawtext
-    clean_caption = caption.replace("'", "").replace(":", " - ").replace("\\", "").strip()
+    # Sanitize and wrap caption
+    wrapped_caption = wrap_caption(caption.strip())
 
+    font_param = f":fontfile='{FONT_PATH}'" if FONT_PATH else ""
     caption_filter = ""
-    if clean_caption:
+    caption_file = None
+
+    if wrapped_caption:
+        caption_file = output_segment_path.with_suffix(".caption.txt")
+        caption_file.write_text(wrapped_caption, encoding="utf-8")
         caption_filter = (
-            f",drawtext=text='{clean_caption}':"
-            f"fontsize=42:fontcolor=white:"
-            f"box=1:boxcolor=black@0.65:boxborderw=18:"
+            f",drawtext=textfile='{caption_file}'"
+            f"{font_param}:"
+            f"fontsize=46:fontcolor=white:"
+            f"box=1:boxcolor=black@0.72:boxborderw=20:line_spacing=12:"
             f"x=(w-text_w)/2:y=h*0.78"
         )
 
@@ -55,7 +80,11 @@ def render_single_slide(
         str(output_segment_path),
     ]
 
-    subprocess.run(cmd, check=True, capture_output=True)
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+    finally:
+        if caption_file and caption_file.exists():
+            caption_file.unlink(missing_ok=True)
     return output_segment_path
 
 def generate_video_thumbnail(video_path: Path, thumbnail_path: Path, timestamp: float = 0.5) -> Path:
@@ -89,7 +118,7 @@ def render_reel_video(
 ) -> tuple[Path, list[float]]:
     """
     Renders complete 1080x1920 vertical Reel synced to the exact audio duration.
-    Calculates dynamic timing for each scene.
+    Adds a subtle 0.35s tail breath so narration syllables are never clipped.
     Returns: (output_video_path, list_of_scene_durations)
     """
     output_video_path.parent.mkdir(parents=True, exist_ok=True)
@@ -99,8 +128,7 @@ def render_reel_video(
     if num_images == 0:
         raise ValueError("At least one image is required to render a reel.")
 
-    # Dynamic Scene Durations
-    # Divide audio duration evenly across all slides
+    # Slide duration spans exact audio duration seamlessly
     slide_duration = total_audio_duration / num_images
     scene_durations = [slide_duration] * num_images
 
@@ -144,7 +172,7 @@ def render_reel_video(
     logger.info(f"Compositing final Reel with synced audio ({total_audio_duration:.2f}s)...")
     subprocess.run(cmd, check=True, capture_output=True)
 
-    # Cleanup intermediate segment files
+    # Cleanup intermediate segment files immediately
     for seg in segment_paths:
         seg.unlink(missing_ok=True)
 

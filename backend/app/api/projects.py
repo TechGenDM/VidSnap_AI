@@ -1,12 +1,18 @@
 import os
-from fastapi import APIRouter, HTTPException
+import uuid
+from datetime import datetime, timezone
+from fastapi import APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from app.database import db
-from app.models import Project, Scene
+from app.models import Project, Scene, Job, JobStatus
 from app.schemas import UpdateProjectScenes
 from app.config import settings
+from app.services.jobs import process_quick_reel_job
 
 router = APIRouter(prefix="/api/projects", tags=["projects"])
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 class AssistantCommandRequest(BaseModel):
     command: str
@@ -119,4 +125,41 @@ async def ask_vidsnap_assistant(project_id: str, payload: AssistantCommandReques
         "status": "success",
         "action": response_message,
         "project": project.model_dump(),
+    }
+
+@router.post("/{project_id}/render")
+async def render_project(project_id: str, background_tasks: BackgroundTasks):
+    """
+    Triggers 1080x1920 video rendering for an existing story project.
+    Allows creators to re-render after editing text, captions, or voices.
+    """
+    project = db.get_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project {project_id} not found.")
+
+    if not project.scenes or len(project.scenes) == 0:
+        raise HTTPException(status_code=400, detail="Cannot render a project with zero scenes.")
+
+    job_id = str(uuid.uuid4())
+    now = now_iso()
+
+    job = Job(
+        id=job_id,
+        project_id=project_id,
+        status=JobStatus.QUEUED,
+        step="Render re-enqueued for edited story",
+        progress_percent=5,
+        created_at=now,
+        updated_at=now,
+    )
+    db.save_job(job)
+
+    # Launch rendering pipeline in background
+    background_tasks.add_task(process_quick_reel_job, job_id)
+
+    return {
+        "project_id": project_id,
+        "job_id": job_id,
+        "status": JobStatus.QUEUED,
+        "message": "Reel rendering enqueued successfully.",
     }

@@ -1,5 +1,6 @@
 import re
 import time
+import shutil
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
@@ -138,11 +139,13 @@ def process_quick_reel_job(job_id: str):
         db.save_job(job)
 
         output_video_path = settings.REELS_DIR / f"{project.id}.mp4"
+        final_audio_duration = get_audio_duration(final_audio_path)
+
         _, scene_durations = render_reel_video(
             image_paths=image_paths,
             audio_path=final_audio_path,
             captions=captions,
-            total_audio_duration=voice_duration,
+            total_audio_duration=final_audio_duration,
             output_video_path=output_video_path,
             temp_dir=temp_dir,
         )
@@ -152,8 +155,11 @@ def process_quick_reel_job(job_id: str):
         generate_video_thumbnail(
             video_path=output_video_path,
             thumbnail_path=thumbnail_path,
-            timestamp=min(1.0, voice_duration / 2),
+            timestamp=min(1.0, final_audio_duration / 2),
         )
+
+        # Clean up temporary video segments
+        shutil.rmtree(temp_dir, ignore_errors=True)
 
         # Update Project Scenes with durations and captions
         for idx, scene in enumerate(project.scenes):
@@ -163,7 +169,7 @@ def process_quick_reel_job(job_id: str):
                 scene.caption = captions[idx]
 
         project.status = JobStatus.COMPLETED
-        project.duration_seconds = round(voice_duration, 2)
+        project.duration_seconds = round(final_audio_duration, 2)
         project.video_filename = f"{project.id}.mp4"
         project.video_url = f"/media/reels/{project.id}.mp4"
         project.thumbnail_url = f"/media/thumbnails/{project.id}.jpg"
