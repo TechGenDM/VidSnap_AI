@@ -1,0 +1,144 @@
+{
+  "projects": {
+    "d0c48d1b-eb35-4caf-894a-fe5e793a85b7": {
+      "id": "d0c48d1b-eb35-4caf-894a-fe5e793a85b7",
+      "title": "Welcome to VidSnap AI. Creating...",
+      "created_at": "2026-09-13T07:27:01.973911+00:00",
+      "status": "failed",
+      "duration_seconds": 0.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "Welcome to VidSnap AI. Creating vertical videos has never been faster.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "slide_1.jpg",
+          "visual_url": "/media/uploads/d0c48d1b-eb35-4caf-894a-fe5e793a85b7/slide_1.jpg",
+          "narration": "",
+          "caption": "",
+          "duration_seconds": 0.0
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "slide_2.jpg",
+          "visual_url": "/media/uploads/d0c48d1b-eb35-4caf-894a-fe5e793a85b7/slide_2.jpg",
+          "narration": "",
+          "caption": "",
+          "duration_seconds": 0.0
+        }
+      ],
+      "mode": "quick"
+    },
+    "919c6ad8-332e-43cc-a1cf-82f3fb855fa6": {
+      "id": "919c6ad8-332e-43cc-a1cf-82f3fb855fa6",
+      "title": "Welcome to VidSnap AI. Creating...",
+      "created_at": "2026-09-13T07:27:51.780174+00:00",
+      "status": "failed",
+      "duration_seconds": 0.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "Welcome to VidSnap AI. Creating vertical videos has never been faster.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "slide_1.jpg",
+          "visual_url": "/media/uploads/919c6ad8-332e-43cc-a1cf-82f3fb855fa6/slide_1.jpg",
+          "narration": "",
+          "caption": "",
+          "duration_seconds": 0.0
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "slide_2.jpg",
+          "visual_url": "/media/uploads/919c6ad8-332e-43cc-a1cf-82f3fb855fa6/slide_2.jpg",
+          "narration": "",
+          "caption": "",
+          "duration_seconds": 0.0
+        }
+      ],
+      "mode": "quick"
+    },
+    "8de29a47-df82-48b3-a1ad-7f99190f36a1": {
+      "id": "8de29a47-df82-48b3-a1ad-7f99190f36a1",
+      "title": "Welcome to VidSnap AI. Creating...",
+      "created_at": "2026-09-13T07:32:13.109580+00:00",
+      "status": "completed",
+      "duration_seconds": 4.5,
+      "video_filename": "8de29a47-df82-48b3-a1ad-7f99190f36a1.mp4",
+      "video_url": "/media/reels/8de29a47-df82-48b3-a1ad-7f99190f36a1.mp4",
+      "thumbnail_url": "/media/thumbnails/8de29a47-df82-48b3-a1ad-7f99190f36a1.jpg",
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "Welcome to VidSnap AI. Creating vertical videos has never been faster.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "slide_1.jpg",
+          "visual_url": "/media/uploads/8de29a47-df82-48b3-a1ad-7f99190f36a1/slide_1.jpg",
+          "narration": "",
+          "caption": "Welcome to VidSnap AI",
+          "duration_seconds": 2.25
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "slide_2.jpg",
+          "visual_url": "/media/uploads/8de29a47-df82-48b3-a1ad-7f99190f36a1/slide_2.jpg",
+          "narration": "",
+          "caption": "Creating vertical videos has never been faster",
+          "duration_seconds": 2.25
+        }
+      ],
+      "mode": "quick"
+    }
+  },
+  "jobs": {
+    "110e2ebb-f3f1-4a55-8620-3ffff9fcbbdc": {
+      "id": "110e2ebb-f3f1-4a55-8620-3ffff9fcbbdc",
+      "project_id": "d0c48d1b-eb35-4caf-894a-fe5e793a85b7",
+      "status": "failed",
+      "step": "Render failed",
+      "progress_percent": 80,
+      "error_message": "Command '['ffmpeg', '-y', '-loop', '1', '-t', '2.248', '-i', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/uploads/d0c48d1b-eb35-4caf-894a-fe5e793a85b7/slide_1.jpg', '-vf', \"[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=28:5[bg];[0:v]scale=1080:1920:force_original_aspect_ratio=decrease,zoompan=z='min(zoom+0.0005,1.05)':d=67:s=1080x1920:fps=30[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,drawtext=text='Welcome to VidSnap AI':fontsize=42:fontcolor=white:fontcolor_expr=ffffff:box=1:boxcolor=black@0.65:boxborderw=18:x=(w-text_w)/2:y=h*0.78\", '-c:v', 'libx264', '-t', '2.248', '-pix_fmt', 'yuv420p', '-r', '30', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/uploads/d0c48d1b-eb35-4caf-894a-fe5e793a85b7/temp/segment_000.mp4']' returned non-zero exit status 234.",
+      "created_at": "2026-09-13T07:27:01.973911+00:00",
+      "updated_at": "2026-09-13T07:27:04.255098+00:00",
+      "completed_at": null
+    },
+    "3571ebfb-4fc3-4ba5-9fd2-a8d6aeb8b9fe": {
+      "id": "3571ebfb-4fc3-4ba5-9fd2-a8d6aeb8b9fe",
+      "project_id": "919c6ad8-332e-43cc-a1cf-82f3fb855fa6",
+      "status": "failed",
+      "step": "Render failed",
+      "progress_percent": 80,
+      "error_message": "Command '['ffmpeg', '-y', '-i', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/uploads/919c6ad8-332e-43cc-a1cf-82f3fb855fa6/temp/segment_000.mp4', '-i', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/uploads/919c6ad8-332e-43cc-a1cf-82f3fb855fa6/temp/segment_001.mp4', '-i', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/uploads/919c6ad8-332e-43cc-a1cf-82f3fb855fa6/audio_final.aac', '-filter_complex', '[0:v][1:v]concat=n=2:v=1:a=0[vconcat]', '-map', '[vconcat]', '-map', '2:a', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', '/Users/devasishmishra/Developer/TechGenDM_Codes/Coding Web Playground /VidSnap_AI/media/reels/919c6ad8-332e-43cc-a1cf-82f3fb855fa6.mp4']' returned non-zero exit status 234.",
+      "created_at": "2026-09-13T07:27:51.780174+00:00",
+      "updated_at": "2026-09-13T07:27:57.454902+00:00",
+      "completed_at": null
+    },
+    "85c97971-685e-4013-94a4-6ab0833dda15": {
+      "id": "85c97971-685e-4013-94a4-6ab0833dda15",
+      "project_id": "8de29a47-df82-48b3-a1ad-7f99190f36a1",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-13T07:32:13.109580+00:00",
+      "updated_at": "2026-09-13T07:32:19.284475+00:00",
+      "completed_at": "2026-09-13T07:32:19.284454+00:00"
+    }
+  }
+}
