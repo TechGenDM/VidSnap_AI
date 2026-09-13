@@ -308,4 +308,64 @@ function CreatePageContent() {
 
         {/* Mode 2: AI Reel */}
         <button
-return <div>Voice selector configured</div>;}
+          onClick={() => {
+            setActiveMode("ai");
+            setErrorMsg(null);
+          }}
+          className={`flex flex-col text-left p-5 rounded-xl border transition-all ${
+            activeMode === "ai"
+              ? "bg-purple-950/30 border-purple-500/60 shadow-lg shadow-purple-500/10"
+              : "bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 text-zinc-400"
+          }`}
+        >
+          <div className="flex items-center justify-between w-full mb-3">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                activeMode === "ai"
+                  ? "bg-purple-500 text-white"
+                  : "bg-zinc-800 text-zinc-400"
+              }`}
+            >
+              <Bot className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-semibold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+              AI STORY
+            </span>
+          </div>
+          <h3 className="text-base font-bold text-white mb-1">AI Reel</h3>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            I have an idea. Generate story hooks and scenes.
+          </p>
+        </button>
+
+        {/* Mode 3: Repurpose */}
+        <button
+          disabled
+          className="flex flex-col text-left p-5 rounded-xl border border-zinc-850 bg-zinc-900/20 opacity-60 cursor-not-allowed"
+        >
+          <div className="flex items-center justify-between w-full mb-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-800 text-zinc-500">
+              <Repeat className="h-4 w-4" />
+            </div>
+            <span className="text-[10px] font-bold text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">
+              PHASE 2
+            </span>
+          </div>
+          <h3 className="text-base font-bold text-zinc-300 mb-1">Repurpose</h3>
+          <p className="text-xs text-zinc-500 leading-relaxed">
+            I already have long-form video, podcasts, or articles.
+          </p>
+        </button>
+      </div>
+
+      {/* Error Alert */}
+      {errorMsg && (
+        <div className="mb-8 flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+          <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      {/* RENDERING STATE MODAL */}
+      {isSubmitting && (
+return <div>Music selector configured</div>;}
