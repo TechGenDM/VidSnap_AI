@@ -68,4 +68,64 @@ function CreatePageContent() {
   const [aiStyle, setAiStyle] = useState("Cinematic Photography");
   const [aiVoice, setAiVoice] = useState("adam");
 
-return <div>Quick Reel Loading...</div>;}
+  // Rendering & Job State
+  const [activeJobId, setActiveJobId] = useState<string | null>(null);
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [jobStatus, setJobStatus] = useState<string | null>(null);
+  const [jobStep, setJobStep] = useState<string>("Initializing render...");
+  const [jobProgress, setJobProgress] = useState<number>(0);
+  const [renderedVideoUrl, setRenderedVideoUrl] = useState<string | null>(null);
+
+  // Word count & duration calculation
+  const wordCount = script.trim() ? script.trim().split(/\s+/).length : 0;
+  const estimatedDurationSecs = Math.max(3, Math.round((wordCount / 140) * 60));
+
+  // Handle Multi-Image Upload
+  const handleFileSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setErrorMsg(null);
+
+    const newItems: UploadedFileItem[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      if (!f.type.startsWith("image/")) {
+        setErrorMsg(`"${f.name}" is not an image. Only JPG, PNG, and WebP are allowed.`);
+        continue;
+      }
+      newItems.push({
+        id: `${Date.now()}_${i}_${Math.random().toString(36).substr(2, 9)}`,
+        file: f,
+        previewUrl: URL.createObjectURL(f),
+      });
+    }
+
+    setUploadedImages((prev) => [...prev, ...newItems]);
+  };
+
+  // Reordering helpers
+  const moveImage = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= uploadedImages.length) return;
+
+    setUploadedImages((prev) => {
+      const copy = [...prev];
+      const [moved] = copy.splice(index, 1);
+      copy.splice(targetIndex, 0, moved);
+      return copy;
+    });
+  };
+
+  const removeImage = (index: number) => {
+    setUploadedImages((prev) => {
+      const copy = [...prev];
+      URL.revokeObjectURL(copy[index].previewUrl);
+      copy.splice(index, 1);
+      return copy;
+    });
+  };
+
+  // Submit Quick Reel
+  const handleQuickReelSubmit = async () => {
+    if (uploadedImages.length === 0) {
+      setErrorMsg("Please upload at least one image.");
+return <div>Upload configured</div>;}
