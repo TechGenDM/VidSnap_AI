@@ -58,3 +58,94 @@ def render_single_slide(
     subprocess.run(cmd, check=True, capture_output=True)
     return output_segment_path
 
+def generate_video_thumbnail(video_path: Path, thumbnail_path: Path, timestamp: float = 0.5) -> Path:
+    """
+    Extracts a crisp thumbnail frame from the rendered MP4 for project cards and previews.
+    """
+    thumbnail_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        "ffmpeg", "-y",
+        "-ss", f"{timestamp:.2f}",
+        "-i", str(video_path),
+        "-vframes", "1",
+        "-q:v", "2",
+        str(thumbnail_path),
+    ]
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+    except Exception as e:
+        logger.warning(f"Could not extract thumbnail frame at {timestamp}s: {e}. Falling back to 0.0s")
+        cmd[2] = "0.0"
+        subprocess.run(cmd, check=True, capture_output=True)
+    return thumbnail_path
+
+def render_reel_video(
+    image_paths: list[Path],
+    audio_path: Path,
+    captions: list[str],
+    total_audio_duration: float,
+    output_video_path: Path,
+    temp_dir: Path,
+) -> tuple[Path, list[float]]:
+    """
+    Renders complete 1080x1920 vertical Reel synced to the exact audio duration.
+    Calculates dynamic timing for each scene.
+    Returns: (output_video_path, list_of_scene_durations)
+    """
+    output_video_path.parent.mkdir(parents=True, exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    num_images = len(image_paths)
+    if num_images == 0:
+        raise ValueError("At least one image is required to render a reel.")
+
+    # Dynamic Scene Durations
+    # Divide audio duration evenly across all slides
+    slide_duration = total_audio_duration / num_images
+    scene_durations = [slide_duration] * num_images
+
+    segment_paths = []
+    for idx, img_path in enumerate(image_paths):
+        caption = captions[idx] if idx < len(captions) else ""
+        segment_file = temp_dir / f"segment_{idx:03d}.mp4"
+        logger.info(f"Rendering slide {idx + 1}/{num_images} ({slide_duration:.2f}s) for {img_path.name}...")
+        render_single_slide(
+            image_path=img_path,
+            duration=slide_duration,
+            caption=caption,
+            output_segment_path=segment_file,
+            scene_index=idx,
+        )
+        segment_paths.append(segment_file)
+
+    # Concat segments using concat filter (frame-accurate and seamless)
+    filter_inputs = "".join([f"[{i}:v]" for i in range(num_images)])
+    filter_complex = f"{filter_inputs}concat=n={num_images}:v=1:a=0[vconcat]"
+
+    cmd = ["ffmpeg", "-y"]
+    for seg in segment_paths:
+        cmd.extend(["-i", str(seg)])
+    cmd.extend(["-i", str(audio_path)])
+
+    cmd.extend([
+        "-filter_complex", filter_complex,
+        "-map", "[vconcat]",
+        "-map", f"{num_images}:a",
+        "-c:v", "libx264",
+        "-preset", "medium",
+        "-crf", "20",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-shortest",
+        "-movflags", "+faststart",
+        str(output_video_path),
+    ])
+
+    logger.info(f"Compositing final Reel with synced audio ({total_audio_duration:.2f}s)...")
+    subprocess.run(cmd, check=True, capture_output=True)
+
+    # Cleanup intermediate segment files
+    for seg in segment_paths:
+        seg.unlink(missing_ok=True)
+
+    return output_video_path, scene_durations
