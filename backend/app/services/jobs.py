@@ -128,3 +128,33 @@ def process_quick_reel_job(job_id: str):
         job.updated_at = now_iso()
         db.save_job(job)
 
+        captions = split_script_into_captions(project.script, len(image_paths))
+
+        # STEP 5: Video Rendering
+        job.status = JobStatus.RENDERING
+        job.step = "Compositing 1080x1920 Reel with motion & blurred framing"
+        job.progress_percent = 80
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        output_video_path = settings.REELS_DIR / f"{project.id}.mp4"
+        _, scene_durations = render_reel_video(
+            image_paths=image_paths,
+            audio_path=final_audio_path,
+            captions=captions,
+            total_audio_duration=voice_duration,
+            output_video_path=output_video_path,
+            temp_dir=temp_dir,
+        )
+
+        # STEP 6: Thumbnail Generation
+        thumbnail_path = settings.THUMBNAILS_DIR / f"{project.id}.jpg"
+        generate_video_thumbnail(
+            video_path=output_video_path,
+            thumbnail_path=thumbnail_path,
+            timestamp=min(1.0, voice_duration / 2),
+        )
+
+        # Update Project Scenes with durations and captions
+        for idx, scene in enumerate(project.scenes):
+            if idx < len(scene_durations):
