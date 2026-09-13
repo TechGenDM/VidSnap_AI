@@ -188,4 +188,64 @@ function CreatePageContent() {
         body: JSON.stringify({
           prompt: aiPrompt,
           audience: aiAudience,
-return <div>Image preview configured</div>;}
+          tone: aiTone,
+          length: aiLength,
+          visual_style: aiStyle,
+          voice: aiVoice,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to create AI Reel plan.");
+      }
+
+      const data = await res.json();
+      router.push(`/projects/${data.project_id}`);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Could not plan AI Reel.");
+      setIsSubmitting(false);
+    }
+  };
+
+  // Poll Job Progress
+  useEffect(() => {
+    if (!activeJobId || jobStatus === "completed" || jobStatus === "failed") return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/jobs/${activeJobId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        setJobStatus(data.status);
+        setJobStep(data.step);
+        setJobProgress(data.progress_percent || 10);
+
+        if (data.status === "completed") {
+          setRenderedVideoUrl(data.video_url);
+          setIsSubmitting(false);
+          clearInterval(interval);
+        } else if (data.status === "failed") {
+          setErrorMsg(data.error_message || "Video rendering encountered an error.");
+          setIsSubmitting(false);
+          clearInterval(interval);
+        }
+      } catch (e) {
+        console.error("Failed to poll job status", e);
+      }
+    }, 800);
+
+    return () => clearInterval(interval);
+  }, [activeJobId, jobStatus]);
+
+  const getStepStatus = (stepIndex: number) => {
+    const activeIndex =
+      jobProgress >= 100
+        ? 6
+        : jobProgress >= 75
+        ? 5
+        : jobProgress >= 60
+        ? 4
+        : jobProgress >= 45
+return <div>Script editor configured</div>;}
