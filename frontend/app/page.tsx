@@ -148,6 +148,231 @@ export default function HomePage() {
                     <p className="text-xs text-zinc-200 line-clamp-2">
                       ✨ Auto-synchronized narration & kinetic captions with speech-driven scene timing.
                     </p>
-</div>
-</div>
-);}
+
+                    <div className="flex items-center justify-between text-[10px] text-zinc-400 pt-1 border-t border-white/10">
+                      <span className="flex items-center gap-1">
+                        <Wand2 className="h-3 w-3 text-indigo-400" />
+                        <span>Voice: Adam (ElevenLabs)</span>
+                      </span>
+                      <span>Music: Ambient Chill</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section (#how-it-works) */}
+      <section id="how-it-works" className="w-full py-24 border-t border-zinc-850 bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">
+              How It Works
+            </h2>
+            <h3 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+              From thought to finished video in 4 steps
+            </h3>
+            <p className="text-zinc-400 text-base sm:text-lg">
+              VidSnap replaces hours of timeline slicing with intelligent audio-visual story composition.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                step: "01",
+                title: "Tell VidSnap",
+                description: "Type an idea, paste a script, or drop your existing photos.",
+                icon: Zap,
+              },
+              {
+                step: "02",
+                title: "AI Builds the Story",
+                description: "The engine structures your hook, timing, and scene breakdown.",
+                icon: Bot,
+              },
+              {
+                step: "03",
+                title: "VidSnap Renders It",
+                description: "ElevenLabs voice narration, kinetic captions, and music ducking.",
+                icon: Wand2,
+              },
+              {
+                step: "04",
+                title: "Publish",
+                description: "Download a ready-to-share 1080×1920 MP4 for Reels, Shorts, and TikTok.",
+                icon: Share2,
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.step}
+                  className="glass-card rounded-2xl p-6 flex flex-col justify-between group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 group-hover:scale-105 transition-transform">
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <span className="text-2xl font-mono font-bold text-zinc-700 group-hover:text-indigo-400/50 transition-colors">
+                        {item.step}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
+                    <p className="text-sm text-zinc-400 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Creation Modes Preview Section */}
+      <section className="w-full py-24 border-t border-zinc-850 bg-zinc-900/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h3 className="text-3xl font-bold tracking-tight text-white mb-4">
+              Three Creation Modes. Zero Timelines.
+            </h3>
+            <p className="text-zinc-400 text-base">
+              Choose the workflow that matches where you are starting from.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Quick Reel */}
+            <div className="glass-card rounded-2xl p-7 border-indigo-500/30 relative flex flex-col justify-between">
+              <div className="absolute top-4 right-4 rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-[10px] font-bold text-indigo-300 border border-indigo-500/30">
+                ACTIVE
+              </div>
+              <div>
+                <div className="h-10 w-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-5">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <h4 className="text-xl font-bold text-white mb-2">Quick Reel</h4>
+                <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+                  I have my own photos or visual assets. Drop in images, write a script, pick a voice, and render in seconds.
+                </p>
+                <ul className="space-y-2.5 text-xs text-zinc-300 mb-8">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <span>Multi-image drag & drop with reordering</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <span>Dynamic speech-driven slide timing</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <span>Blurred background 9:16 portrait framing</span>
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/create?mode=quick"
+                className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-center text-sm font-semibold transition-colors flex items-center justify-center gap-1.5"
+              >
+                <span>Launch Quick Reel</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* AI Reel */}
+            <div className="glass-card rounded-2xl p-7 flex flex-col justify-between">
+              <div>
+                <div className="h-10 w-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center mb-5">
+                  <Bot className="h-5 w-5" />
+                </div>
+                <h4 className="text-xl font-bold text-white mb-2">AI Reel</h4>
+                <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+                  I have an idea. Prompt VidSnap with a topic and audience to generate structured hooks, scenes, and narration.
+                </p>
+                <ul className="space-y-2.5 text-xs text-zinc-300 mb-8">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-purple-400" />
+                    <span>Idea to hook & script decomposition</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-purple-400" />
+                    <span>Audience and tone tuning</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-purple-400" />
+                    <span>Automatic scene scheduling</span>
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/create?mode=ai"
+                className="w-full py-2.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-750 text-white text-center text-sm font-semibold transition-colors flex items-center justify-center gap-1.5"
+              >
+                <span>Try AI Reel</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Repurpose */}
+            <div className="glass-card rounded-2xl p-7 flex flex-col justify-between opacity-80 border-dashed">
+              <div>
+                <div className="h-10 w-10 rounded-lg bg-zinc-800 text-zinc-400 flex items-center justify-center mb-5">
+                  <Repeat className="h-5 w-5" />
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <h4 className="text-xl font-bold text-white">Repurpose</h4>
+                  <span className="text-[10px] font-bold text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">ROADMAP</span>
+                </div>
+                <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+                  I already have long-form content. Paste a YouTube URL, article, or podcast to extract viral vertical highlights.
+                </p>
+                <ul className="space-y-2.5 text-xs text-zinc-500 mb-8">
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-600" />
+                    <span>Highlight extraction</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-600" />
+                    <span>Automatic 9:16 smart crop</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-600" />
+                    <span>Multi-format social export</span>
+                  </li>
+                </ul>
+              </div>
+              <button
+                disabled
+                className="w-full py-2.5 rounded-lg border border-zinc-850 bg-zinc-900 text-zinc-500 text-center text-sm font-semibold cursor-not-allowed"
+              >
+                Coming in Phase 2
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA Banner */}
+      <section className="w-full py-20 border-t border-zinc-850 bg-gradient-to-b from-zinc-950 to-zinc-900 text-center">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <h3 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            Ready to create your first Reel?
+          </h3>
+          <p className="text-zinc-400 text-base max-w-xl mx-auto mb-8">
+            No video editing background required. Turn your photos and ideas into high-engagement vertical content now.
+          </p>
+          <Link
+            href="/create"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-indigo-500/30 hover:from-indigo-600 hover:to-purple-700 transition-all active:scale-98"
+          >
+            <Zap className="h-5 w-5" />
+            <span>Launch Reel Creator</span>
+            <ArrowRight className="h-4 w-4 ml-1" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
