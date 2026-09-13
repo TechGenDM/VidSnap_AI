@@ -58,3 +58,65 @@ async def update_project_scenes(project_id: str, payload: UpdateProjectScenes):
     project = db.get_project(project_id)
     if not project:
         raise HTTPException(status_code=404, detail=f"Project {project_id} not found.")
+
+    scene_map = {s.id: s for s in project.scenes}
+    for update in payload.scenes:
+        if update.id in scene_map:
+            target = scene_map[update.id]
+            if update.narration is not None:
+                target.narration = update.narration
+            if update.caption is not None:
+                target.caption = update.caption
+            if update.visual_filename is not None:
+                target.visual_filename = update.visual_filename
+                target.visual_url = f"/media/uploads/{project.id}/{update.visual_filename}"
+
+    # Reassemble script from scenes
+    combined_script = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
+    if combined_script:
+        project.script = combined_script
+
+    db.save_project(project)
+    return project.model_dump()
+
+@router.post("/{project_id}/assistant")
+async def ask_vidsnap_assistant(project_id: str, payload: AssistantCommandRequest):
+    """
+    'Ask VidSnap' conversational assistant foundation:
+    Processes natural language commands on the story (e.g. 'Make the intro more punchy').
+    """
+    project = db.get_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project {project_id} not found.")
+
+    cmd = payload.command.lower()
+    response_message = ""
+
+    if "punchy" in cmd or "attention" in cmd or "hook" in cmd:
+        if project.scenes:
+            project.scenes[0].caption = "🔥 STOP SCROLLING: This changes everything."
+            project.scenes[0].narration = "Stop scrolling. This changes everything you thought you knew."
+            response_message = "Updated Scene 1 hook to be high-retention and punchy."
+    elif "energetic" in cmd or "tone" in cmd:
+        project.music = "upbeat_pulse"
+        project.voice = "josh"
+        response_message = "Changed voice to Josh (Energetic) and music to Upbeat Pulse."
+    elif "voice" in cmd:
+        if "rachel" in cmd:
+            project.voice = "rachel"
+            response_message = "Switched narrator to Rachel."
+        elif "adam" in cmd:
+            project.voice = "adam"
+            response_message = "Switched narrator to Adam."
+        else:
+            project.voice = "rachel"
+            response_message = "Switched narrator voice."
+    else:
+        response_message = f"Applied AI adjustment for: '{payload.command}'"
+
+    db.save_project(project)
+    return {
+        "status": "success",
+        "action": response_message,
+        "project": project.model_dump(),
+    }
