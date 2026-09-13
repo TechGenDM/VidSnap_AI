@@ -19,6 +19,8 @@ import {
   Save,
   Trash2,
   Sliders,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 
 interface SceneItem {
@@ -53,8 +55,11 @@ export default function ProjectDetailPage() {
   const projectId = params?.id as string;
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRendering, setIsRendering] = useState(false);
+  const [renderStep, setRenderStep] = useState("");
   const [assistantPrompt, setAssistantPrompt] = useState("");
   const [assistantFeedback, setAssistantFeedback] = useState<string | null>(null);
   const [isAssistantWorking, setIsAssistantWorking] = useState(false);
@@ -69,17 +74,18 @@ export default function ProjectDetailPage() {
           const data = await res.json();
           setProject(data);
         } else {
-          router.push("/projects");
+          setNotFound(true);
         }
       } catch (err) {
         console.error("Failed to load project", err);
+        setNotFound(true);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadProject();
-  }, [projectId, router]);
+  }, [projectId]);
 
   const handleSceneChange = (
     sceneId: string,
@@ -93,8 +99,8 @@ export default function ProjectDetailPage() {
     });
   };
 
-  const saveScenes = async () => {
-    if (!project) return;
+  const saveScenes = async (): Promise<boolean> => {
+    if (!project) return false;
     setIsSaving(true);
     try {
       const res = await fetch(`/api/projects/${project.id}/scenes`, {
@@ -113,11 +119,74 @@ export default function ProjectDetailPage() {
         setProject(updated);
         setAssistantFeedback("Story changes saved successfully!");
         setTimeout(() => setAssistantFeedback(null), 3000);
+        return true;
       }
+      return false;
     } catch (e) {
       console.error("Failed to save scenes", e);
+      return false;
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleReRender = async () => {
+    if (!project) return;
+    setIsRendering(true);
+    setRenderStep("Saving story changes & enqueuing render...");
+    try {
+      await saveScenes();
+      const res = await fetch(`/api/projects/${project.id}/render`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to start render.");
+      }
+      const data = await res.json();
+      const jobId = data.job_id;
+
+      const interval = setInterval(async () => {
+        try {
+          const pollRes = await fetch(`/api/jobs/${jobId}`);
+          if (pollRes.ok) {
+            const jobData = await pollRes.json();
+            setRenderStep(jobData.step);
+            if (jobData.status === "completed") {
+              clearInterval(interval);
+              setIsRendering(false);
+              const projRes = await fetch(`/api/projects/${project.id}`);
+              if (projRes.ok) {
+                setProject(await projRes.json());
+              }
+              setAssistantFeedback("Reel re-rendered successfully! 🎉");
+              setTimeout(() => setAssistantFeedback(null), 4000);
+            } else if (jobData.status === "failed") {
+              clearInterval(interval);
+              setIsRendering(false);
+              setAssistantFeedback(`Render failed: ${jobData.error_message || "Unknown error"}`);
+            }
+          }
+        } catch (e) {
+          console.error("Poll error", e);
+        }
+      }, 1000);
+    } catch (err: any) {
+      setIsRendering(false);
+      setAssistantFeedback(err.message || "Failed to trigger re-render.");
+    }
+  };
+
+  const handleDeleteProject = async () => {
+    if (!project) return;
+    if (!confirm(`Are you sure you want to delete "${project.title}"?`)) return;
+    try {
+      const res = await fetch(`/api/projects/${project.id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/projects");
+      }
+    } catch (e) {
+      console.error("Failed to delete project", e);
     }
   };
 
@@ -147,6 +216,41 @@ export default function ProjectDetailPage() {
       setIsAssistantWorking(false);
     }
   };
+
+  if (notFound) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-24 text-center">
+        <div className="glass-card rounded-2xl p-8 border-red-500/30 bg-zinc-900/60 shadow-xl">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500/10 text-red-400 mx-auto mb-4 border border-red-500/20">
+            <AlertCircle className="h-6 w-6" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Project Not Found</h2>
+          <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+            We couldn't locate a story project with ID: <br />
+            <code className="text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded text-xs mt-1 inline-block font-mono">
+              {projectId}
+            </code>
+            <br />
+            The project may have been deleted or the link is incorrect.
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <Link
+              href="/projects"
+              className="rounded-xl bg-zinc-800 hover:bg-zinc-700 px-5 py-2.5 text-xs font-semibold text-white transition-all"
+            >
+              ← Return to Projects
+            </Link>
+            <Link
+              href="/create"
+              className="rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-xs font-semibold text-white transition-all shadow-lg shadow-indigo-500/20"
+            >
+              Create New Reel
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading || !project) {
     return (
@@ -183,28 +287,57 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={saveScenes}
-            disabled={isSaving}
-            className="flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
+            disabled={isSaving || isRendering}
+            className="flex items-center gap-1.5 rounded-xl border border-zinc-750 bg-zinc-850 hover:bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
           >
             <Save className="h-3.5 w-3.5" />
             <span>{isSaving ? "Saving..." : "Save Story"}</span>
+          </button>
+
+          <button
+            onClick={handleReRender}
+            disabled={isRendering || isSaving}
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-500/20 transition-all disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isRendering ? "animate-spin" : ""}`} />
+            <span>{isRendering ? "Rendering..." : "Render Reel"}</span>
           </button>
 
           {project.video_url && (
             <a
               href={project.video_url}
               download={`${project.title}.mp4`}
-              className="flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 px-4 py-2 text-xs font-semibold text-zinc-200 transition-all"
+              className="flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-zinc-200 transition-all"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>Download MP4</span>
+              <span>MP4</span>
             </a>
           )}
+
+          <button
+            onClick={handleDeleteProject}
+            disabled={isRendering}
+            className="p-2 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            title="Delete Project"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         </div>
       </div>
+
+      {/* Re-rendering banner */}
+      {isRendering && (
+        <div className="mb-8 flex items-center gap-3 rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-xs text-indigo-200 animate-pulse">
+          <RefreshCw className="h-4 w-4 animate-spin text-indigo-400 flex-shrink-0" />
+          <div>
+            <span className="font-semibold block text-white mb-0.5">VidSnap is re-rendering your story</span>
+            <span>{renderStep || "Processing speech synchronization and 1080x1920 video canvas..."}</span>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Scene/Story Cards ("VidSnap edits the story, not the timeline") */}

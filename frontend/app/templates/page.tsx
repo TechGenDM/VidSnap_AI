@@ -59,7 +59,7 @@ export default function TemplatesPage() {
             </div>
 
             <Link
-              href="/create?mode=quick"
+              href={`/create?mode=quick&template=${tpl.id}`}
               className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:bg-zinc-800 text-xs font-semibold text-white transition-all"
             >
               <span>Use Template</span>

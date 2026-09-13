@@ -42,23 +42,49 @@ const RENDER_STEPS = [
   { key: "rendering", label: "Rendering 1080x1920 vertical video" },
 ];
 
+const TEMPLATE_PRESETS: Record<string, { script: string; style: string; voice: string; music: string }> = {
+  tech_breakdown: {
+    script: "Artificial Intelligence is transforming how developers build software in 2026. Autonomous agents can now explore repositories, diagnose bottlenecks, and write verified production code in seconds. The future of engineering is orchestration.",
+    style: "cinematic",
+    voice: "adam",
+    music: "ambient_chill",
+  },
+  product_showcase: {
+    script: "Meet the creator workflow built for modern reels. Clean visuals, instant rendering, and speech-synchronized pacing directly on your phone. Experience video creation redefined.",
+    style: "dynamic",
+    voice: "rachel",
+    music: "upbeat_pulse",
+  },
+  founder_story: {
+    script: "When we set out to build VidSnap, our core rule was simple: edit the story, never the timeline. Creators shouldn't spend hours tweaking keyframes when an idea is ready to share.",
+    style: "minimal",
+    voice: "antoni",
+    music: "lofi_beat",
+  },
+};
+
 function CreatePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialMode = searchParams.get("mode") === "ai" ? "ai" : "quick";
+  const templateKey = searchParams.get("template");
 
   const [activeMode, setActiveMode] = useState<"quick" | "ai" | "repurpose">(initialMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isLoadingSamples, setIsLoadingSamples] = useState(false);
 
   // Quick Reel State
+  const defaultTemplate = templateKey && TEMPLATE_PRESETS[templateKey] ? TEMPLATE_PRESETS[templateKey] : null;
   const [uploadedImages, setUploadedImages] = useState<UploadedFileItem[]>([]);
   const [script, setScript] = useState(
+    defaultTemplate?.script ||
     "Welcome to VidSnap AI. Creating high-retention vertical reels has never been faster. Drop in your photos, write your message, and watch the story come to life."
   );
-  const [voice, setVoice] = useState("adam");
-  const [music, setMusic] = useState("ambient_chill");
-  const [style, setStyle] = useState("cinematic");
+  const [voice, setVoice] = useState(defaultTemplate?.voice || "adam");
+  const [music, setMusic] = useState(defaultTemplate?.music || "ambient_chill");
+  const [style, setStyle] = useState(defaultTemplate?.style || "cinematic");
 
   // AI Reel State
   const [aiPrompt, setAiPrompt] = useState("");
@@ -75,6 +101,19 @@ function CreatePageContent() {
   const [jobStep, setJobStep] = useState<string>("Initializing render...");
   const [jobProgress, setJobProgress] = useState<number>(0);
   const [renderedVideoUrl, setRenderedVideoUrl] = useState<string | null>(null);
+
+  // Restore active job from sessionStorage on refresh/mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const savedJobId = sessionStorage.getItem("vidsnap_active_job_id");
+    const savedProjectId = sessionStorage.getItem("vidsnap_active_project_id");
+    if (savedJobId) {
+      setActiveJobId(savedJobId);
+      if (savedProjectId) setActiveProjectId(savedProjectId);
+      setIsSubmitting(true);
+      setJobStep("Resuming render progress...");
+    }
+  }, []);
 
   // Word count & duration calculation
   const wordCount = script.trim() ? script.trim().split(/\s+/).length : 0;
@@ -100,6 +139,56 @@ function CreatePageContent() {
     }
 
     setUploadedImages((prev) => [...prev, ...newItems]);
+  };
+
+  // Instant Sample Images Loader
+  const handleLoadSampleImages = async () => {
+    setIsLoadingSamples(true);
+    setErrorMsg(null);
+    try {
+      const samples = [
+        { name: "visual_01.jpg", url: "/media/templates/1.jpg" },
+        { name: "visual_02.jpg", url: "/media/templates/2.jpg" },
+        { name: "visual_03.jpg", url: "/media/templates/3.jpg" },
+      ];
+      const items: UploadedFileItem[] = [];
+      for (let i = 0; i < samples.length; i++) {
+        const item = samples[i];
+        const res = await fetch(item.url);
+        const blob = await res.blob();
+        const file = new File([blob], item.name, { type: "image/jpeg" });
+        items.push({
+          id: `sample_${Date.now()}_${i}`,
+          file,
+          previewUrl: URL.createObjectURL(file),
+        });
+      }
+      setUploadedImages((prev) => [...prev, ...items]);
+    } catch (e: any) {
+      setErrorMsg("Failed to load sample visuals: " + e.message);
+    } finally {
+      setIsLoadingSamples(false);
+    }
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    handleFileSelect(e.dataTransfer.files);
   };
 
   // Reordering helpers
@@ -163,6 +252,10 @@ function CreatePageContent() {
       const data = await res.json();
       setActiveJobId(data.job_id);
       setActiveProjectId(data.project_id);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("vidsnap_active_job_id", data.job_id);
+        sessionStorage.setItem("vidsnap_active_project_id", data.project_id);
+      }
       setJobStatus("queued");
       setJobProgress(5);
     } catch (err: any) {
@@ -225,10 +318,16 @@ function CreatePageContent() {
         if (data.status === "completed") {
           setRenderedVideoUrl(data.video_url);
           setIsSubmitting(false);
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem("vidsnap_active_job_id");
+          }
           clearInterval(interval);
         } else if (data.status === "failed") {
           setErrorMsg(data.error_message || "Video rendering encountered an error.");
           setIsSubmitting(false);
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem("vidsnap_active_job_id");
+          }
           clearInterval(interval);
         }
       } catch (e) {
@@ -493,6 +592,10 @@ function CreatePageContent() {
                     setJobStatus(null);
                     setRenderedVideoUrl(null);
                     setUploadedImages([]);
+                    if (typeof window !== "undefined") {
+                      sessionStorage.removeItem("vidsnap_active_job_id");
+                      sessionStorage.removeItem("vidsnap_active_project_id");
+                    }
                   }}
                   className="w-full flex items-center justify-center gap-2 rounded-xl border border-zinc-850 hover:border-zinc-750 py-2.5 text-xs text-zinc-400 hover:text-white transition-colors"
                 >
@@ -522,10 +625,23 @@ function CreatePageContent() {
               </div>
 
               {/* Drag and Drop Zone */}
-              <label className="relative flex flex-col items-center justify-center w-full min-h-[160px] rounded-xl border-2 border-dashed border-zinc-800 hover:border-indigo-500/50 bg-zinc-900/40 hover:bg-zinc-900/80 cursor-pointer transition-all p-6 text-center group">
-                <UploadCloud className="h-10 w-10 text-zinc-500 group-hover:text-indigo-400 transition-colors mb-3" />
+              <label
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative flex flex-col items-center justify-center w-full min-h-[160px] rounded-xl border-2 border-dashed transition-all p-6 text-center group cursor-pointer ${
+                  isDragging
+                    ? "border-indigo-400 bg-indigo-500/15 scale-[1.01]"
+                    : "border-zinc-800 hover:border-indigo-500/50 bg-zinc-900/40 hover:bg-zinc-900/80"
+                }`}
+              >
+                <UploadCloud
+                  className={`h-10 w-10 transition-colors mb-3 ${
+                    isDragging ? "text-indigo-400 animate-bounce" : "text-zinc-500 group-hover:text-indigo-400"
+                  }`}
+                />
                 <span className="text-sm font-semibold text-zinc-200 mb-1">
-                  Drop your photos here, or browse
+                  {isDragging ? "Drop images to upload" : "Drop your photos here, or browse"}
                 </span>
                 <span className="text-xs text-zinc-500">
                   Supports JPG, PNG, WebP up to 25MB each
@@ -538,6 +654,20 @@ function CreatePageContent() {
                   onChange={(e) => handleFileSelect(e.target.files)}
                 />
               </label>
+
+              {/* Sample Images Quick Button */}
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-xs text-zinc-500">Need sample images to test?</span>
+                <button
+                  type="button"
+                  onClick={handleLoadSampleImages}
+                  disabled={isLoadingSamples}
+                  className="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all disabled:opacity-50"
+                >
+                  <Sparkles className="h-3 w-3" />
+                  <span>{isLoadingSamples ? "Loading..." : "Load Sample Photos"}</span>
+                </button>
+              </div>
 
               {/* Uploaded Thumbnails List with Reordering */}
               {uploadedImages.length > 0 && (
