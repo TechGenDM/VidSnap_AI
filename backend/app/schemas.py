@@ -24,6 +24,7 @@ class SceneUpdate(BaseModel):
     caption: Optional[str] = None
     visual_direction: Optional[str] = None
     visual_filename: Optional[str] = None
+    scene_role: Optional[str] = None
 
 class UpdateProjectScenes(BaseModel):
     scenes: list[SceneUpdate]

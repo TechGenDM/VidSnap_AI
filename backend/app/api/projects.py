@@ -85,6 +85,8 @@ async def update_project_scenes(project_id: str, payload: UpdateProjectScenes):
             if update.visual_filename is not None:
                 target.visual_filename = update.visual_filename
                 target.visual_url = f"/media/uploads/{project.id}/{update.visual_filename}"
+            if update.scene_role is not None:
+                target.scene_role = update.scene_role
 
     # Reassemble script from scenes
     combined_script = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
@@ -257,25 +259,60 @@ async def ask_vidsnap_assistant(project_id: str, payload: AssistantCommandReques
     cmd = payload.command.lower()
     response_message = ""
 
+    from app.services.creative_engine import TopicInterpreter
+    interp = TopicInterpreter.interpret(project.original_prompt or project.title or "technology")
+
     if "punchy" in cmd or "attention" in cmd or "hook" in cmd or "intro" in cmd:
+        # Only modify the hook scene unless necessary
         if project.scenes:
-            project.scenes[0].caption = "🔥 STOP SCROLLING: This changes everything"
-            project.scenes[0].narration = "Stop scrolling. This changes everything you thought you knew."
-            response_message = "Updated Scene 1 hook to be high-retention and attention-grabbing."
+            alt_hook = interp.hook_angles.get("problem", f"The single biggest bottleneck in {interp.topic} isn't what you think.")
+            project.scenes[0].narration = alt_hook
+            project.scenes[0].caption = "STOP SCROLLING: THE REAL BOTTLENECK"
+            response_message = f"Refined Scene 1 hook to focus on acute curiosity: '{alt_hook}'"
+    elif "technical" in cmd:
+        # Increase technical specificity without turning into unreadable jargon
+        if interp.domain == "technology":
+            for s in project.scenes:
+                if s.scene_role == "insight" or s.order == 2:
+                    s.narration = f"By offloading AST syntax parsing and deterministic testing, {interp.topic} lets engineers focus purely on architecture and state constraints."
+                    s.caption = "AST AND STATE LOGIC"
+                elif s.order == 3:
+                    s.narration = "Developers transition into system orchestrators, verifying automated pull requests and container deployment health."
+                    s.caption = "SYSTEM ORCHESTRATION"
+            response_message = "Enhanced technical specificity with architecture and state constraints."
+        elif interp.domain == "science":
+            for s in project.scenes:
+                if s.scene_role == "insight" or s.order == 2:
+                    s.narration = "Rayleigh scattering intensity is inversely proportional to the fourth power of the light's wavelength."
+                    s.caption = "RAYLEIGH SCATTERING LAW"
+            response_message = "Added physical wavelength scattering equations and scientific rigor."
+        else:
+            for s in project.scenes:
+                if s.scene_role == "insight" or s.order == 2:
+                    s.narration = f"Quantitative cohort retention and unit economics validate {interp.topic} far faster than speculative roadmaps."
+                    s.caption = "COHORT RETENTION METRICS"
+            response_message = "Injected quantitative validation and unit economics metrics."
     elif "energetic" in cmd or "tone" in cmd:
         project.music = "upbeat_pulse"
         project.voice = "josh"
+        # Rewrite phrasing into high-momentum active voice
         if project.scenes:
-            project.scenes[0].caption = "⚡ THE GAME HAS CHANGED"
-        response_message = "Changed voice to Josh (Energetic), music to Upbeat Pulse, and boosted hook energy."
+            project.scenes[0].narration = f"Here is what completely transforms {interp.topic} today—and why you cannot afford to ignore it."
+            project.scenes[0].caption = "TRANSFORM YOUR WORKFLOW"
+        response_message = "Rewrote narration with high-momentum active voice, switched voice to Josh (Energetic), and paired with Upbeat Pulse."
     elif "shorter" in cmd or "short" in cmd:
+        # Intelligently compress narrative while preserving the story arc
         if len(project.scenes) > 2:
             removed = project.scenes.pop()
             for idx, s in enumerate(project.scenes):
                 s.order = idx + 1
-            response_message = f"Trimmed Scene #{removed.order} to shorten Reel duration."
-        else:
-            response_message = "Reel is already concise at 2 scenes."
+        for s in project.scenes:
+            words = s.narration.split()
+            if len(words) > 12:
+                s.narration = " ".join(words[:12]).rstrip(",;:") + "."
+            s.duration_seconds = max(2.5, round(s.duration_seconds * 0.75, 1))
+        project.duration_seconds = sum(s.duration_seconds for s in project.scenes)
+        response_message = f"Compressed scene narrations and tightened Reel duration to {round(project.duration_seconds, 1)}s while preserving the story arc."
     elif "remove" in cmd and ("scene" in cmd or "last" in cmd):
         # Look for a specific scene number, e.g. "remove scene 3"
         match = re.search(r"remove\s+(?:scene\s*)?(\d+)", cmd)

@@ -39,6 +39,7 @@ interface StorySceneItem {
   caption: string;
   visual_direction: string;
   estimated_duration: number;
+  scene_role?: string;
 }
 
 interface PlannedStory {
@@ -1209,6 +1210,11 @@ function CreatePageContent() {
                         <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-zinc-800 text-zinc-200 border border-zinc-700">
                           Scene #{s.order}
                         </span>
+                        {s.scene_role && (
+                          <span className="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                            {s.scene_role}
+                          </span>
+                        )}
                         <span className="text-[11px] text-zinc-400 font-mono">
                           Est. ~{s.estimated_duration}s
                         </span>

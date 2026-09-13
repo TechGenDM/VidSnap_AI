@@ -37,6 +37,8 @@ interface SceneItem {
   narration: string;
   caption: string;
   duration_seconds: number;
+  scene_role?: string;
+  match_quality?: string;
 }
 
 interface ProjectDetail {
@@ -472,6 +474,16 @@ export default function ProjectDetailPage() {
                     <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                       Scene #{scene.order}
                     </span>
+                    {scene.scene_role && (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                        {scene.scene_role}
+                      </span>
+                    )}
+                    {scene.match_quality && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] text-zinc-400 bg-zinc-800/80 border border-zinc-700/60">
+                        {scene.match_quality === "exact" ? "Exact Match" : "Stock Asset"}
+                      </span>
+                    )}
                     {scene.duration_seconds > 0 && (
                       <span className="text-[11px] text-zinc-400 font-mono">
                         ~{scene.duration_seconds}s
@@ -609,6 +621,7 @@ export default function ProjectDetailPage() {
             <div className="flex flex-wrap gap-2 mb-4">
               {[
                 "Make the intro more attention-grabbing",
+                "Make this more technical",
                 "Make the tone more energetic",
                 "Make this shorter",
                 "Remove the last scene",

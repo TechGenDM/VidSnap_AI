@@ -17,6 +17,7 @@ class StoryScene(BaseModel):
     caption: str = Field(..., min_length=1)
     visual_direction: str = Field(..., min_length=3)
     estimated_duration: float = Field(default=4.0, ge=0.5, le=60.0)
+    scene_role: Optional[str] = "insight"
 
 class Story(BaseModel):
     title: str = Field(..., min_length=3)
@@ -24,6 +25,8 @@ class Story(BaseModel):
     scenes: list[StoryScene] = Field(..., min_length=1)
     cta: str = Field(..., min_length=2)
     estimated_duration: float = Field(default=0.0, ge=0.0)
+    hook_strategy: Optional[str] = None
+    quality_score: Optional[float] = None
 
 class Scene(BaseModel):
     id: str
@@ -34,6 +37,8 @@ class Scene(BaseModel):
     narration: str = ""
     caption: str = ""
     duration_seconds: float = 0.0
+    scene_role: Optional[str] = "insight"
+    match_quality: Optional[str] = "approximate"
 
 class Project(BaseModel):
     id: str
