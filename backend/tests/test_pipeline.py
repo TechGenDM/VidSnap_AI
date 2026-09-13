@@ -35,3 +35,15 @@ def test_quick_reel_pipeline():
     project_id = res_data["project_id"]
     job_id = res_data["job_id"]
 
+    # Verify initial queued status
+    status_resp = client.get(f"/api/jobs/{job_id}")
+    assert status_resp.status_code == 200
+    job_info = status_resp.json()
+    assert job_info["status"] in [JobStatus.QUEUED, JobStatus.PROCESSING, JobStatus.COMPLETED]
+
+    # Verify project exists in DB
+    proj_resp = client.get(f"/api/projects/{project_id}")
+    assert proj_resp.status_code == 200
+    proj_data = proj_resp.json()
+    assert proj_data["id"] == project_id
+    assert len(proj_data["scenes"]) == 2
