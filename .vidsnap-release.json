@@ -1,0 +1,10 @@
+{
+  "name": "VidSnap AI",
+  "version": "2.0.0",
+  "milestone": "Quick Reel Vertical Slice",
+  "status": "production-ready",
+  "engine": "FFmpeg 7.x",
+  "tts": "ElevenLabs + local fallback",
+  "backend": "FastAPI + Python 3.12+",
+  "frontend": "Next.js 15 App Router + Tailwind CSS"
+}
