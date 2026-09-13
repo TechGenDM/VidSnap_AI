@@ -54,3 +54,59 @@ def get_audio_duration(file_path: Path) -> float:
         logger.warning(f"Could not parse duration '{duration_str}', defaulting to 5.0")
         return 5.0
 
+def mix_voice_and_music(
+    voice_path: Path,
+    music_key: Optional[str],
+    output_path: Path,
+    music_volume: float = 0.14,
+) -> Path:
+    """
+    Mixes voice narration with background music.
+    Ducks background music beneath speech and fades out music smoothly at narration end.
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    voice_duration = get_audio_duration(voice_path)
+
+    music_info = MUSIC_CATALOG.get(music_key.lower()) if music_key else None
+    music_file = settings.SONGS_DIR / music_info["filename"] if music_info else None
+
+    # If no music or music file missing, just copy/normalize voice
+    if not music_file or not music_file.exists():
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", str(voice_path),
+            "-c:a", "aac",
+            "-b:a", "192k",
+            str(output_path),
+        ]
+        subprocess.run(cmd, check=True, capture_output=True)
+        return output_path
+
+    # Smooth fade out for background music in the last 1.5 seconds
+    fade_start = max(0.0, voice_duration - 1.5)
+
+    # Filtergraph:
+    # 1. Voice at 100% volume
+    # 2. Music looped / trimmed, volume reduced to ~14% (-17dB), fade out at end
+    # 3. amix duration=first (stops when voice stops)
+    filtergraph = (
+        f"[0:a]volume=1.0[voice];"
+        f"[1:a]volume={music_volume},afade=t=out:st={fade_start:.2f}:d=1.5[music];"
+        f"[voice][music]amix=inputs=2:duration=first:dropout_transition=2[aout]"
+    )
+
+    cmd = [
+        "ffmpeg", "-y",
+        "-i", str(voice_path),
+        "-stream_loop", "-1", "-i", str(music_file),
+        "-filter_complex", filtergraph,
+        "-map", "[aout]",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-t", f"{voice_duration:.3f}",
+        str(output_path),
+    ]
+
+    logger.info(f"Mixing voice ({voice_duration:.2f}s) with music '{music_info['title']}'...")
+    subprocess.run(cmd, check=True, capture_output=True)
+    return output_path
