@@ -58,9 +58,9 @@ async def delete_project(project_id: str):
 import re
 from typing import Optional
 from app.models import Story, StoryScene
-from app.schemas import RegenerateSceneRequest
+from app.schemas import RegenerateSceneRequest, RegenerateVisualRequest
 from app.services.story_generation import get_story_provider
-from app.services.visual_provider import local_visual_provider
+from app.services.visual_provider import local_visual_provider, smart_visual_provider
 
 @router.put("/{project_id}/scenes")
 async def update_project_scenes(project_id: str, payload: UpdateProjectScenes):
@@ -240,6 +240,52 @@ async def regenerate_single_scene(
         "message": f"Scene {scene_order} regenerated successfully.",
         "scene": target_scene.model_dump(),
         "project": project.model_dump(),
+    }
+
+@router.post("/{project_id}/scenes/{scene_order}/regenerate-visual")
+async def regenerate_single_scene_visual(
+    project_id: str,
+    scene_order: int,
+    payload: Optional[RegenerateVisualRequest] = None,
+):
+    """
+    Regenerates ONLY a single scene's visual asset.
+    Preserves narration, captions, scene order, and unrelated project state.
+    Supports AI generation with fallback to stock library.
+    """
+    project = db.get_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project {project_id} not found.")
+
+    target_scene = next((s for s in project.scenes if s.order == scene_order), None)
+    if not target_scene:
+        raise HTTPException(status_code=404, detail=f"Scene with order {scene_order} not found.")
+
+    custom_prompt = payload.prompt if payload else None
+    seed = payload.seed if payload else None
+
+    updated_scene, diag = smart_visual_provider.regenerate_single_scene_visual(
+        scene=target_scene,
+        visual_style=project.style,
+        project_id=project.id,
+        custom_prompt=custom_prompt,
+        seed=seed,
+    )
+
+    # Record diagnostic in project history
+    if not hasattr(project, "generation_diagnostics") or project.generation_diagnostics is None:
+        project.generation_diagnostics = []
+    project.generation_diagnostics.append(diag)
+
+    db.save_project(project)
+
+    return {
+        "status": "success",
+        "scene_order": scene_order,
+        "message": f"Visual for scene {scene_order} regenerated successfully.",
+        "scene": updated_scene.model_dump(),
+        "project": project.model_dump(),
+        "diagnostic": diag,
     }
 
 @router.post("/{project_id}/assistant")

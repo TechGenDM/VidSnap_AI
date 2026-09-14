@@ -22,12 +22,19 @@ class VisualPlan(BaseModel):
     transition: str = "crossfade"
     emphasis: str = "key insight"
 
+class CaptionWord(BaseModel):
+    text: str
+    start_time: float
+    end_time: float
+    emphasized: bool = False
+
 class CaptionSegment(BaseModel):
     text: str
     start_time: float = 0.0
     end_time: float = 0.0
+    words: list[CaptionWord] = Field(default_factory=list)
     emphasis_words: list[str] = Field(default_factory=list)
-    style: str = "emphasis"
+    style: str = "kinetic" # "kinetic" | "emphasis" | "highlight"
 
 class StoryScene(BaseModel):
     order: int
@@ -38,6 +45,8 @@ class StoryScene(BaseModel):
     scene_role: Optional[str] = "insight"
     visual_plan: Optional[VisualPlan] = None
     caption_segment: Optional[CaptionSegment] = None
+    caption_segments: list[CaptionSegment] = Field(default_factory=list)
+    visual_source: Optional[str] = "stock" # "ai" | "stock" | "fallback_stock"
 
 class Story(BaseModel):
     title: str = Field(..., min_length=3)
@@ -62,8 +71,11 @@ class Scene(BaseModel):
     match_quality: Optional[str] = "approximate"
     visual_plan: Optional[VisualPlan] = None
     caption_segment: Optional[CaptionSegment] = None
+    caption_segments: list[CaptionSegment] = Field(default_factory=list)
     motion: Optional[str] = "slow_zoom_in"
     transition: Optional[str] = "crossfade"
+    visual_source: Optional[str] = "stock" # "ai" | "stock" | "fallback_stock"
+    alignment_source: Optional[str] = "estimated" # "native" | "transcription" | "estimated"
 
 class Project(BaseModel):
     id: str
@@ -81,12 +93,14 @@ class Project(BaseModel):
     scenes: list[Scene] = Field(default_factory=list)
     mode: str = "quick" # "quick" | "ai"
     source_type: str = "quick" # "quick" | "ai" | "future_repurpose"
+    visual_source: str = "auto" # "auto" | "ai" | "local"
     original_prompt: Optional[str] = None
     audience: Optional[str] = None
     tone: Optional[str] = None
     target_length: Optional[str] = None
     generated_story: Optional[Story] = None
     render_history: list[dict] = Field(default_factory=list)
+    generation_diagnostics: list[dict] = Field(default_factory=list)
 
 class Job(BaseModel):
     id: str

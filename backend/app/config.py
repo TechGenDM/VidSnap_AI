@@ -19,10 +19,14 @@ class Settings(BaseSettings):
     THUMBNAILS_DIR: Path = PROJECT_ROOT / "media" / "thumbnails"
     SONGS_DIR: Path = PROJECT_ROOT / "media" / "songs"
     TEMPLATES_DIR: Path = PROJECT_ROOT / "media" / "templates"
+    CACHE_DIR: Path = PROJECT_ROOT / "media" / "cache"
+    AI_ASSETS_DIR: Path = PROJECT_ROOT / "media" / "cache" / "ai_visuals"
     
     # API Secrets
     ELEVENLABS_API_KEY: str = ""
     OPENAI_API_KEY: str = ""
+    POLLINATIONS_API_KEY: str = ""
+    POLLINATIONS_IMAGE_MODEL: str = "flux"
     
     # Video & Audio defaults
     VIDEO_WIDTH: int = 1080
@@ -49,5 +53,8 @@ for d in [
     settings.REELS_DIR,
     settings.THUMBNAILS_DIR,
     settings.SONGS_DIR,
+    settings.TEMPLATES_DIR,
+    settings.CACHE_DIR,
+    settings.AI_ASSETS_DIR,
 ]:
     d.mkdir(parents=True, exist_ok=True)

@@ -79,12 +79,33 @@ def render_scene_segment(
         target_height=target_height,
     )
 
-    # 2. Build safe caption overlay
+    # 2. Build safe caption overlay (ASS kinetic subtitles preferred, drawtext fallback)
     caption_filter = ""
     caption_file = None
+    ass_file = None
     caption_text = item.caption.strip()
 
-    if caption_text:
+    has_kinetic_segments = bool(item.caption_segments and any(s.words for s in item.caption_segments))
+
+    if has_kinetic_segments:
+        try:
+            from app.services.caption_generator import ASSCaptionGenerator
+            ass_path = output_segment_path.with_suffix(".ass")
+            ASSCaptionGenerator.generate_ass_file(
+                segments=item.caption_segments,
+                output_path=ass_path,
+                scene_offset=0.0,
+                style="kinetic",
+            )
+            ass_file = ass_path
+            # Escape path for ffmpeg filter: colons and backslashes
+            escaped_ass_path = str(ass_path.resolve()).replace("\\", "/").replace(":", "\\:")
+            caption_filter = f",ass='{escaped_ass_path}'"
+        except Exception as e:
+            logger.warning(f"ASS kinetic caption generation failed ({e}), falling back to drawtext.")
+            has_kinetic_segments = False
+
+    if not has_kinetic_segments and caption_text:
         wrapped_caption = wrap_caption(caption_text)
         caption_file = output_segment_path.with_suffix(".caption.txt")
         caption_file.write_text(wrapped_caption, encoding="utf-8")
@@ -122,6 +143,8 @@ def render_scene_segment(
     finally:
         if caption_file and caption_file.exists():
             caption_file.unlink(missing_ok=True)
+        if ass_file and ass_file.exists():
+            ass_file.unlink(missing_ok=True)
 
     return output_segment_path
 

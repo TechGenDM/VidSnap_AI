@@ -35,6 +35,8 @@ out/
 media/uploads/
 media/reels/
 media/thumbnails/
+media/cache/
+media/acceptance_frames/
 user_uploads/
 static/reels/
 test_final.mp4

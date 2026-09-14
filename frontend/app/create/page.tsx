@@ -133,6 +133,7 @@ function CreatePageContent() {
   const [aiStyle, setAiStyle] = useState("Minimal Tech");
   const [aiVoice, setAiVoice] = useState("adam");
   const [aiMusic, setAiMusic] = useState("ambient_chill");
+  const [aiVisualSource, setAiVisualSource] = useState("auto"); // "auto" | "ai" | "local"
 
   const [isPlanning, setIsPlanning] = useState(false);
   const [plannedStory, setPlannedStory] = useState<PlannedStory | null>(null);
@@ -332,6 +333,7 @@ function CreatePageContent() {
           visual_style: aiStyle,
           voice: aiVoice,
           music: aiMusic,
+          visual_source: aiVisualSource,
         }),
       });
 
@@ -1103,6 +1105,22 @@ function CreatePageContent() {
                     <option value="none">None (Voice Only)</option>
                   </select>
                 </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5 flex items-center justify-between">
+                    <span>Visual Source</span>
+                    <span className="text-[10px] text-purple-400 font-mono">Real AI</span>
+                  </label>
+                  <select
+                    value={aiVisualSource}
+                    onChange={(e) => setAiVisualSource(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="auto">Smart (Balanced & Fast)</option>
+                    <option value="ai">AI Generated (Full AI Visuals)</option>
+                    <option value="local">Stock (Local Templates)</option>
+                  </select>
+                </div>
               </div>
 
               {/* Primary CTA */}
@@ -1248,8 +1266,12 @@ function CreatePageContent() {
                           Est. ~{s.estimated_duration}s
                         </span>
                       </div>
-                      <span className="text-[11px] text-zinc-500 italic">
-                        Visual matched via Local Asset Library
+                      <span className="text-[11px] text-purple-400/90 font-medium">
+                        {aiVisualSource === "ai"
+                          ? "✨ AI Generated Visual"
+                          : aiVisualSource === "local"
+                          ? "📷 Stock Library Asset"
+                          : "⚡ Smart Visual Engine"}
                       </span>
                     </div>
 

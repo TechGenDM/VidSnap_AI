@@ -17,6 +17,7 @@ class AIReelCreate(BaseModel):
     visual_style: str = "Minimal Tech"
     voice: str = "adam"
     music: Optional[str] = "ambient_chill"
+    visual_source: str = "auto" # "auto" | "ai" | "local"
 
 class SceneUpdate(BaseModel):
     id: str
@@ -28,12 +29,17 @@ class SceneUpdate(BaseModel):
     motion: Optional[str] = None
     transition: Optional[str] = None
     visual_plan: Optional[VisualPlan] = None
+    visual_source: Optional[str] = None
 
 class UpdateProjectScenes(BaseModel):
     scenes: list[SceneUpdate]
 
 class RegenerateSceneRequest(BaseModel):
     feedback: Optional[str] = None
+
+class RegenerateVisualRequest(BaseModel):
+    prompt: Optional[str] = None
+    seed: Optional[int] = None
 
 class AssistantRequest(BaseModel):
     command: str
@@ -71,12 +77,14 @@ class ProjectResponse(BaseModel):
     scenes: list[Scene]
     mode: str
     source_type: str = "quick"
+    visual_source: str = "auto"
     original_prompt: Optional[str] = None
     audience: Optional[str] = None
     tone: Optional[str] = None
     target_length: Optional[str] = None
     generated_story: Optional[Story] = None
     render_history: list[dict] = Field(default_factory=list)
+    generation_diagnostics: list[dict] = Field(default_factory=list)
 
 class MusicTrackResponse(BaseModel):
     id: str

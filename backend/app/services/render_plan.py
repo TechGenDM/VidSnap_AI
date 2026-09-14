@@ -28,6 +28,7 @@ class SceneRenderItem:
     transition: str
     visual_plan: Optional[VisualPlan] = None
     caption_segment: Optional[CaptionSegment] = None
+    caption_segments: list[CaptionSegment] = field(default_factory=list)
 
 
 @dataclass
@@ -151,17 +152,22 @@ class RenderPlanBuilder:
                 else:
                     transition = "crossfade"
 
-            # Build caption segment
-            cap_seg = scene.caption_segment
-            if not cap_seg and scene.caption:
+            # Build caption segments
+            cap_segments = scene.caption_segments or []
+            if not cap_segments and scene.caption_segment:
+                cap_segments = [scene.caption_segment]
+            elif not cap_segments and scene.caption:
                 cap_words = [w.strip() for w in scene.caption.split() if w.strip()]
                 cap_seg = CaptionSegment(
                     text=scene.caption,
                     start_time=0.0,
                     end_time=durations[idx],
                     emphasis_words=[cap_words[0]] if cap_words else [],
-                    style="bold_pill",
+                    style="kinetic",
                 )
+                cap_segments = [cap_seg]
+
+            cap_seg = cap_segments[0] if cap_segments else None
 
             item = SceneRenderItem(
                 scene_id=scene.id,
@@ -173,6 +179,7 @@ class RenderPlanBuilder:
                 transition=transition,
                 visual_plan=scene.visual_plan,
                 caption_segment=cap_seg,
+                caption_segments=cap_segments,
             )
             scene_items.append(item)
 

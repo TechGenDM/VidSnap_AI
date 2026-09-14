@@ -46,14 +46,28 @@ class Database:
         data = self._read_data()
         p_dict = data.get("projects", {}).get(project_id)
         if p_dict:
-            return Project(**p_dict)
+            try:
+                return Project(**p_dict)
+            except Exception:
+                return None
         return None
 
     def list_projects(self) -> list[Project]:
         data = self._read_data()
         projects_dict = data.get("projects", {})
-        # Return sorted by created_at descending
-        projects = [Project(**p) for p in projects_dict.values()]
+        # Return sorted by created_at descending, gracefully skipping any legacy corrupt entries
+        projects: list[Project] = []
+        for p in projects_dict.values():
+            try:
+                # Self-healing: if scenes is a 2-element tuple/list with [scenes, diagnostics]
+                scenes = p.get("scenes")
+                if isinstance(scenes, list) and len(scenes) == 2 and isinstance(scenes[0], list) and isinstance(scenes[1], list):
+                    p["scenes"] = scenes[0]
+                    if not p.get("generation_diagnostics"):
+                        p["generation_diagnostics"] = scenes[1]
+                projects.append(Project(**p))
+            except Exception:
+                continue
         projects.sort(key=lambda x: x.created_at, reverse=True)
         return projects
 

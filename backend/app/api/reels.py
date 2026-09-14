@@ -114,13 +114,13 @@ async def create_quick_reel(
     }
 
 from app.services.story_generation import get_story_provider
-from app.services.visual_provider import local_visual_provider
+from app.services.visual_provider import smart_visual_provider
 
 @router.post("/ai")
 async def create_ai_reel(payload: AIReelCreate):
     """
     AI Reel Creation endpoint:
-    Accepts idea prompt and parameters, produces structured Story, matches local visuals,
+    Accepts idea prompt and parameters, produces structured Story, matches or generates visuals,
     and returns canonical project state for human review without auto-rendering.
     """
     project_id = str(uuid.uuid4())
@@ -137,14 +137,16 @@ async def create_ai_reel(payload: AIReelCreate):
         variation_seed=0,
     )
 
-    # 2. Match visuals via LocalAssetProvider with structured visual intelligence
-    scenes = local_visual_provider.match_visuals_for_scenes(
+    # 2. Match or generate visuals via SmartVisualProvider (supports local, ai, and auto modes)
+    scenes = smart_visual_provider.match_visuals_for_scenes(
         scenes=story.scenes,
         visual_style=payload.visual_style,
         project_id=project_id,
         domain=story.domain or "technology",
         tone=payload.tone,
+        visual_source_mode=payload.visual_source,
     )
+    diagnostics = smart_visual_provider.last_diagnostics
 
     # 3. Formulate narration script from scenes
     full_script = " ".join([s.narration for s in story.scenes if s.narration])
@@ -163,12 +165,14 @@ async def create_ai_reel(payload: AIReelCreate):
         scenes=scenes,
         mode="ai",
         source_type="ai",
+        visual_source=payload.visual_source,
         original_prompt=payload.prompt,
         audience=payload.audience,
         tone=payload.tone,
         target_length=payload.length,
         generated_story=story,
         render_history=[],
+        generation_diagnostics=diagnostics,
     )
     db.save_project(project)
 

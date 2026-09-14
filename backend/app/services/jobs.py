@@ -103,7 +103,7 @@ def process_quick_reel_job(job_id: str):
         db.save_job(job)
 
         raw_voice_path = project_dir / "voice_raw.mp3"
-        tts_service.generate_speech(
+        _, native_alignment = tts_service.generate_speech_with_alignment(
             text=project.script,
             voice_key=project.voice,
             output_path=raw_voice_path,
@@ -126,12 +126,14 @@ def process_quick_reel_job(job_id: str):
             output_path=final_audio_path,
         )
 
-        # STEP 4: Captions & Story Timing
+        # STEP 4: Speech Alignment & Kinetic Captions
         job.status = JobStatus.GENERATING_CAPTIONS
-        job.step = "Designing kinetic captions & scene timing"
+        job.step = "Synchronizing speech alignment & kinetic captions"
         job.progress_percent = 65
         job.updated_at = now_iso()
         db.save_job(job)
+
+        from app.services.speech_alignment import SpeechAlignmentEngine
 
         # Respect explicit scene captions if already present (AI Story or user edit)
         existing_captions = [s.caption.strip() for s in project.scenes if s.caption and s.caption.strip()]
@@ -142,6 +144,39 @@ def process_quick_reel_job(job_id: str):
             for idx, c in enumerate(captions):
                 if idx < len(project.scenes):
                     project.scenes[idx].caption = c
+
+        # Calculate proportional scene durations to bound word-level alignment
+        num_scenes = len(project.scenes)
+        est_durs = [s.duration_seconds for s in project.scenes if s.duration_seconds and s.duration_seconds > 0]
+        if len(est_durs) == num_scenes and sum(est_durs) > 0:
+            total_est = sum(est_durs)
+            proportional_durations = [(d / total_est) * voice_duration for d in est_durs]
+        else:
+            proportional_durations = [voice_duration / max(1, num_scenes)] * num_scenes
+
+        # Align speech for each scene into kinetic CaptionSegments
+        align_sources_used = []
+        for idx, scene in enumerate(project.scenes):
+            scene_dur = proportional_durations[idx] if idx < len(proportional_durations) else 4.0
+            narration_text = scene.narration or scene.caption
+            words, segments, align_src = SpeechAlignmentEngine.align_scene(
+                narration=narration_text,
+                scene_duration=scene_dur,
+                audio_path=raw_voice_path,
+                native_alignment=native_alignment,
+                style="kinetic",
+            )
+            scene.caption_segments = segments
+            scene.alignment_source = align_src
+            align_sources_used.append(align_src)
+            if segments:
+                scene.caption_segment = segments[0]
+
+        primary_alignment_source = (
+            "native" if "native" in align_sources_used
+            else ("transcription" if "transcription" in align_sources_used else "estimated")
+        )
+        logger.info(f"Speech alignment completed for {num_scenes} scenes using '{primary_alignment_source}' source.")
 
         # STEP 5: Visual Planning & RenderPlan Construction
         job.step = "Constructing cinematic render plan with camera motion"

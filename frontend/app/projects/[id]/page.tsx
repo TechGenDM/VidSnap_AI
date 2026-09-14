@@ -53,6 +53,9 @@ interface SceneItem {
   visual_plan?: VisualPlanData;
   motion?: string;
   transition?: string;
+  visual_source?: string;
+  alignment_source?: string;
+  caption_segments?: any[];
 }
 
 interface ProjectDetail {
@@ -91,6 +94,7 @@ export default function ProjectDetailPage() {
   const [assistantFeedback, setAssistantFeedback] = useState<string | null>(null);
   const [isAssistantWorking, setIsAssistantWorking] = useState(false);
   const [regeneratingSceneId, setRegeneratingSceneId] = useState<string | null>(null);
+  const [regeneratingVisualSceneId, setRegeneratingVisualSceneId] = useState<string | null>(null);
   const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
 
   useEffect(() => {
@@ -151,6 +155,28 @@ export default function ProjectDetailPage() {
       console.error("Regenerate scene failed", e);
     } finally {
       setRegeneratingSceneId(null);
+    }
+  };
+
+  const handleRegenerateVisual = async (sceneOrder: number, sceneId: string) => {
+    if (!project) return;
+    setRegeneratingVisualSceneId(sceneId);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/regenerate-visual`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to regenerate visual.");
+      }
+      const data = await res.json();
+      setProject(data.project);
+    } catch (e: any) {
+      alert("Could not regenerate visual: " + e.message);
+    } finally {
+      setRegeneratingVisualSceneId(null);
     }
   };
 
@@ -503,9 +529,24 @@ export default function ProjectDetailPage() {
                         {(scene.visual_plan?.transition || scene.transition || "").replace(/_/g, " ")}
                       </span>
                     )}
-                    {scene.match_quality && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] text-zinc-400 bg-zinc-800/80 border border-zinc-700/60">
-                        {scene.match_quality === "exact" ? "Exact Match" : "Stock Asset"}
+                    {scene.visual_source && (
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-semibold border ${
+                        scene.visual_source === "ai"
+                          ? "bg-purple-500/10 text-purple-300 border-purple-500/30"
+                          : scene.visual_source === "fallback_stock"
+                          ? "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                          : "bg-zinc-800 text-zinc-300 border-zinc-700"
+                      }`}>
+                        {scene.visual_source === "ai"
+                          ? "✨ AI Generated"
+                          : scene.visual_source === "fallback_stock"
+                          ? "⚡ Stock Fallback"
+                          : "📷 Stock Library"}
+                      </span>
+                    )}
+                    {scene.alignment_source && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-400 bg-zinc-800/80 border border-zinc-700/60">
+                        sync: {scene.alignment_source}
                       </span>
                     )}
                     {scene.duration_seconds > 0 && (
@@ -565,16 +606,35 @@ export default function ProjectDetailPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start gap-4">
-                  {/* Visual Thumbnail */}
-                  <div className="relative w-full sm:w-28 aspect-[9/16] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
-                    <img
-                      src={scene.visual_url}
-                      alt={`Scene ${scene.order}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
-                      #{scene.order}
+                  {/* Visual Thumbnail & Visual Action */}
+                  <div className="flex flex-col gap-2 w-full sm:w-32 flex-shrink-0">
+                    <div className="relative aspect-[9/16] sm:aspect-square w-full rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 group">
+                      <img
+                        src={scene.visual_url}
+                        alt={`Scene ${scene.order}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-1.5 left-1.5 bg-black/75 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
+                        #{scene.order}
+                      </div>
+                      {scene.visual_source === "ai" && (
+                        <div className="absolute top-1.5 right-1.5 bg-purple-900/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-purple-200">
+                          AI
+                        </div>
+                      )}
                     </div>
+
+                    {/* Regenerate Visual Button */}
+                    <button
+                      type="button"
+                      disabled={regeneratingVisualSceneId === scene.id}
+                      onClick={() => handleRegenerateVisual(scene.order, scene.id)}
+                      className="w-full flex items-center justify-center gap-1 py-1 px-2 rounded-lg text-[10px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/25 transition-all disabled:opacity-40"
+                      title="Regenerate only this scene visual"
+                    >
+                      <Sparkles className={`h-3 w-3 ${regeneratingVisualSceneId === scene.id ? "animate-spin text-purple-400" : "text-purple-400"}`} />
+                      <span>{regeneratingVisualSceneId === scene.id ? "Generating..." : "Regen Visual"}</span>
+                    </button>
                   </div>
 
                   {/* Text & Direction Fields */}
