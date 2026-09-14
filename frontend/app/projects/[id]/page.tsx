@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,6 +26,7 @@ import {
   RotateCcw,
   Eye,
   Flame,
+  Film,
 } from "lucide-react";
 
 interface VisualPlanData {
@@ -90,12 +91,25 @@ export default function ProjectDetailPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isRendering, setIsRendering] = useState(false);
   const [renderStep, setRenderStep] = useState("");
+  
+  // Selected scene for storyboard <-> video synchronization
+  const [selectedSceneIndex, setSelectedSceneIndex] = useState<number>(0);
+
+  // Mobile tab switcher: "storyboard" vs "preview"
+  const [mobileTab, setMobileTab] = useState<"storyboard" | "preview">("storyboard");
+
+  // Ask VidSnap compact command bar
   const [assistantPrompt, setAssistantPrompt] = useState("");
   const [assistantFeedback, setAssistantFeedback] = useState<string | null>(null);
   const [isAssistantWorking, setIsAssistantWorking] = useState(false);
+
+  // Scene regeneration flags
   const [regeneratingSceneId, setRegeneratingSceneId] = useState<string | null>(null);
   const [regeneratingVisualSceneId, setRegeneratingVisualSceneId] = useState<string | null>(null);
   const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
+
+  // HTML5 Video ref to seek when selecting scenes in completed reels
+  const videoPlayerRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     if (!projectId) return;
@@ -119,6 +133,24 @@ export default function ProjectDetailPage() {
 
     loadProject();
   }, [projectId]);
+
+  // Sync selected scene with video playback time if video is present
+  const handleSelectScene = (index: number) => {
+    setSelectedSceneIndex(index);
+    if (project?.video_url && videoPlayerRef.current && project.scenes) {
+      // Calculate scene start timestamp
+      let startSecs = 0;
+      for (let i = 0; i < index; i++) {
+        startSecs += project.scenes[i]?.duration_seconds || 4;
+      }
+      try {
+        videoPlayerRef.current.currentTime = startSecs;
+        videoPlayerRef.current.play().catch(() => {});
+      } catch (e) {
+        console.error("Failed to seek video", e);
+      }
+    }
+  };
 
   const handleSceneChange = (
     sceneId: string,
@@ -173,6 +205,8 @@ export default function ProjectDetailPage() {
       }
       const data = await res.json();
       setProject(data.project);
+      setAssistantFeedback(`✨ Visual for Scene #${sceneOrder} regenerated!`);
+      setTimeout(() => setAssistantFeedback(null), 3000);
     } catch (e: any) {
       alert("Could not regenerate visual: " + e.message);
     } finally {
@@ -194,6 +228,7 @@ export default function ProjectDetailPage() {
       if (res.ok) {
         const data = await res.json();
         setProject(data.project);
+        setSelectedSceneIndex(0);
         setAssistantFeedback(`Deleted Scene #${sceneOrder}.`);
         setTimeout(() => setAssistantFeedback(null), 3000);
       }
@@ -212,12 +247,12 @@ export default function ProjectDetailPage() {
     newScenes[index] = newScenes[targetIndex];
     newScenes[targetIndex] = temp;
 
-    // Re-index orders
     newScenes.forEach((s, idx) => {
       s.order = idx + 1;
     });
 
     setProject({ ...project, scenes: newScenes });
+    setSelectedSceneIndex(targetIndex);
   };
 
   const handleRegenerateStory = async () => {
@@ -230,6 +265,7 @@ export default function ProjectDetailPage() {
       if (res.ok) {
         const data = await res.json();
         setProject(data.project);
+        setSelectedSceneIndex(0);
         setAssistantFeedback("✨ Story regenerated with a new hook & angle!");
         setTimeout(() => setAssistantFeedback(null), 4000);
       }
@@ -301,7 +337,7 @@ export default function ProjectDetailPage() {
               if (projRes.ok) {
                 setProject(await projRes.json());
               }
-              setAssistantFeedback("Reel re-rendered successfully! 🎉");
+              setAssistantFeedback("Reel rendered successfully! 🎉");
               setTimeout(() => setAssistantFeedback(null), 4000);
             } else if (jobData.status === "failed") {
               clearInterval(interval);
@@ -315,7 +351,7 @@ export default function ProjectDetailPage() {
       }, 1000);
     } catch (err: any) {
       setIsRendering(false);
-      setAssistantFeedback(err.message || "Failed to trigger re-render.");
+      setAssistantFeedback(err.message || "Failed to trigger render.");
     }
   };
 
@@ -362,29 +398,27 @@ export default function ProjectDetailPage() {
   if (notFound) {
     return (
       <div className="mx-auto max-w-lg px-4 py-24 text-center">
-        <div className="glass-card rounded-2xl p-8 border-red-500/30 bg-zinc-900/60 shadow-xl">
+        <div className="glass-card rounded-3xl p-8 border-red-500/30 bg-zinc-900/60 shadow-2xl">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500/10 text-red-400 mx-auto mb-4 border border-red-500/20">
             <AlertCircle className="h-6 w-6" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">Project Not Found</h2>
           <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
             We couldn't locate a story project with ID: <br />
-            <code className="text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded text-xs mt-1 inline-block font-mono">
+            <code className="text-zinc-300 bg-white/[0.05] px-2 py-0.5 rounded text-xs mt-1 inline-block font-mono">
               {projectId}
             </code>
-            <br />
-            The project may have been deleted or the link is incorrect.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link
               href="/projects"
-              className="rounded-xl bg-zinc-800 hover:bg-zinc-700 px-5 py-2.5 text-xs font-semibold text-white transition-all"
+              className="rounded-xl bg-white/[0.05] hover:bg-white/[0.1] px-5 py-2.5 text-xs font-semibold text-white transition-all"
             >
               ← Return to Projects
             </Link>
             <Link
               href="/create"
-              className="rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-xs font-semibold text-white transition-all shadow-lg shadow-indigo-500/20"
+              className="rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
               Create New Reel
             </Link>
@@ -397,62 +431,69 @@ export default function ProjectDetailPage() {
   if (isLoading || !project) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-        <div className="h-8 w-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin mx-auto mb-4" />
-        <p className="text-sm text-zinc-400">Loading your story...</p>
+        <div className="h-8 w-8 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto mb-4" />
+        <p className="text-sm text-zinc-400">Opening VidSnap Studio Editor...</p>
       </div>
     );
   }
 
+  const currentScene: SceneItem | null =
+    project.scenes && project.scenes.length > 0
+      ? project.scenes[selectedSceneIndex] || project.scenes[0]
+      : null;
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 w-full">
       {/* Top Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-zinc-800/80">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/[0.08]">
+        <div className="flex items-center gap-3.5">
           <Link
             href="/projects"
-            className="p-2 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            aria-label="Back to Projects"
+            className="p-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="text-xl font-bold text-white truncate max-w-sm sm:max-w-md">
+              <h1 className="text-lg sm:text-xl font-bold text-white truncate max-w-xs sm:max-w-md">
                 {project.title}
               </h1>
-              <span className="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full uppercase">
+              <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-2 py-0.5 rounded-full uppercase">
                 {project.mode} Reel
               </span>
             </div>
             <p className="text-xs text-zinc-400">
-              Story-driven scene editor • Total duration: ~{project.duration_seconds}s
+              Story Editor • Total duration: ~{Math.round(project.duration_seconds)}s • {project.scenes.length} Scenes
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        {/* Primary Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={saveScenes}
             disabled={isSaving || isRendering}
-            className="flex items-center gap-1.5 rounded-xl border border-zinc-750 bg-zinc-850 hover:bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.07] px-3.5 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
           >
-            <Save className="h-3.5 w-3.5" />
+            <Save className="h-3.5 w-3.5 text-cyan-400" />
             <span>{isSaving ? "Saving..." : "Save Story"}</span>
           </button>
 
           <button
             onClick={handleReRender}
             disabled={isRendering || isSaving}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-500/20 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-indigo-500 px-4 py-2 text-xs font-bold text-white shadow-md shadow-cyan-500/20 transition-all disabled:opacity-50 active:scale-98"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isRendering ? "animate-spin" : ""}`} />
-            <span>{isRendering ? "Rendering..." : "Render Reel"}</span>
+            <span>{isRendering ? "Rendering..." : project.video_url ? "Re-Render Reel" : "Render Reel"}</span>
           </button>
 
           {project.video_url && (
             <a
               href={project.video_url}
               download={`${project.title}.mp4`}
-              className="flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-zinc-200 transition-all"
+              className="flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.07] px-3 py-2 text-xs font-semibold text-zinc-200 transition-all"
             >
               <Download className="h-3.5 w-3.5" />
               <span>MP4</span>
@@ -462,294 +503,293 @@ export default function ProjectDetailPage() {
           <button
             onClick={handleDeleteProject}
             disabled={isRendering}
-            className="p-2 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-2 rounded-xl border border-white/[0.1] bg-white/[0.02] text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
             title="Delete Project"
+            aria-label="Delete Project"
           >
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Re-rendering banner */}
+      {/* Rendering Banner */}
       {isRendering && (
-        <div className="mb-8 flex items-center gap-3 rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-xs text-indigo-200 animate-pulse">
-          <RefreshCw className="h-4 w-4 animate-spin text-indigo-400 flex-shrink-0" />
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4 text-xs text-cyan-200 animate-pulse">
+          <RefreshCw className="h-4 w-4 animate-spin text-cyan-400 flex-shrink-0" />
           <div>
-            <span className="font-semibold block text-white mb-0.5">VidSnap is re-rendering your story</span>
-            <span>{renderStep || "Processing speech synchronization and 1080x1920 video canvas..."}</span>
+            <span className="font-semibold block text-white mb-0.5">VidSnap is rendering your story into video</span>
+            <span>{renderStep || "Processing speech synchronization and 1080×1920 video canvas..."}</span>
           </div>
         </div>
       )}
 
+      {/* Mobile Tab Switcher */}
+      <div className="lg:hidden flex items-center gap-1.5 p-1 mb-6 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+        <button
+          type="button"
+          onClick={() => setMobileTab("storyboard")}
+          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+            mobileTab === "storyboard"
+              ? "bg-white/[0.1] text-white border border-white/[0.15]"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          Storyboard ({project.scenes.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab("preview")}
+          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+            mobileTab === "preview"
+              ? "bg-white/[0.1] text-white border border-white/[0.15]"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          Video Preview
+        </button>
+      </div>
+
+      {/* Desktop 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Scene/Story Cards ("VidSnap edits the story, not the timeline") */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        {/* Left Column: Storyboard Scene Cards */}
+        <div className={`lg:col-span-7 flex flex-col gap-6 ${mobileTab === "preview" ? "hidden lg:flex" : "flex"}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-indigo-400" />
-              <h2 className="text-base font-bold text-white">Story Scenes</h2>
+              <Layers className="h-4 w-4 text-cyan-400" />
+              <h2 className="text-base font-bold text-white">Storyboard Scenes</h2>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleRegenerateStory}
-                disabled={isRegeneratingStory || isRendering}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-300 hover:text-white bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-50"
-              >
-                <RefreshCw className={`h-3 w-3 ${isRegeneratingStory ? "animate-spin" : ""}`} />
-                <span>{isRegeneratingStory ? "Regenerating..." : "Regenerate Full Story"}</span>
-              </button>
-            </div>
+            <span className="text-xs text-zinc-500">
+              Click any scene to focus companion preview
+            </span>
           </div>
 
-          {/* Scene Cards */}
+          {/* Scene Cards List */}
           <div className="space-y-4">
-            {project.scenes.map((scene, idx) => (
-              <div
-                key={scene.id}
-                className="glass-card rounded-2xl p-5 border-zinc-800 hover:border-zinc-700 transition-all flex flex-col gap-4"
-              >
-                <div className="flex items-center justify-between border-b border-zinc-800/60 pb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                      Scene #{scene.order}
-                    </span>
-                    {scene.scene_role && (
-                      <span className="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                        {scene.scene_role}
-                      </span>
-                    )}
-                    {(scene.visual_plan?.motion || scene.motion) && (
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-blue-500/10 text-blue-300 border border-blue-500/20 capitalize">
-                        {(scene.visual_plan?.motion || scene.motion || "").replace(/_/g, " ")}
-                      </span>
-                    )}
-                    {(scene.visual_plan?.transition || scene.transition) && (
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 capitalize">
-                        {(scene.visual_plan?.transition || scene.transition || "").replace(/_/g, " ")}
-                      </span>
-                    )}
-                    {scene.visual_source && (
-                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-semibold border ${
-                        scene.visual_source === "ai"
-                          ? "bg-purple-500/10 text-purple-300 border-purple-500/30"
-                          : scene.visual_source === "fallback_stock"
-                          ? "bg-amber-500/10 text-amber-300 border-amber-500/30"
-                          : "bg-zinc-800 text-zinc-300 border-zinc-700"
-                      }`}>
-                        {scene.visual_source === "ai"
-                          ? "✨ AI Generated"
-                          : scene.visual_source === "fallback_stock"
-                          ? "⚡ Stock Fallback"
-                          : "📷 Stock Library"}
-                      </span>
-                    )}
-                    {scene.alignment_source && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-400 bg-zinc-800/80 border border-zinc-700/60">
-                        sync: {scene.alignment_source}
-                      </span>
-                    )}
-                    {scene.duration_seconds > 0 && (
-                      <span className="text-[11px] text-zinc-400 font-mono">
-                        ~{scene.duration_seconds}s
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    {/* Move Up */}
-                    <button
-                      type="button"
-                      disabled={idx === 0}
-                      onClick={() => moveScene(idx, "up")}
-                      className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 transition-all"
-                      title="Move Scene Up"
-                    >
-                      <ArrowUp className="h-3.5 w-3.5" />
-                    </button>
-
-                    {/* Move Down */}
-                    <button
-                      type="button"
-                      disabled={idx === project.scenes.length - 1}
-                      onClick={() => moveScene(idx, "down")}
-                      className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 transition-all"
-                      title="Move Scene Down"
-                    >
-                      <ArrowDown className="h-3.5 w-3.5" />
-                    </button>
-
-                    {/* Regenerate Scene */}
-                    <button
-                      type="button"
-                      disabled={regeneratingSceneId === scene.id}
-                      onClick={() => handleRegenerateScene(scene.order, scene.id)}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-40 ml-1"
-                      title="Regenerate this scene narration & caption"
-                    >
-                      <RotateCcw className={`h-3 w-3 ${regeneratingSceneId === scene.id ? "animate-spin" : ""}`} />
-                      <span>{regeneratingSceneId === scene.id ? "Regenerating..." : "Regen Scene"}</span>
-                    </button>
-
-                    {/* Delete Scene */}
-                    {project.scenes.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteScene(scene.order)}
-                        className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all ml-1"
-                        title="Delete Scene"
+            {project.scenes.map((scene, idx) => {
+              const isSelected = selectedSceneIndex === idx;
+              return (
+                <div
+                  key={scene.id}
+                  onClick={() => handleSelectScene(idx)}
+                  className={`glass-card rounded-2xl p-5 transition-all cursor-pointer flex flex-col gap-4 ${
+                    isSelected
+                      ? "glass-card-active"
+                      : "border-white/[0.08] hover:border-white/[0.15]"
+                  }`}
+                >
+                  {/* Top Header of Scene Card */}
+                  <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`px-2 py-0.5 rounded-md text-[11px] font-mono font-bold ${
+                          isSelected
+                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                            : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                        }`}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-start gap-4">
-                  {/* Visual Thumbnail & Visual Action */}
-                  <div className="flex flex-col gap-2 w-full sm:w-32 flex-shrink-0">
-                    <div className="relative aspect-[9/16] sm:aspect-square w-full rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 group">
-                      <img
-                        src={scene.visual_url}
-                        alt={`Scene ${scene.order}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-1.5 left-1.5 bg-black/75 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
-                        #{scene.order}
-                      </div>
-                      {scene.visual_source === "ai" && (
-                        <div className="absolute top-1.5 right-1.5 bg-purple-900/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-purple-200">
-                          AI
-                        </div>
+                        Scene #{scene.order}
+                      </span>
+                      {scene.scene_role && (
+                        <span className="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                          {scene.scene_role}
+                        </span>
+                      )}
+                      {(scene.visual_plan?.motion || scene.motion) && (
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-blue-500/10 text-blue-300 border border-blue-500/20 capitalize">
+                          {(scene.visual_plan?.motion || scene.motion || "").replace(/_/g, " ")}
+                        </span>
+                      )}
+                      {scene.duration_seconds > 0 && (
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          ~{scene.duration_seconds.toFixed(1)}s
+                        </span>
                       )}
                     </div>
 
-                    {/* Regenerate Visual Button */}
-                    <button
-                      type="button"
-                      disabled={regeneratingVisualSceneId === scene.id}
-                      onClick={() => handleRegenerateVisual(scene.order, scene.id)}
-                      className="w-full flex items-center justify-center gap-1 py-1 px-2 rounded-lg text-[10px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/25 transition-all disabled:opacity-40"
-                      title="Regenerate only this scene visual"
-                    >
-                      <Sparkles className={`h-3 w-3 ${regeneratingVisualSceneId === scene.id ? "animate-spin text-purple-400" : "text-purple-400"}`} />
-                      <span>{regeneratingVisualSceneId === scene.id ? "Generating..." : "Regen Visual"}</span>
-                    </button>
+                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      {/* Move Up */}
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => moveScene(idx, "up")}
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] disabled:opacity-30 transition-all"
+                        aria-label={`Move scene ${scene.order} up`}
+                      >
+                        <ArrowUp className="h-3.5 w-3.5" />
+                      </button>
+
+                      {/* Move Down */}
+                      <button
+                        type="button"
+                        disabled={idx === project.scenes.length - 1}
+                        onClick={() => moveScene(idx, "down")}
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] disabled:opacity-30 transition-all"
+                        aria-label={`Move scene ${scene.order} down`}
+                      >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                      </button>
+
+                      {/* Regenerate Scene */}
+                      <button
+                        type="button"
+                        disabled={regeneratingSceneId === scene.id}
+                        onClick={() => handleRegenerateScene(scene.order, scene.id)}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 transition-all disabled:opacity-40 ml-1"
+                        title="Regenerate this scene narration & caption"
+                      >
+                        <RotateCcw className={`h-3 w-3 ${regeneratingSceneId === scene.id ? "animate-spin" : ""}`} />
+                        <span>Regen</span>
+                      </button>
+
+                      {/* Delete Scene */}
+                      {project.scenes.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteScene(scene.order)}
+                          className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all ml-1"
+                          title="Delete Scene"
+                          aria-label={`Delete scene ${scene.order}`}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Text & Direction Fields */}
-                  <div className="flex-1 w-full flex flex-col gap-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                        Narration Script
-                      </label>
-                      <textarea
-                        rows={2}
-                        value={scene.narration || scene.caption}
-                        onChange={(e) =>
-                          handleSceneChange(scene.id, "narration", e.target.value)
-                        }
-                        placeholder="Scene voiceover text..."
-                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-xs text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none resize-none leading-relaxed"
-                      />
+                  {/* Scene Body: Thumbnail + Script Fields */}
+                  <div className="flex flex-col sm:flex-row items-start gap-4">
+                    {/* Visual Thumbnail */}
+                    <div className="flex flex-col gap-2 w-full sm:w-32 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                      <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-zinc-900 border border-white/[0.1]">
+                        <img
+                          src={scene.visual_url}
+                          alt={`Scene ${scene.order}`}
+                          className="w-full h-full object-cover"
+                        />
+                        {scene.visual_source === "ai" && (
+                          <div className="absolute top-1.5 right-1.5 bg-purple-900/90 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-purple-200">
+                            AI
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Regenerate Visual Button */}
+                      <button
+                        type="button"
+                        disabled={regeneratingVisualSceneId === scene.id}
+                        onClick={() => handleRegenerateVisual(scene.order, scene.id)}
+                        className="w-full flex items-center justify-center gap-1 py-1 px-2 rounded-lg text-[10px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/25 transition-all disabled:opacity-40"
+                      >
+                        <Sparkles className={`h-3 w-3 ${regeneratingVisualSceneId === scene.id ? "animate-spin" : ""}`} />
+                        <span>{regeneratingVisualSceneId === scene.id ? "Generating..." : "Regen Visual"}</span>
+                      </button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Script Fields */}
+                    <div className="flex-1 w-full flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
                       <div>
                         <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                          Screen Caption
+                          Narration Script
                         </label>
-                        <input
-                          type="text"
-                          value={scene.caption}
-                          onChange={(e) =>
-                            handleSceneChange(scene.id, "caption", e.target.value)
-                          }
-                          placeholder="Kinetic caption in video..."
-                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 px-2.5 py-1.5 text-xs font-semibold text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+                        <textarea
+                          rows={2}
+                          value={scene.narration || scene.caption}
+                          onChange={(e) => handleSceneChange(scene.id, "narration", e.target.value)}
+                          className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] p-2.5 text-xs text-white placeholder-zinc-500 focus:border-cyan-400 focus:outline-none resize-none leading-relaxed"
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                          Visual Direction
-                        </label>
-                        <input
-                          type="text"
-                          value={scene.visual_direction || ""}
-                          onChange={(e) =>
-                            handleSceneChange(scene.id, "visual_direction", e.target.value)
-                          }
-                          placeholder="Scene visual guidance..."
-                          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 px-2.5 py-1.5 text-xs text-zinc-300 placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
-                        />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Screen Caption
+                          </label>
+                          <input
+                            type="text"
+                            value={scene.caption}
+                            onChange={(e) => handleSceneChange(scene.id, "caption", e.target.value)}
+                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white focus:border-cyan-400 focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Visual Direction
+                          </label>
+                          <input
+                            type="text"
+                            value={scene.visual_direction || ""}
+                            onChange={(e) => handleSceneChange(scene.id, "visual_direction", e.target.value)}
+                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-300 focus:border-cyan-400 focus:outline-none"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Ask VidSnap AI Assistant Box */}
-          <div className="glass-card rounded-2xl p-6 border-indigo-500/30 bg-zinc-950/60">
-            <div className="flex items-center gap-2 mb-3">
-              <Bot className="h-4 w-4 text-purple-400" />
-              <h3 className="text-sm font-bold text-white">Ask VidSnap (AI Assistant)</h3>
+          {/* Ask VidSnap: Compact AI Command Interface */}
+          <div className="glass-card rounded-2xl p-5 border-cyan-500/20 bg-[#0c0e17]">
+            <div className="flex items-center gap-2 mb-2">
+              <Bot className="h-4 w-4 text-cyan-400" />
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Ask VidSnap (AI Director)</h3>
             </div>
-            <p className="text-xs text-zinc-400 mb-4">
-              Direct the story with natural language. VidSnap modifies the canonical scenes and pacing.
+            <p className="text-xs text-zinc-400 mb-3">
+              Direct and reshape the story with natural language commands:
             </p>
 
-            {/* Quick Prompt Chips */}
-            <div className="flex flex-wrap gap-2 mb-4">
+            {/* Quick Action Chips */}
+            <div className="flex flex-wrap gap-1.5 mb-3">
               {[
-                "Make the intro more attention-grabbing",
-                "Make this more technical",
-                "Make the tone more energetic",
+                "Make the hook stronger",
                 "Make this shorter",
-                "Remove the last scene",
+                "Make this more technical",
                 "Change the voice to Rachel",
-                "Change the voice to Josh",
+                "Make the tone punchy",
+                "Regenerate full story",
               ].map((chip) => (
                 <button
                   key={chip}
                   type="button"
                   onClick={() => handleAskAssistant(chip)}
-                  className="rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white hover:border-purple-500/50 transition-all"
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white hover:border-cyan-500/40 transition-all"
                 >
                   {chip}
                 </button>
               ))}
             </div>
 
-            {/* Assistant Input Bar */}
+            {/* Input Bar */}
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={assistantPrompt}
                 onChange={(e) => setAssistantPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAskAssistant()}
-                placeholder="e.g. “Make the intro more attention-grabbing” or “Make this shorter”"
-                className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                placeholder="Ask VidSnap to adjust tone, pacing, or scene details..."
+                aria-label="Ask VidSnap command input"
+                className="flex-1 rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-2 text-xs text-white placeholder-zinc-500 focus:border-cyan-400 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => handleAskAssistant()}
                 disabled={isAssistantWorking || !assistantPrompt.trim()}
-                className="rounded-xl bg-purple-600 hover:bg-purple-500 px-4 py-2.5 text-xs font-semibold text-white disabled:opacity-40 transition-all flex items-center gap-1.5"
+                className="rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black px-3.5 py-2 text-xs font-bold disabled:opacity-40 transition-all flex items-center gap-1.5"
               >
                 {isAssistantWorking ? (
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                 ) : (
                   <Send className="h-3.5 w-3.5" />
                 )}
-                <span>Send</span>
+                <span>Run</span>
               </button>
             </div>
 
             {assistantFeedback && (
-              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-400">
+              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-400 animate-fadeIn">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>{assistantFeedback}</span>
               </div>
@@ -757,32 +797,87 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        {/* Right Column: Phone Preview Simulator */}
-        <div className="lg:col-span-5 flex flex-col items-center sticky top-24">
+        {/* Right Column: Sticky Video Preview (STORY ↔ VIDEO) */}
+        <div className={`lg:col-span-5 flex flex-col items-center sticky top-24 ${mobileTab === "storyboard" ? "hidden lg:flex" : "flex"}`}>
           <div className="phone-mockup relative">
             <div className="phone-notch" />
+
+            {/* Case 1: Video is Rendered -> HTML5 Player synced to scenes */}
             {project.video_url ? (
-              <video
-                src={project.video_url}
-                controls
-                playsInline
-                className="w-full h-full object-cover"
-              />
+              <div className="relative w-full h-full bg-zinc-950 flex flex-col justify-between">
+                <video
+                  ref={videoPlayerRef}
+                  src={project.video_url}
+                  controls
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-12 left-4 right-4 flex items-center justify-between z-30 pointer-events-none">
+                  <span className="bg-black/75 backdrop-blur-md px-2 py-0.5 rounded text-[11px] font-mono font-bold text-white border border-white/10">
+                    Scene #{selectedSceneIndex + 1}
+                  </span>
+                  <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold">
+                    RENDERED MP4
+                  </span>
+                </div>
+              </div>
+            ) : currentScene ? (
+              /* Case 2: Storyboard Preview (Unrendered Project) */
+              <div className="relative w-full h-full bg-zinc-950 flex flex-col justify-between overflow-hidden">
+                <img
+                  src={currentScene.visual_url}
+                  alt={`Scene ${currentScene.order}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* Top Storyboard Preview Badges */}
+                <div className="absolute top-12 left-4 right-4 flex items-center justify-between z-30">
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-black/75 backdrop-blur-md px-2 py-0.5 rounded text-[11px] font-mono font-bold text-white border border-white/10">
+                      Scene #{currentScene.order}
+                    </span>
+                    {currentScene.scene_role && (
+                      <span className="bg-purple-900/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase text-purple-200 border border-purple-500/20">
+                        {currentScene.scene_role}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold">
+                    <Eye className="h-3 w-3" />
+                    <span>STORYBOARD PREVIEW</span>
+                  </div>
+                </div>
+
+                {/* Middle Motion Indicator */}
+                <div className="absolute top-22 left-4 z-30">
+                  <span className="bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-medium text-zinc-300 border border-white/10 capitalize">
+                    🎬 Motion: {(currentScene.visual_plan?.motion || currentScene.motion || "Slow Zoom").replace(/_/g, " ")}
+                  </span>
+                </div>
+
+                {/* Bottom Kinetic Caption Overlay */}
+                <div className="phone-caption-overlay">
+                  <span className="text-[10px] uppercase font-bold text-cyan-400 block mb-0.5">
+                    Screen Caption
+                  </span>
+                  <p className="text-xs font-bold text-white leading-snug drop-shadow-md">
+                    {currentScene.caption}
+                  </p>
+                </div>
+              </div>
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-zinc-500 bg-zinc-900">
-                <Wand2 className="h-10 w-10 text-indigo-400 mb-3 animate-pulse" />
+              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-zinc-500 bg-zinc-950">
+                <Film className="h-10 w-10 text-zinc-600 mb-3" />
                 <span className="text-xs font-semibold text-zinc-300 mb-1">
-                  Video Not Yet Rendered
-                </span>
-                <span className="text-[11px] text-zinc-500">
-                  Save story changes to trigger high-resolution 1080×1920 compilation.
+                  Storyboard Preview
                 </span>
               </div>
             )}
           </div>
 
-          {/* Quick Settings Info */}
-          <div className="mt-6 w-[310px] glass-card rounded-xl p-4 text-xs text-zinc-400 flex flex-col gap-2">
+          {/* Quick Details Below Mockup */}
+          <div className="mt-4 w-full max-w-[320px] glass-card rounded-xl p-3.5 text-xs text-zinc-400 flex flex-col gap-1.5 border-white/[0.08]">
             <div className="flex justify-between">
               <span>Voice:</span>
               <span className="text-zinc-200 font-semibold capitalize">{project.voice}</span>
@@ -794,7 +889,7 @@ export default function ProjectDetailPage() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span>Format:</span>
+              <span>Canvas:</span>
               <span className="text-zinc-200 font-semibold">1080×1920 (9:16)</span>
             </div>
           </div>

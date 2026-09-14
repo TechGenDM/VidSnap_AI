@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
-  --card-bg: #121215;
+  --background: #07080b;
+  --foreground: #f3f4f6;
+  --card-bg: #0d0f17;
+  --card-bg-elevated: #131726;
   --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-hover: rgba(99, 102, 241, 0.4);
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.15);
+  --card-border-hover: rgba(0, 240, 255, 0.3);
+  --accent-cyan: #00f0ff;
+  --accent-indigo: #6366f1;
+  --accent-purple: #a855f7;
+  --accent-glow: rgba(0, 240, 255, 0.12);
 }
 
 body {
@@ -15,6 +18,13 @@ body {
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Accessible focus visible rings */
+*:focus-visible {
+  outline: 2px solid var(--accent-cyan) !important;
+  outline-offset: 2px !important;
 }
 
 /* Custom modern scrollbar */
@@ -23,53 +33,90 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #07080b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #232738;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #3b4260;
 }
 
 /* Glass card utility */
 .glass-card {
-  background-color: rgba(18, 18, 21, 0.75);
-  backdrop-filter: blur(12px);
+  background-color: rgba(13, 15, 23, 0.78);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--card-border);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   border-color: var(--card-border-hover);
-  box-shadow: 0 0 25px var(--accent-glow);
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.glass-card-active {
+  background-color: rgba(19, 23, 38, 0.9);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.18);
 }
 
 /* Subtle glow effects */
 .radial-glow {
-  background: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+  background: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.15) 0%, rgba(0, 240, 255, 0.04) 40%, rgba(0, 0, 0, 0) 70%);
+}
+
+.radial-glow-cyan {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
 }
 
 /* Phone Bezel Simulator */
 .phone-mockup {
   position: relative;
-  width: 310px;
-  height: 620px;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 9 / 18.5;
+  height: auto;
+  max-height: 640px;
   background: #000;
-  border-radius: 44px;
-  box-shadow: 0 0 0 10px #1c1c1f, 0 0 0 12px #27272a, 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+  border-radius: 40px;
+  box-shadow: 0 0 0 10px #181a24, 0 0 0 12px #262a3b, 0 25px 60px -15px rgba(0, 0, 0, 0.95);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .phone-notch {
   position: absolute;
-  top: 12px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 110px;
-  height: 24px;
+  width: 100px;
+  height: 22px;
   background: #000;
-  border-radius: 20px;
+  border-radius: 18px;
   z-index: 40;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Kinetic Caption Overlay Simulator inside Phone */
+.phone-caption-overlay {
+  position: absolute;
+  bottom: 60px;
+  left: 16px;
+  right: 16px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  z-index: 30;
+}
+
+/* Touch-friendly min tap targets */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
 }

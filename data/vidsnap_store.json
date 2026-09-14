@@ -22014,6 +22014,4213 @@
           "visual_source": "fallback_stock"
         }
       ]
+    },
+    "36939cc8-87e6-42a7-b09e-0d47b85fad15": {
+      "id": "36939cc8-87e6-42a7-b09e-0d47b85fad15",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.154037+00:00",
+      "status": "queued",
+      "duration_seconds": 28.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place. Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration. That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes. The valuable skill isn't disappearing\u2014it's moving up a level.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/36939cc8-87e6-42a7-b09e-0d47b85fad15/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+          "caption": "NOT JUST WRITING CODE",
+          "duration_seconds": 7.0,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "NOT JUST WRITING CODE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "NOT"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "NOT JUST WRITING CODE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "NOT"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/36939cc8-87e6-42a7-b09e-0d47b85fad15/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+          "caption": "GOAL-DIRECTED ORCHESTRATION",
+          "duration_seconds": 7.0,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "GOAL-DIRECTED ORCHESTRATION",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "GOAL-DIRECTED"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "GOAL-DIRECTED ORCHESTRATION",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "GOAL-DIRECTED"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/36939cc8-87e6-42a7-b09e-0d47b85fad15/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 7.0,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "REVIEW OVER SYNTAX",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "REVIEW"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "REVIEW OVER SYNTAX",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "REVIEW"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_4",
+          "order": 4,
+          "visual_filename": "scene_4.jpg",
+          "visual_url": "/media/uploads/36939cc8-87e6-42a7-b09e-0d47b85fad15/scene_4.jpg",
+          "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+          "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+          "caption": "MOVING UP A LEVEL",
+          "duration_seconds": 7.0,
+          "scene_role": "implication",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 4,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in minimal tech",
+            "composition": "clean_center",
+            "mood": "inviting",
+            "motion": "slow_zoom_out",
+            "transition": "crossfade",
+            "emphasis": "final payoff"
+          },
+          "caption_segment": {
+            "text": "MOVING UP A LEVEL",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "MOVING"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "MOVING UP A LEVEL",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "MOVING"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_out",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "844ef9ab-428f-4a28-bdf9-1c7c8319c387": {
+      "id": "844ef9ab-428f-4a28-bdf9-1c7c8319c387",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.175402+00:00",
+      "status": "queued",
+      "duration_seconds": 28.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation. Teams spend forty percent of engineering hours on boilerplate, unit tests, and mundane dependency updates. Intelligent agents can now analyze codebases, run diagnostics, and draft verified fixes autonomously. This lets creators focus on high-leverage product decisions rather than repetitive syntax.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/844ef9ab-428f-4a28-bdf9-1c7c8319c387/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation.",
+          "caption": "THE BOILERPLATE TRAP",
+          "duration_seconds": 7.0,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "THE BOILERPLATE TRAP",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "THE"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "THE BOILERPLATE TRAP",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "THE"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/844ef9ab-428f-4a28-bdf9-1c7c8319c387/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Teams spend forty percent of engineering hours on boilerplate, unit tests, and mundane dependency updates.",
+          "caption": "AUTONOMOUS DIAGNOSTICS",
+          "duration_seconds": 7.0,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "metrics_dashboard",
+            "subject": "product_metrics",
+            "environment": "sleek analytics studio",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "AUTONOMOUS DIAGNOSTICS",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "AUTONOMOUS"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "AUTONOMOUS DIAGNOSTICS",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "AUTONOMOUS"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/844ef9ab-428f-4a28-bdf9-1c7c8319c387/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "Intelligent agents can now analyze codebases, run diagnostics, and draft verified fixes autonomously.",
+          "caption": "FOCUS ON HIGH LEVERAGE",
+          "duration_seconds": 7.0,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "FOCUS ON HIGH LEVERAGE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "FOCUS"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "FOCUS ON HIGH LEVERAGE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "FOCUS"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_4",
+          "order": 4,
+          "visual_filename": "scene_4.jpg",
+          "visual_url": "/media/uploads/844ef9ab-428f-4a28-bdf9-1c7c8319c387/scene_4.jpg",
+          "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+          "narration": "This lets creators focus on high-leverage product decisions rather than repetitive syntax.",
+          "caption": "THE NEW ADVANTAGE",
+          "duration_seconds": 7.0,
+          "scene_role": "implication",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 4,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "clean_center",
+            "mood": "inviting",
+            "motion": "slow_zoom_out",
+            "transition": "crossfade",
+            "emphasis": "final payoff"
+          },
+          "caption_segment": {
+            "text": "THE NEW ADVANTAGE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "THE"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "THE NEW ADVANTAGE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "THE"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_out",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation.",
+            "caption": "THE BOILERPLATE TRAP",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Teams spend forty percent of engineering hours on boilerplate, unit tests, and mundane dependency updates.",
+            "caption": "AUTONOMOUS DIAGNOSTICS",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "metrics_dashboard",
+              "subject": "product_metrics",
+              "environment": "sleek analytics studio",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "Intelligent agents can now analyze codebases, run diagnostics, and draft verified fixes autonomously.",
+            "caption": "FOCUS ON HIGH LEVERAGE",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "This lets creators focus on high-leverage product decisions rather than repetitive syntax.",
+            "caption": "THE NEW ADVANTAGE",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Drop your experience below. Have you faced this challenge?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "problem",
+        "quality_score": 0.96,
+        "domain": "technology"
+      },
+      "render_history": [
+        {
+          "action": "regenerate_story",
+          "timestamp": "2026-09-14T07:11:43.201753+00:00",
+          "variation_seed": 1,
+          "hook": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation."
+        }
+      ],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e": {
+      "id": "edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.219307+00:00",
+      "status": "queued",
+      "duration_seconds": 28.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation. Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration. That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes. The valuable skill isn't disappearing\u2014it's moving up a level.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e/scene_1.jpg",
+          "visual_direction": "Cinematic focus on modern creator workstation with ambient studio lighting.",
+          "narration": "The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation.",
+          "caption": "THE HIDDEN FRICTION",
+          "duration_seconds": 7.0,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "NOT JUST WRITING CODE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "NOT"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "NOT JUST WRITING CODE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "NOT"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+          "caption": "GOAL-DIRECTED ORCHESTRATION",
+          "duration_seconds": 7.0,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "GOAL-DIRECTED ORCHESTRATION",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "GOAL-DIRECTED"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "GOAL-DIRECTED ORCHESTRATION",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "GOAL-DIRECTED"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 7.0,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "REVIEW OVER SYNTAX",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "REVIEW"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "REVIEW OVER SYNTAX",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "REVIEW"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_4",
+          "order": 4,
+          "visual_filename": "scene_4.jpg",
+          "visual_url": "/media/uploads/edb5d0e4-0ec7-4e52-95fd-65d8b6a1518e/scene_4.jpg",
+          "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+          "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+          "caption": "MOVING UP A LEVEL",
+          "duration_seconds": 7.0,
+          "scene_role": "implication",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 4,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in minimal tech",
+            "composition": "clean_center",
+            "mood": "inviting",
+            "motion": "slow_zoom_out",
+            "transition": "crossfade",
+            "emphasis": "final payoff"
+          },
+          "caption_segment": {
+            "text": "MOVING UP A LEVEL",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "MOVING"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "MOVING UP A LEVEL",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "MOVING"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_out",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "231258c0-b7c0-4b14-9ba3-926dd3ba0a12": {
+      "id": "231258c0-b7c0-4b14-9ba3-926dd3ba0a12",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.253312+00:00",
+      "status": "queued",
+      "duration_seconds": 28.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place. That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes. The valuable skill isn't disappearing\u2014it's moving up a level.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/231258c0-b7c0-4b14-9ba3-926dd3ba0a12/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+          "caption": "NOT JUST WRITING CODE",
+          "duration_seconds": 7.0,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "NOT JUST WRITING CODE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "NOT"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "NOT JUST WRITING CODE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "NOT"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 2,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/231258c0-b7c0-4b14-9ba3-926dd3ba0a12/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 7.0,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "REVIEW OVER SYNTAX",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "REVIEW"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "REVIEW OVER SYNTAX",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "REVIEW"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_4",
+          "order": 3,
+          "visual_filename": "scene_4.jpg",
+          "visual_url": "/media/uploads/231258c0-b7c0-4b14-9ba3-926dd3ba0a12/scene_4.jpg",
+          "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+          "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+          "caption": "MOVING UP A LEVEL",
+          "duration_seconds": 7.0,
+          "scene_role": "implication",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 4,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in minimal tech",
+            "composition": "clean_center",
+            "mood": "inviting",
+            "motion": "slow_zoom_out",
+            "transition": "crossfade",
+            "emphasis": "final payoff"
+          },
+          "caption_segment": {
+            "text": "MOVING UP A LEVEL",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "MOVING"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "MOVING UP A LEVEL",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "MOVING"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_out",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "b426d46a-c83d-43ec-a7a1-66562e2d6af4": {
+      "id": "b426d46a-c83d-43ec-a7a1-66562e2d6af4",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.291817+00:00",
+      "status": "queued",
+      "duration_seconds": 15.600000000000001,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "rachel",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "The biggest bottleneck in software engineering today isn't typing speed. It's the. Instead of developers writing every function line by line, software systems are. That moves the human job from manual syntax to reviewing architecture, edge.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/b426d46a-c83d-43ec-a7a1-66562e2d6af4/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "The biggest bottleneck in software engineering today isn't typing speed. It's the.",
+          "caption": "STOP SCROLLING: THE REAL BOTTLENECK",
+          "duration_seconds": 5.2,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "NOT JUST WRITING CODE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "NOT"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "NOT JUST WRITING CODE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "NOT"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/b426d46a-c83d-43ec-a7a1-66562e2d6af4/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Instead of developers writing every function line by line, software systems are.",
+          "caption": "GOAL-DIRECTED ORCHESTRATION",
+          "duration_seconds": 5.2,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "GOAL-DIRECTED ORCHESTRATION",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "GOAL-DIRECTED"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "GOAL-DIRECTED ORCHESTRATION",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "GOAL-DIRECTED"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/b426d46a-c83d-43ec-a7a1-66562e2d6af4/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 5.2,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "REVIEW OVER SYNTAX",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "REVIEW"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "REVIEW OVER SYNTAX",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "REVIEW"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "fa61ef71-dd8b-41a7-8f56-6a3eec90009c": {
+      "id": "fa61ef71-dd8b-41a7-8f56-6a3eec90009c",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:43.365720+00:00",
+      "status": "completed",
+      "duration_seconds": 19.48,
+      "video_filename": "fa61ef71-dd8b-41a7-8f56-6a3eec90009c.mp4",
+      "video_url": "/media/reels/fa61ef71-dd8b-41a7-8f56-6a3eec90009c.mp4",
+      "thumbnail_url": "/media/thumbnails/fa61ef71-dd8b-41a7-8f56-6a3eec90009c.jpg",
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Minimal Tech",
+      "script": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place. Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration. That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/fa61ef71-dd8b-41a7-8f56-6a3eec90009c/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+          "caption": "NOT JUST WRITING CODE",
+          "duration_seconds": 6.49,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "AI agents aren't",
+            "start_time": 0.0,
+            "end_time": 1.051,
+            "words": [
+              {
+                "text": "AI",
+                "start_time": 0.0,
+                "end_time": 0.183,
+                "emphasized": true
+              },
+              {
+                "text": "agents",
+                "start_time": 0.208,
+                "end_time": 0.611,
+                "emphasized": true
+              },
+              {
+                "text": "aren't",
+                "start_time": 0.666,
+                "end_time": 1.051,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [
+              "AI",
+              "agents"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "AI agents aren't",
+              "start_time": 0.0,
+              "end_time": 1.051,
+              "words": [
+                {
+                  "text": "AI",
+                  "start_time": 0.0,
+                  "end_time": 0.183,
+                  "emphasized": true
+                },
+                {
+                  "text": "agents",
+                  "start_time": 0.208,
+                  "end_time": 0.611,
+                  "emphasized": true
+                },
+                {
+                  "text": "aren't",
+                  "start_time": 0.666,
+                  "end_time": 1.051,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "AI",
+                "agents"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "just helping developers",
+              "start_time": 1.104,
+              "end_time": 2.601,
+              "words": [
+                {
+                  "text": "just",
+                  "start_time": 1.104,
+                  "end_time": 1.323,
+                  "emphasized": false
+                },
+                {
+                  "text": "helping",
+                  "start_time": 1.353,
+                  "end_time": 1.774,
+                  "emphasized": true
+                },
+                {
+                  "text": "developers",
+                  "start_time": 1.832,
+                  "end_time": 2.601,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "helping",
+                "developers"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "write code.",
+              "start_time": 2.706,
+              "end_time": 3.354,
+              "words": [
+                {
+                  "text": "write",
+                  "start_time": 2.706,
+                  "end_time": 2.944,
+                  "emphasized": false
+                },
+                {
+                  "text": "code.",
+                  "start_time": 2.976,
+                  "end_time": 3.354,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "They're changing who",
+              "start_time": 3.406,
+              "end_time": 4.397,
+              "words": [
+                {
+                  "text": "They're",
+                  "start_time": 3.406,
+                  "end_time": 3.662,
+                  "emphasized": true
+                },
+                {
+                  "text": "changing",
+                  "start_time": 3.697,
+                  "end_time": 4.136,
+                  "emphasized": true
+                },
+                {
+                  "text": "who",
+                  "start_time": 4.196,
+                  "end_time": 4.397,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "They're",
+                "changing"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "does the writing",
+              "start_time": 4.425,
+              "end_time": 5.324,
+              "words": [
+                {
+                  "text": "does",
+                  "start_time": 4.425,
+                  "end_time": 4.644,
+                  "emphasized": false
+                },
+                {
+                  "text": "the",
+                  "start_time": 4.674,
+                  "end_time": 4.876,
+                  "emphasized": false
+                },
+                {
+                  "text": "writing",
+                  "start_time": 4.903,
+                  "end_time": 5.324,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "writing"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "in the first",
+              "start_time": 5.382,
+              "end_time": 6.057,
+              "words": [
+                {
+                  "text": "in",
+                  "start_time": 5.382,
+                  "end_time": 5.565,
+                  "emphasized": false
+                },
+                {
+                  "text": "the",
+                  "start_time": 5.59,
+                  "end_time": 5.791,
+                  "emphasized": false
+                },
+                {
+                  "text": "first",
+                  "start_time": 5.819,
+                  "end_time": 6.057,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "place.",
+              "start_time": 6.089,
+              "end_time": 6.485,
+              "words": [
+                {
+                  "text": "place.",
+                  "start_time": 6.089,
+                  "end_time": 6.485,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/fa61ef71-dd8b-41a7-8f56-6a3eec90009c/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+          "caption": "GOAL-DIRECTED ORCHESTRATION",
+          "duration_seconds": 6.49,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "Instead of developers",
+            "start_time": 0.0,
+            "end_time": 1.206,
+            "words": [
+              {
+                "text": "Instead",
+                "start_time": 0.0,
+                "end_time": 0.349,
+                "emphasized": true
+              },
+              {
+                "text": "of",
+                "start_time": 0.396,
+                "end_time": 0.548,
+                "emphasized": false
+              },
+              {
+                "text": "developers",
+                "start_time": 0.569,
+                "end_time": 1.206,
+                "emphasized": true
+              }
+            ],
+            "emphasis_words": [
+              "Instead",
+              "developers"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "Instead of developers",
+              "start_time": 0.0,
+              "end_time": 1.206,
+              "words": [
+                {
+                  "text": "Instead",
+                  "start_time": 0.0,
+                  "end_time": 0.349,
+                  "emphasized": true
+                },
+                {
+                  "text": "of",
+                  "start_time": 0.396,
+                  "end_time": 0.548,
+                  "emphasized": false
+                },
+                {
+                  "text": "developers",
+                  "start_time": 0.569,
+                  "end_time": 1.206,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "Instead",
+                "developers"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "writing every function",
+              "start_time": 1.292,
+              "end_time": 2.552,
+              "words": [
+                {
+                  "text": "writing",
+                  "start_time": 1.292,
+                  "end_time": 1.641,
+                  "emphasized": true
+                },
+                {
+                  "text": "every",
+                  "start_time": 1.689,
+                  "end_time": 2.129,
+                  "emphasized": false
+                },
+                {
+                  "text": "function",
+                  "start_time": 2.189,
+                  "end_time": 2.552,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "writing",
+                "function"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "line by line,",
+              "start_time": 2.602,
+              "end_time": 3.238,
+              "words": [
+                {
+                  "text": "line",
+                  "start_time": 2.602,
+                  "end_time": 2.784,
+                  "emphasized": false
+                },
+                {
+                  "text": "by",
+                  "start_time": 2.809,
+                  "end_time": 2.96,
+                  "emphasized": false
+                },
+                {
+                  "text": "line,",
+                  "start_time": 2.981,
+                  "end_time": 3.238,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "software systems are",
+              "start_time": 3.273,
+              "end_time": 4.249,
+              "words": [
+                {
+                  "text": "software",
+                  "start_time": 3.273,
+                  "end_time": 3.636,
+                  "emphasized": true
+                },
+                {
+                  "text": "systems",
+                  "start_time": 3.686,
+                  "end_time": 4.034,
+                  "emphasized": true
+                },
+                {
+                  "text": "are",
+                  "start_time": 4.082,
+                  "end_time": 4.249,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "software",
+                "systems"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "shifting to goal-directed",
+              "start_time": 4.271,
+              "end_time": 5.524,
+              "words": [
+                {
+                  "text": "shifting",
+                  "start_time": 4.271,
+                  "end_time": 4.635,
+                  "emphasized": true
+                },
+                {
+                  "text": "to",
+                  "start_time": 4.684,
+                  "end_time": 4.836,
+                  "emphasized": false
+                },
+                {
+                  "text": "goal-directed",
+                  "start_time": 4.857,
+                  "end_time": 5.524,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "shifting",
+                "goal-directed"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "orchestration.",
+              "start_time": 5.615,
+              "end_time": 6.428,
+              "words": [
+                {
+                  "text": "orchestration.",
+                  "start_time": 5.615,
+                  "end_time": 6.428,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "orchestration."
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/fa61ef71-dd8b-41a7-8f56-6a3eec90009c/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 6.49,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "That moves the",
+            "start_time": 0.0,
+            "end_time": 0.803,
+            "words": [
+              {
+                "text": "That",
+                "start_time": 0.0,
+                "end_time": 0.198,
+                "emphasized": false
+              },
+              {
+                "text": "moves",
+                "start_time": 0.226,
+                "end_time": 0.573,
+                "emphasized": false
+              },
+              {
+                "text": "the",
+                "start_time": 0.621,
+                "end_time": 0.803,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "That moves the",
+              "start_time": 0.0,
+              "end_time": 0.803,
+              "words": [
+                {
+                  "text": "That",
+                  "start_time": 0.0,
+                  "end_time": 0.198,
+                  "emphasized": false
+                },
+                {
+                  "text": "moves",
+                  "start_time": 0.226,
+                  "end_time": 0.573,
+                  "emphasized": false
+                },
+                {
+                  "text": "the",
+                  "start_time": 0.621,
+                  "end_time": 0.803,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "human job from",
+              "start_time": 0.828,
+              "end_time": 1.629,
+              "words": [
+                {
+                  "text": "human",
+                  "start_time": 0.828,
+                  "end_time": 1.176,
+                  "emphasized": false
+                },
+                {
+                  "text": "job",
+                  "start_time": 1.223,
+                  "end_time": 1.405,
+                  "emphasized": false
+                },
+                {
+                  "text": "from",
+                  "start_time": 1.43,
+                  "end_time": 1.629,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "manual syntax to",
+              "start_time": 1.656,
+              "end_time": 2.649,
+              "words": [
+                {
+                  "text": "manual",
+                  "start_time": 1.656,
+                  "end_time": 2.02,
+                  "emphasized": true
+                },
+                {
+                  "text": "syntax",
+                  "start_time": 2.07,
+                  "end_time": 2.434,
+                  "emphasized": true
+                },
+                {
+                  "text": "to",
+                  "start_time": 2.484,
+                  "end_time": 2.649,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "manual",
+                "syntax"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "reviewing architecture,",
+              "start_time": 2.672,
+              "end_time": 4.103,
+              "words": [
+                {
+                  "text": "reviewing",
+                  "start_time": 2.672,
+                  "end_time": 3.218,
+                  "emphasized": true
+                },
+                {
+                  "text": "architecture,",
+                  "start_time": 3.293,
+                  "end_time": 4.103,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "reviewing",
+                "architecture,"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "edge cases,",
+              "start_time": 4.214,
+              "end_time": 4.869,
+              "words": [
+                {
+                  "text": "edge",
+                  "start_time": 4.214,
+                  "end_time": 4.412,
+                  "emphasized": false
+                },
+                {
+                  "text": "cases,",
+                  "start_time": 4.439,
+                  "end_time": 4.869,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "and deployment outcomes.",
+              "start_time": 4.928,
+              "end_time": 6.447,
+              "words": [
+                {
+                  "text": "and",
+                  "start_time": 4.928,
+                  "end_time": 5.11,
+                  "emphasized": false
+                },
+                {
+                  "text": "deployment",
+                  "start_time": 5.135,
+                  "end_time": 5.697,
+                  "emphasized": true
+                },
+                {
+                  "text": "outcomes.",
+                  "start_time": 5.774,
+                  "end_time": 6.447,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "deployment",
+                "outcomes."
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "15s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 5.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 5.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 5.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 15.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [
+        {
+          "rendered_at": "2026-09-14T07:11:52.585372+00:00",
+          "duration_seconds": 19.48,
+          "video_filename": "fa61ef71-dd8b-41a7-8f56-6a3eec90009c.mp4",
+          "voice": "adam",
+          "music": "ambient_chill",
+          "inspection": {
+            "passed": true,
+            "resolution": [
+              1080,
+              1920
+            ],
+            "metrics": {
+              "frame_15pct_mean_lum": 131.28,
+              "frame_15pct_stddev_lum": 74.92,
+              "frame_15pct_caption_zone_stddev": 71.18,
+              "frame_50pct_mean_lum": 132.99,
+              "frame_50pct_stddev_lum": 74.19,
+              "frame_50pct_caption_zone_stddev": 70.66,
+              "frame_85pct_mean_lum": 134.46,
+              "frame_85pct_stddev_lum": 73.35,
+              "frame_85pct_caption_zone_stddev": 68.62
+            }
+          }
+        }
+      ],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "56b77c3e-97ca-4027-967a-f842ffe8a2de": {
+      "id": "56b77c3e-97ca-4027-967a-f842ffe8a2de",
+      "title": "Why AI Agents Are Changing Software Development?",
+      "created_at": "2026-09-14T07:11:52.676162+00:00",
+      "status": "queued",
+      "duration_seconds": 15.600000000000001,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "josh",
+      "music": "upbeat_pulse",
+      "style": "Minimal Tech",
+      "script": "Here is what completely transforms AI agents today\u2014and why you cannot afford to ignore it. By offloading AST syntax parsing and deterministic testing, AI agents lets engineers. By offloading AST syntax parsing and deterministic testing, AI agents lets engineers.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/56b77c3e-97ca-4027-967a-f842ffe8a2de/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+          "narration": "Here is what completely transforms AI agents today\u2014and why you cannot afford to ignore it.",
+          "caption": "TRANSFORM YOUR WORKFLOW",
+          "duration_seconds": 5.2,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "NOT JUST WRITING CODE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "NOT"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "NOT JUST WRITING CODE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "NOT"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/56b77c3e-97ca-4027-967a-f842ffe8a2de/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "By offloading AST syntax parsing and deterministic testing, AI agents lets engineers.",
+          "caption": "AST AND STATE LOGIC",
+          "duration_seconds": 5.2,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "GOAL-DIRECTED ORCHESTRATION",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "GOAL-DIRECTED"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "GOAL-DIRECTED ORCHESTRATION",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "GOAL-DIRECTED"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/56b77c3e-97ca-4027-967a-f842ffe8a2de/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "By offloading AST syntax parsing and deterministic testing, AI agents lets engineers.",
+          "caption": "AST AND STATE LOGIC",
+          "duration_seconds": 5.2,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in minimal tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "REVIEW OVER SYNTAX",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "REVIEW"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "REVIEW OVER SYNTAX",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "REVIEW"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "Explain why AI agents are changing software development.",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "Why AI Agents Are Changing Software Development?",
+        "hook": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "AI agents aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a minimal tech environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in minimal tech",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in minimal tech",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.86,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
+    },
+    "cf20eff6-d0f0-4fb1-8082-e02110df47ae": {
+      "id": "cf20eff6-d0f0-4fb1-8082-e02110df47ae",
+      "title": "Single image quick reel test.",
+      "created_at": "2026-09-14T07:11:52.784756+00:00",
+      "status": "completed",
+      "duration_seconds": 2.16,
+      "video_filename": "cf20eff6-d0f0-4fb1-8082-e02110df47ae.mp4",
+      "video_url": "/media/reels/cf20eff6-d0f0-4fb1-8082-e02110df47ae.mp4",
+      "thumbnail_url": "/media/thumbnails/cf20eff6-d0f0-4fb1-8082-e02110df47ae.jpg",
+      "voice": "rachel",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "Single image quick reel test.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "single_slide.jpg",
+          "visual_url": "/media/uploads/cf20eff6-d0f0-4fb1-8082-e02110df47ae/single_slide.jpg",
+          "visual_direction": "",
+          "narration": "",
+          "caption": "Single image quick reel test",
+          "duration_seconds": 2.16,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "Single image quick",
+            "start_time": 0.0,
+            "end_time": 1.219,
+            "words": [
+              {
+                "text": "Single",
+                "start_time": 0.0,
+                "end_time": 0.434,
+                "emphasized": true
+              },
+              {
+                "text": "image",
+                "start_time": 0.493,
+                "end_time": 0.907,
+                "emphasized": false
+              },
+              {
+                "text": "quick",
+                "start_time": 0.963,
+                "end_time": 1.219,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [
+              "Single"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "Single image quick",
+              "start_time": 0.0,
+              "end_time": 1.219,
+              "words": [
+                {
+                  "text": "Single",
+                  "start_time": 0.0,
+                  "end_time": 0.434,
+                  "emphasized": true
+                },
+                {
+                  "text": "image",
+                  "start_time": 0.493,
+                  "end_time": 0.907,
+                  "emphasized": false
+                },
+                {
+                  "text": "quick",
+                  "start_time": 0.963,
+                  "end_time": 1.219,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "Single"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "reel test",
+              "start_time": 1.254,
+              "end_time": 1.759,
+              "words": [
+                {
+                  "text": "reel",
+                  "start_time": 1.254,
+                  "end_time": 1.49,
+                  "emphasized": false
+                },
+                {
+                  "text": "test",
+                  "start_time": 1.522,
+                  "end_time": 1.759,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        }
+      ],
+      "mode": "quick",
+      "source_type": "quick",
+      "visual_source": "auto",
+      "original_prompt": null,
+      "audience": null,
+      "tone": null,
+      "target_length": null,
+      "generated_story": null,
+      "render_history": [
+        {
+          "rendered_at": "2026-09-14T07:11:56.876593+00:00",
+          "duration_seconds": 2.16,
+          "video_filename": "cf20eff6-d0f0-4fb1-8082-e02110df47ae.mp4",
+          "voice": "rachel",
+          "music": "ambient_chill",
+          "inspection": {
+            "passed": true,
+            "resolution": [
+              1080,
+              1920
+            ],
+            "metrics": {
+              "frame_15pct_mean_lum": 131.34,
+              "frame_15pct_stddev_lum": 74.93,
+              "frame_15pct_caption_zone_stddev": 71.14,
+              "frame_50pct_mean_lum": 133.28,
+              "frame_50pct_stddev_lum": 74.23,
+              "frame_50pct_caption_zone_stddev": 71.15,
+              "frame_85pct_mean_lum": 134.49,
+              "frame_85pct_stddev_lum": 73.31,
+              "frame_85pct_caption_zone_stddev": 67.68
+            }
+          }
+        }
+      ],
+      "generation_diagnostics": []
+    },
+    "9e6d6664-a368-4428-8dd8-521067860311": {
+      "id": "9e6d6664-a368-4428-8dd8-521067860311",
+      "title": "Hello world.",
+      "created_at": "2026-09-14T07:11:56.910833+00:00",
+      "status": "completed",
+      "duration_seconds": 1.29,
+      "video_filename": "9e6d6664-a368-4428-8dd8-521067860311.mp4",
+      "video_url": "/media/reels/9e6d6664-a368-4428-8dd8-521067860311.mp4",
+      "thumbnail_url": "/media/thumbnails/9e6d6664-a368-4428-8dd8-521067860311.jpg",
+      "voice": "josh",
+      "music": "upbeat_pulse",
+      "style": "cinematic",
+      "script": "Hello world.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "img1.jpg",
+          "visual_url": "/media/uploads/9e6d6664-a368-4428-8dd8-521067860311/img1.jpg",
+          "visual_direction": "",
+          "narration": "",
+          "caption": "Hello",
+          "duration_seconds": 0.65,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "Hello",
+            "start_time": 0.0,
+            "end_time": 0.391,
+            "words": [
+              {
+                "text": "Hello",
+                "start_time": 0.0,
+                "end_time": 0.391,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "Hello",
+              "start_time": 0.0,
+              "end_time": 0.391,
+              "words": [
+                {
+                  "text": "Hello",
+                  "start_time": 0.0,
+                  "end_time": 0.391,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "img2.jpg",
+          "visual_url": "/media/uploads/9e6d6664-a368-4428-8dd8-521067860311/img2.jpg",
+          "visual_direction": "",
+          "narration": "",
+          "caption": "world.",
+          "duration_seconds": 0.65,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "world.",
+            "start_time": 0.0,
+            "end_time": 0.391,
+            "words": [
+              {
+                "text": "world.",
+                "start_time": 0.0,
+                "end_time": 0.391,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "world.",
+              "start_time": 0.0,
+              "end_time": 0.391,
+              "words": [
+                {
+                  "text": "world.",
+                  "start_time": 0.0,
+                  "end_time": 0.391,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        }
+      ],
+      "mode": "quick",
+      "source_type": "quick",
+      "visual_source": "auto",
+      "original_prompt": null,
+      "audience": null,
+      "tone": null,
+      "target_length": null,
+      "generated_story": null,
+      "render_history": [
+        {
+          "rendered_at": "2026-09-14T07:12:00.763454+00:00",
+          "duration_seconds": 1.29,
+          "video_filename": "9e6d6664-a368-4428-8dd8-521067860311.mp4",
+          "voice": "josh",
+          "music": "upbeat_pulse",
+          "inspection": {
+            "passed": true,
+            "resolution": [
+              1080,
+              1920
+            ],
+            "metrics": {
+              "frame_15pct_mean_lum": 131.5,
+              "frame_15pct_stddev_lum": 74.65,
+              "frame_15pct_caption_zone_stddev": 70.23,
+              "frame_50pct_mean_lum": 122.87,
+              "frame_50pct_stddev_lum": 66.17,
+              "frame_50pct_caption_zone_stddev": 59.72,
+              "frame_85pct_mean_lum": 44.25,
+              "frame_85pct_stddev_lum": 58.09,
+              "frame_85pct_caption_zone_stddev": 65.73
+            }
+          }
+        }
+      ],
+      "generation_diagnostics": []
+    },
+    "6f680b5b-fc10-4a02-97a8-3d1b896c9d00": {
+      "id": "6f680b5b-fc10-4a02-97a8-3d1b896c9d00",
+      "title": "Regeneration Test Project",
+      "created_at": "2026-09-14T00:00:00Z",
+      "status": "completed",
+      "duration_seconds": 7.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "Cinematic Tech",
+      "script": "Keep this exact narration 1 Keep this exact narration 2",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/6f680b5b-fc10-4a02-97a8-3d1b896c9d00/scene_1.jpg?v=1789369930",
+          "visual_direction": "Scene 1 visual direction",
+          "narration": "Keep this exact narration 1",
+          "caption": "CAPTION 1",
+          "duration_seconds": 3.0,
+          "scene_role": "insight",
+          "match_quality": "fallback_local",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic tech",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": null,
+          "caption_segments": [],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "fallback_stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/6f680b5b-fc10-4a02-97a8-3d1b896c9d00/scene_2.jpg",
+          "visual_direction": "Scene 2 visual direction",
+          "narration": "Keep this exact narration 2",
+          "caption": "CAPTION 2",
+          "duration_seconds": 4.0,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": null,
+          "caption_segment": null,
+          "caption_segments": [],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "quick",
+      "source_type": "quick",
+      "visual_source": "stock",
+      "original_prompt": null,
+      "audience": null,
+      "tone": null,
+      "target_length": null,
+      "generated_story": null,
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "regenerated": true,
+          "prompt": "cinematic 35mm film still, anamorphic framing, clean shallow depth of field, sharp edge highlights, global network set in modern tech studio in cinematic tech, showing network_graph, emphasizing core revelation, macro focus, focused atmosphere, color palette of deep midnight blue, slate obsidian, cool ambient backlight, subtle electric cyan accents, photorealistic, masterwork detail, 8k resolution, crisp focus, vertical 9:16 portrait composition, tailored for mobile vertical screen framing, no text, no typography, no watermarks, no logos, no distorted interface elements, no unreadable UI artifacts",
+          "seed": null,
+          "error": "Pollinations authentication error (HTTP 401 Unauthorized: {\"success\":false,\"error\":{\"message\":\"A valid API key is required. Get one at https://enter.pollinations.ai/keys\",\"code\":\"UNAUTHORIZED\",\"timestamp\":\"2026-09-14T07:12:10.113Z\"},\"status\":401}). Verify POLLINATIONS_API_KEY.",
+          "fallback": "LocalAssetProvider",
+          "visual_source": "fallback_stock"
+        }
+      ]
+    },
+    "17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc": {
+      "id": "17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc",
+      "title": "Welcome to VidSnap AI. Creating...",
+      "created_at": "2026-09-14T07:12:10.775712+00:00",
+      "status": "completed",
+      "duration_seconds": 4.95,
+      "video_filename": "17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc.mp4",
+      "video_url": "/media/reels/17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc.mp4",
+      "thumbnail_url": "/media/thumbnails/17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc.jpg",
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "Welcome to VidSnap AI. Creating vertical videos has never been faster.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "slide_1.jpg",
+          "visual_url": "/media/uploads/17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc/slide_1.jpg",
+          "visual_direction": "",
+          "narration": "",
+          "caption": "Welcome to VidSnap AI",
+          "duration_seconds": 2.47,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "Welcome to VidSnap",
+            "start_time": 0.0,
+            "end_time": 1.813,
+            "words": [
+              {
+                "text": "Welcome",
+                "start_time": 0.0,
+                "end_time": 0.689,
+                "emphasized": true
+              },
+              {
+                "text": "to",
+                "start_time": 0.783,
+                "end_time": 1.083,
+                "emphasized": false
+              },
+              {
+                "text": "VidSnap",
+                "start_time": 1.124,
+                "end_time": 1.813,
+                "emphasized": true
+              }
+            ],
+            "emphasis_words": [
+              "Welcome",
+              "VidSnap"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "Welcome to VidSnap",
+              "start_time": 0.0,
+              "end_time": 1.813,
+              "words": [
+                {
+                  "text": "Welcome",
+                  "start_time": 0.0,
+                  "end_time": 0.689,
+                  "emphasized": true
+                },
+                {
+                  "text": "to",
+                  "start_time": 0.783,
+                  "end_time": 1.083,
+                  "emphasized": false
+                },
+                {
+                  "text": "VidSnap",
+                  "start_time": 1.124,
+                  "end_time": 1.813,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "Welcome",
+                "VidSnap"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "AI",
+              "start_time": 1.907,
+              "end_time": 2.207,
+              "words": [
+                {
+                  "text": "AI",
+                  "start_time": 1.907,
+                  "end_time": 2.207,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "AI"
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "slide_2.jpg",
+          "visual_url": "/media/uploads/17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc/slide_2.jpg",
+          "visual_direction": "",
+          "narration": "",
+          "caption": "Creating vertical videos has never been faster",
+          "duration_seconds": 2.47,
+          "scene_role": "insight",
+          "match_quality": "approximate",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "Creating vertical videos",
+            "start_time": 0.0,
+            "end_time": 1.176,
+            "words": [
+              {
+                "text": "Creating",
+                "start_time": 0.0,
+                "end_time": 0.329,
+                "emphasized": true
+              },
+              {
+                "text": "vertical",
+                "start_time": 0.374,
+                "end_time": 0.814,
+                "emphasized": true
+              },
+              {
+                "text": "videos",
+                "start_time": 0.874,
+                "end_time": 1.176,
+                "emphasized": true
+              }
+            ],
+            "emphasis_words": [
+              "Creating",
+              "vertical",
+              "videos"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "Creating vertical videos",
+              "start_time": 0.0,
+              "end_time": 1.176,
+              "words": [
+                {
+                  "text": "Creating",
+                  "start_time": 0.0,
+                  "end_time": 0.329,
+                  "emphasized": true
+                },
+                {
+                  "text": "vertical",
+                  "start_time": 0.374,
+                  "end_time": 0.814,
+                  "emphasized": true
+                },
+                {
+                  "text": "videos",
+                  "start_time": 0.874,
+                  "end_time": 1.176,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "Creating",
+                "vertical",
+                "videos"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "has never been",
+              "start_time": 1.217,
+              "end_time": 1.882,
+              "words": [
+                {
+                  "text": "has",
+                  "start_time": 1.217,
+                  "end_time": 1.368,
+                  "emphasized": false
+                },
+                {
+                  "text": "never",
+                  "start_time": 1.389,
+                  "end_time": 1.678,
+                  "emphasized": false
+                },
+                {
+                  "text": "been",
+                  "start_time": 1.717,
+                  "end_time": 1.882,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "faster",
+              "start_time": 1.904,
+              "end_time": 2.206,
+              "words": [
+                {
+                  "text": "faster",
+                  "start_time": 1.904,
+                  "end_time": 2.206,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "faster"
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        }
+      ],
+      "mode": "quick",
+      "source_type": "quick",
+      "visual_source": "auto",
+      "original_prompt": null,
+      "audience": null,
+      "tone": null,
+      "target_length": null,
+      "generated_story": null,
+      "render_history": [
+        {
+          "rendered_at": "2026-09-14T07:12:17.431772+00:00",
+          "duration_seconds": 4.95,
+          "video_filename": "17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc.mp4",
+          "voice": "adam",
+          "music": "ambient_chill",
+          "inspection": {
+            "passed": true,
+            "resolution": [
+              1080,
+              1920
+            ],
+            "metrics": {
+              "frame_15pct_mean_lum": 131.76,
+              "frame_15pct_stddev_lum": 74.67,
+              "frame_15pct_caption_zone_stddev": 71.07,
+              "frame_50pct_mean_lum": 134.36,
+              "frame_50pct_stddev_lum": 73.3,
+              "frame_50pct_caption_zone_stddev": 67.59,
+              "frame_85pct_mean_lum": 44.38,
+              "frame_85pct_stddev_lum": 58.05,
+              "frame_85pct_caption_zone_stddev": 65.65
+            }
+          }
+        }
+      ],
+      "generation_diagnostics": []
+    },
+    "c0307b2f-6b01-4838-8d7b-ec04508d65ea": {
+      "id": "c0307b2f-6b01-4838-8d7b-ec04508d65ea",
+      "title": "How AI Agent Swarms Will Revolutionize Software Development in 2026?",
+      "created_at": "2026-09-14T07:16:40.257009+00:00",
+      "status": "completed",
+      "duration_seconds": 14.100000000000001,
+      "video_filename": "c0307b2f-6b01-4838-8d7b-ec04508d65ea.mp4",
+      "video_url": "/media/reels/c0307b2f-6b01-4838-8d7b-ec04508d65ea.mp4",
+      "thumbnail_url": "/media/thumbnails/c0307b2f-6b01-4838-8d7b-ec04508d65ea.jpg",
+      "voice": "adam",
+      "music": "ambient_chill",
+      "style": "cinematic",
+      "script": "The biggest bottleneck in software engineering today isn't typing speed. It's the. In 2026, autonomous agent swarms plan, write, and verify code directly in. That moves the human job from manual syntax to reviewing architecture, edge.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/c0307b2f-6b01-4838-8d7b-ec04508d65ea/scene_1.jpg",
+          "visual_direction": "Cinematic focus on modern creator workstation with ambient studio lighting.",
+          "narration": "The biggest bottleneck in software engineering today isn't typing speed. It's the.",
+          "caption": "THE HIDDEN FRICTION",
+          "duration_seconds": 4.7,
+          "scene_role": "hook",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in cinematic",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "The biggest bottleneck",
+            "start_time": 0.0,
+            "end_time": 1.044,
+            "words": [
+              {
+                "text": "The",
+                "start_time": 0.0,
+                "end_time": 0.158,
+                "emphasized": false
+              },
+              {
+                "text": "biggest",
+                "start_time": 0.18,
+                "end_time": 0.51,
+                "emphasized": true
+              },
+              {
+                "text": "bottleneck",
+                "start_time": 0.555,
+                "end_time": 1.044,
+                "emphasized": true
+              }
+            ],
+            "emphasis_words": [
+              "biggest",
+              "bottleneck"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "The biggest bottleneck",
+              "start_time": 0.0,
+              "end_time": 1.044,
+              "words": [
+                {
+                  "text": "The",
+                  "start_time": 0.0,
+                  "end_time": 0.158,
+                  "emphasized": false
+                },
+                {
+                  "text": "biggest",
+                  "start_time": 0.18,
+                  "end_time": 0.51,
+                  "emphasized": true
+                },
+                {
+                  "text": "bottleneck",
+                  "start_time": 0.555,
+                  "end_time": 1.044,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "biggest",
+                "bottleneck"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "in software engineering",
+              "start_time": 1.111,
+              "end_time": 2.284,
+              "words": [
+                {
+                  "text": "in",
+                  "start_time": 1.111,
+                  "end_time": 1.254,
+                  "emphasized": false
+                },
+                {
+                  "text": "software",
+                  "start_time": 1.274,
+                  "end_time": 1.619,
+                  "emphasized": true
+                },
+                {
+                  "text": "engineering",
+                  "start_time": 1.666,
+                  "end_time": 2.284,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "software",
+                "engineering"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "today isn't typing",
+              "start_time": 2.369,
+              "end_time": 3.224,
+              "words": [
+                {
+                  "text": "today",
+                  "start_time": 2.369,
+                  "end_time": 2.671,
+                  "emphasized": false
+                },
+                {
+                  "text": "isn't",
+                  "start_time": 2.712,
+                  "end_time": 2.884,
+                  "emphasized": false
+                },
+                {
+                  "text": "typing",
+                  "start_time": 2.908,
+                  "end_time": 3.224,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "typing"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "speed.",
+              "start_time": 3.267,
+              "end_time": 3.578,
+              "words": [
+                {
+                  "text": "speed.",
+                  "start_time": 3.267,
+                  "end_time": 3.578,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "It's the friction",
+              "start_time": 3.62,
+              "end_time": 4.325,
+              "words": [
+                {
+                  "text": "It's",
+                  "start_time": 3.62,
+                  "end_time": 3.779,
+                  "emphasized": false
+                },
+                {
+                  "text": "the",
+                  "start_time": 3.8,
+                  "end_time": 3.958,
+                  "emphasized": false
+                },
+                {
+                  "text": "friction",
+                  "start_time": 3.98,
+                  "end_time": 4.325,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "friction"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "of manual implementation.",
+              "start_time": 4.372,
+              "end_time": 5.795,
+              "words": [
+                {
+                  "text": "of",
+                  "start_time": 4.372,
+                  "end_time": 4.516,
+                  "emphasized": false
+                },
+                {
+                  "text": "manual",
+                  "start_time": 4.535,
+                  "end_time": 4.851,
+                  "emphasized": true
+                },
+                {
+                  "text": "implementation.",
+                  "start_time": 4.895,
+                  "end_time": 5.795,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "manual",
+                "implementation."
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/c0307b2f-6b01-4838-8d7b-ec04508d65ea/scene_2.jpg",
+          "visual_direction": "Dramatic high-angle server room glow",
+          "narration": "In 2026, autonomous agent swarms plan, write, and verify code directly in.",
+          "caption": "AUTONOMOUS REFACTORING",
+          "duration_seconds": 4.7,
+          "scene_role": "context",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in cinematic",
+            "composition": "wide_context",
+            "mood": "analytical",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "In 2026,",
+            "start_time": 0.0,
+            "end_time": 0.533,
+            "words": [
+              {
+                "text": "In",
+                "start_time": 0.0,
+                "end_time": 0.189,
+                "emphasized": false
+              },
+              {
+                "text": "2026,",
+                "start_time": 0.214,
+                "end_time": 0.533,
+                "emphasized": true
+              }
+            ],
+            "emphasis_words": [
+              "2026,"
+            ],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "In 2026,",
+              "start_time": 0.0,
+              "end_time": 0.533,
+              "words": [
+                {
+                  "text": "In",
+                  "start_time": 0.0,
+                  "end_time": 0.189,
+                  "emphasized": false
+                },
+                {
+                  "text": "2026,",
+                  "start_time": 0.214,
+                  "end_time": 0.533,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "2026,"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "autonomous agent swarms",
+              "start_time": 0.577,
+              "end_time": 2.189,
+              "words": [
+                {
+                  "text": "autonomous",
+                  "start_time": 0.577,
+                  "end_time": 1.368,
+                  "emphasized": true
+                },
+                {
+                  "text": "agent",
+                  "start_time": 1.476,
+                  "end_time": 1.872,
+                  "emphasized": false
+                },
+                {
+                  "text": "swarms",
+                  "start_time": 1.926,
+                  "end_time": 2.189,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "autonomous",
+                "swarms"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "plan,",
+              "start_time": 2.225,
+              "end_time": 2.544,
+              "words": [
+                {
+                  "text": "plan,",
+                  "start_time": 2.225,
+                  "end_time": 2.544,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "write,",
+              "start_time": 2.587,
+              "end_time": 2.925,
+              "words": [
+                {
+                  "text": "write,",
+                  "start_time": 2.587,
+                  "end_time": 2.925,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "and verify code",
+              "start_time": 2.971,
+              "end_time": 4.075,
+              "words": [
+                {
+                  "text": "and",
+                  "start_time": 2.971,
+                  "end_time": 3.178,
+                  "emphasized": false
+                },
+                {
+                  "text": "verify",
+                  "start_time": 3.207,
+                  "end_time": 3.772,
+                  "emphasized": true
+                },
+                {
+                  "text": "code",
+                  "start_time": 3.849,
+                  "end_time": 4.075,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "verify"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "directly in production.",
+              "start_time": 4.106,
+              "end_time": 5.809,
+              "words": [
+                {
+                  "text": "directly",
+                  "start_time": 4.106,
+                  "end_time": 4.709,
+                  "emphasized": true
+                },
+                {
+                  "text": "in",
+                  "start_time": 4.791,
+                  "end_time": 4.98,
+                  "emphasized": false
+                },
+                {
+                  "text": "production.",
+                  "start_time": 5.006,
+                  "end_time": 5.809,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "directly",
+                "production."
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/c0307b2f-6b01-4838-8d7b-ec04508d65ea/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "That moves the human job from manual syntax to reviewing architecture, edge.",
+          "caption": "REVIEW OVER SYNTAX",
+          "duration_seconds": 4.7,
+          "scene_role": "insight",
+          "match_quality": "exact",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in cinematic",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "That moves the",
+            "start_time": 0.0,
+            "end_time": 0.727,
+            "words": [
+              {
+                "text": "That",
+                "start_time": 0.0,
+                "end_time": 0.18,
+                "emphasized": false
+              },
+              {
+                "text": "moves",
+                "start_time": 0.204,
+                "end_time": 0.519,
+                "emphasized": false
+              },
+              {
+                "text": "the",
+                "start_time": 0.562,
+                "end_time": 0.727,
+                "emphasized": false
+              }
+            ],
+            "emphasis_words": [],
+            "style": "kinetic"
+          },
+          "caption_segments": [
+            {
+              "text": "That moves the",
+              "start_time": 0.0,
+              "end_time": 0.727,
+              "words": [
+                {
+                  "text": "That",
+                  "start_time": 0.0,
+                  "end_time": 0.18,
+                  "emphasized": false
+                },
+                {
+                  "text": "moves",
+                  "start_time": 0.204,
+                  "end_time": 0.519,
+                  "emphasized": false
+                },
+                {
+                  "text": "the",
+                  "start_time": 0.562,
+                  "end_time": 0.727,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "human job from",
+              "start_time": 0.749,
+              "end_time": 1.474,
+              "words": [
+                {
+                  "text": "human",
+                  "start_time": 0.749,
+                  "end_time": 1.064,
+                  "emphasized": false
+                },
+                {
+                  "text": "job",
+                  "start_time": 1.107,
+                  "end_time": 1.272,
+                  "emphasized": false
+                },
+                {
+                  "text": "from",
+                  "start_time": 1.294,
+                  "end_time": 1.474,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "manual syntax to",
+              "start_time": 1.499,
+              "end_time": 2.398,
+              "words": [
+                {
+                  "text": "manual",
+                  "start_time": 1.499,
+                  "end_time": 1.828,
+                  "emphasized": true
+                },
+                {
+                  "text": "syntax",
+                  "start_time": 1.873,
+                  "end_time": 2.203,
+                  "emphasized": true
+                },
+                {
+                  "text": "to",
+                  "start_time": 2.248,
+                  "end_time": 2.398,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [
+                "manual",
+                "syntax"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "reviewing architecture,",
+              "start_time": 2.418,
+              "end_time": 3.714,
+              "words": [
+                {
+                  "text": "reviewing",
+                  "start_time": 2.418,
+                  "end_time": 2.913,
+                  "emphasized": true
+                },
+                {
+                  "text": "architecture,",
+                  "start_time": 2.98,
+                  "end_time": 3.714,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "reviewing",
+                "architecture,"
+              ],
+              "style": "kinetic"
+            },
+            {
+              "text": "edge cases,",
+              "start_time": 3.814,
+              "end_time": 4.407,
+              "words": [
+                {
+                  "text": "edge",
+                  "start_time": 3.814,
+                  "end_time": 3.993,
+                  "emphasized": false
+                },
+                {
+                  "text": "cases,",
+                  "start_time": 4.018,
+                  "end_time": 4.407,
+                  "emphasized": false
+                }
+              ],
+              "emphasis_words": [],
+              "style": "kinetic"
+            },
+            {
+              "text": "and deployment outcomes.",
+              "start_time": 4.46,
+              "end_time": 5.835,
+              "words": [
+                {
+                  "text": "and",
+                  "start_time": 4.46,
+                  "end_time": 4.625,
+                  "emphasized": false
+                },
+                {
+                  "text": "deployment",
+                  "start_time": 4.647,
+                  "end_time": 5.156,
+                  "emphasized": true
+                },
+                {
+                  "text": "outcomes.",
+                  "start_time": 5.226,
+                  "end_time": 5.835,
+                  "emphasized": true
+                }
+              ],
+              "emphasis_words": [
+                "deployment",
+                "outcomes."
+              ],
+              "style": "kinetic"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "stock",
+          "alignment_source": "transcription"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "auto",
+      "original_prompt": "How AI agent swarms will revolutionize software development in 2026",
+      "audience": "Tech Creators",
+      "tone": "Educational",
+      "target_length": "30s",
+      "generated_story": {
+        "title": "How AI Agent Swarms Will Revolutionize Software Development in 2026?",
+        "hook": "How AI agent swarms will revolutionize software development in 2026 aren't just helping developers write code. They're changing who does the writing in the first place.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "How AI agent swarms will revolutionize software development in 2026 aren't just helping developers write code. They're changing who does the writing in the first place.",
+            "caption": "NOT JUST WRITING CODE",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a cinematic environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in cinematic",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
+            "caption": "GOAL-DIRECTED ORCHESTRATION",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in cinematic",
+              "composition": "wide_context",
+              "mood": "analytical",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
+            "caption": "REVIEW OVER SYNTAX",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in cinematic",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "The valuable skill isn't disappearing\u2014it's moving up a level.",
+            "caption": "MOVING UP A LEVEL",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in cinematic",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. Which part surprised you the most?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.84,
+        "domain": "technology"
+      },
+      "render_history": [
+        {
+          "rendered_at": "2026-09-14T07:16:50.550571+00:00",
+          "duration_seconds": 25.12,
+          "video_filename": "c0307b2f-6b01-4838-8d7b-ec04508d65ea.mp4",
+          "voice": "adam",
+          "music": "ambient_chill",
+          "inspection": {
+            "passed": true,
+            "resolution": [
+              1080,
+              1920
+            ],
+            "metrics": {
+              "frame_15pct_mean_lum": 131.23,
+              "frame_15pct_stddev_lum": 75.0,
+              "frame_15pct_caption_zone_stddev": 71.91,
+              "frame_50pct_mean_lum": 132.84,
+              "frame_50pct_stddev_lum": 74.08,
+              "frame_50pct_caption_zone_stddev": 69.64,
+              "frame_85pct_mean_lum": 134.61,
+              "frame_85pct_stddev_lum": 73.46,
+              "frame_85pct_caption_zone_stddev": 69.82
+            }
+          }
+        }
+      ],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 2,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 3,
+          "visual_source": "stock"
+        },
+        {
+          "scene_order": 4,
+          "visual_source": "stock"
+        }
+      ]
     }
   },
   "jobs": {
@@ -22610,6 +26817,83 @@
       "created_at": "2026-09-14T07:03:13.883402+00:00",
       "updated_at": "2026-09-14T07:03:33.464344+00:00",
       "completed_at": "2026-09-14T07:03:33.464340+00:00"
+    },
+    "e1908d97-f241-4877-bb85-a4775d7eb5eb": {
+      "id": "e1908d97-f241-4877-bb85-a4775d7eb5eb",
+      "project_id": "fa61ef71-dd8b-41a7-8f56-6a3eec90009c",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:11:43.386001+00:00",
+      "updated_at": "2026-09-14T07:11:52.601030+00:00",
+      "completed_at": "2026-09-14T07:11:52.601008+00:00"
+    },
+    "8ffb07a0-d09f-4800-97bf-c047d29955f7": {
+      "id": "8ffb07a0-d09f-4800-97bf-c047d29955f7",
+      "project_id": "cf20eff6-d0f0-4fb1-8082-e02110df47ae",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:11:52.784756+00:00",
+      "updated_at": "2026-09-14T07:11:56.892364+00:00",
+      "completed_at": "2026-09-14T07:11:56.892359+00:00"
+    },
+    "f5b6fb27-2000-4fc8-9890-342d5ffd2cb2": {
+      "id": "f5b6fb27-2000-4fc8-9890-342d5ffd2cb2",
+      "project_id": "9e6d6664-a368-4428-8dd8-521067860311",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:11:56.910833+00:00",
+      "updated_at": "2026-09-14T07:12:00.779007+00:00",
+      "completed_at": "2026-09-14T07:12:00.779003+00:00"
+    },
+    "10c21d44-f98e-4dc1-969e-eb9ea1bab4a8": {
+      "id": "10c21d44-f98e-4dc1-969e-eb9ea1bab4a8",
+      "project_id": "dc7c63ba-f239-48dd-9111-34e6d141df24",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:12:00.827597+00:00",
+      "updated_at": "2026-09-14T07:12:04.555290+00:00",
+      "completed_at": "2026-09-14T07:12:04.555282+00:00"
+    },
+    "d53da3ae-3380-4486-a718-6e97ffb9bbf1": {
+      "id": "d53da3ae-3380-4486-a718-6e97ffb9bbf1",
+      "project_id": "dc7c63ba-f239-48dd-9111-34e6d141df24",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:12:04.596750+00:00",
+      "updated_at": "2026-09-14T07:12:08.853295+00:00",
+      "completed_at": "2026-09-14T07:12:08.853290+00:00"
+    },
+    "f5cdef53-062f-4969-a9ae-f3e5ebbf6fde": {
+      "id": "f5cdef53-062f-4969-a9ae-f3e5ebbf6fde",
+      "project_id": "17dcaf5c-9fc3-4f4c-9f6c-c6bd777b8afc",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:12:10.775712+00:00",
+      "updated_at": "2026-09-14T07:12:17.447822+00:00",
+      "completed_at": "2026-09-14T07:12:17.447818+00:00"
+    },
+    "b3ef6af3-e737-4e23-9780-43a3410eaee5": {
+      "id": "b3ef6af3-e737-4e23-9780-43a3410eaee5",
+      "project_id": "c0307b2f-6b01-4838-8d7b-ec04508d65ea",
+      "status": "completed",
+      "step": "Your Reel is ready \ud83c\udf89",
+      "progress_percent": 100,
+      "error_message": null,
+      "created_at": "2026-09-14T07:16:40.324237+00:00",
+      "updated_at": "2026-09-14T07:16:50.566745+00:00",
+      "completed_at": "2026-09-14T07:16:50.566735+00:00"
     }
   }
 }

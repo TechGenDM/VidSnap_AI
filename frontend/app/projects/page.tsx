@@ -9,13 +9,13 @@ import {
   Play,
   Download,
   Trash2,
-  Clock,
   Calendar,
   CheckCircle2,
   AlertCircle,
   Film,
   Sliders,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 
 interface ProjectItem {
@@ -91,16 +91,16 @@ export default function ProjectsPage() {
             Projects
           </h1>
           <p className="text-sm text-zinc-400">
-            All your generated Reels and story projects.
+            Your library of short-form video reels and story drafts.
           </p>
         </div>
 
         <Link
           href="/create"
-          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 hover:from-indigo-600 hover:to-purple-700 transition-all self-start sm:self-auto"
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-indigo-500 transition-all self-start sm:self-auto active:scale-98"
         >
           <Plus className="h-4 w-4" />
-          <span>Create Reel</span>
+          <span>New Reel</span>
         </Link>
       </div>
 
@@ -112,19 +112,20 @@ export default function ProjectsPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search projects or scripts..."
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 pl-10 pr-4 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            placeholder="Search by title or topic..."
+            aria-label="Search projects"
+            className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-cyan-400 focus:outline-none transition-all"
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-zinc-900/70 border border-zinc-800 p-1 rounded-xl self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.08] p-1 rounded-xl self-start sm:self-auto">
           {["all", "completed", "queued"].map((f) => (
             <button
               key={f}
               onClick={() => setStatusFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all ${
                 statusFilter === f
-                  ? "bg-zinc-800 text-white shadow-sm"
+                  ? "bg-white/[0.1] text-white shadow-sm border border-white/[0.12]"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
@@ -136,33 +137,39 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="glass-card rounded-2xl h-80 animate-pulse bg-zinc-900/30"
+              className="glass-card rounded-2xl aspect-[9/16] animate-pulse bg-white/[0.02]"
             />
           ))}
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="glass-card rounded-2xl p-16 text-center max-w-md mx-auto">
-          <Film className="h-12 w-12 text-zinc-600 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-white mb-2">No projects found</h3>
-          <p className="text-sm text-zinc-400 mb-6">
+        /* Focused Empty State */
+        <div className="glass-card rounded-3xl p-16 text-center max-w-md mx-auto border-white/[0.08] shadow-2xl">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mx-auto mb-5">
+            <Film className="h-7 w-7" />
+          </div>
+          <h3 className="text-xl font-bold text-white mb-2">
+            Your next Reel starts here.
+          </h3>
+          <p className="text-xs text-zinc-400 mb-8 leading-relaxed max-w-xs mx-auto">
             {searchQuery
-              ? "Try adjusting your search terms."
-              : "You haven't generated any Reels yet."}
+              ? "No projects match your search query."
+              : "Transform your ideas or photos into high-retention vertical videos in seconds."}
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 px-6 py-3 text-sm font-bold text-white hover:from-cyan-400 hover:to-indigo-500 shadow-xl shadow-cyan-500/20 transition-all active:scale-98"
           >
-            <Plus className="h-4 w-4" />
             <span>Create your first Reel</span>
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        /* Visual-First Cards: Thumbnail Dominates */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProjects.map((p) => {
             const isCompleted = p.status === "completed";
             const dateStr = new Date(p.created_at).toLocaleDateString(undefined, {
@@ -174,101 +181,99 @@ export default function ProjectsPage() {
             return (
               <div
                 key={p.id}
-                className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group"
+                className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group border-white/[0.08] hover:border-cyan-500/40 transition-all"
               >
-                {/* Media Thumbnail Container */}
-                <div className="relative aspect-[9/16] max-h-72 w-full bg-zinc-900 overflow-hidden border-b border-zinc-800/80">
+                {/* Visual Thumbnail: Dominates the Card */}
+                <div className="relative aspect-[9/14] w-full bg-zinc-950 overflow-hidden">
                   {p.thumbnail_url ? (
                     <img
                       src={p.thumbnail_url}
                       alt={p.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-zinc-600 bg-zinc-900">
-                      <Film className="h-10 w-10 mb-2" />
-                      <span className="text-xs">No thumbnail</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-zinc-600 bg-zinc-900/60 p-4 text-center">
+                      <Film className="h-10 w-10 mb-2 text-zinc-700" />
+                      <span className="text-xs text-zinc-500">Storyboard Draft</span>
                     </div>
                   )}
 
                   {/* Duration Badge */}
                   {p.duration_seconds > 0 && (
-                    <div className="absolute top-3 right-3 rounded-md bg-black/70 backdrop-blur-md px-2 py-0.5 text-[11px] font-mono font-bold text-white border border-white/10">
-                      {p.duration_seconds}s
+                    <div className="absolute top-3 right-3 rounded-md bg-black/80 backdrop-blur-md px-2 py-0.5 text-[11px] font-mono font-bold text-white border border-white/10">
+                      {Math.round(p.duration_seconds)}s
                     </div>
                   )}
 
-                  {/* Mode Badge */}
-                  <div className="absolute top-3 left-3 rounded-md bg-zinc-900/80 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold text-zinc-300 uppercase border border-white/10">
-                    {p.mode} Reel
+                  {/* Status Badge */}
+                  <div className="absolute top-3 left-3">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase backdrop-blur-md border ${
+                        isCompleted
+                          ? "bg-emerald-950/80 text-emerald-400 border-emerald-500/30"
+                          : p.status === "failed"
+                          ? "bg-red-950/80 text-red-400 border-red-500/30"
+                          : "bg-cyan-950/80 text-cyan-300 border-cyan-500/30"
+                      }`}
+                    >
+                      {isCompleted && <CheckCircle2 className="h-3 w-3" />}
+                      <span>{p.status}</span>
+                    </span>
                   </div>
 
-                  {/* Play Overlay if Completed */}
-                  {isCompleted && p.video_url && (
-                    <Link
-                      href={`/projects/${p.id}`}
-                      className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]"
-                    >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl shadow-indigo-600/40">
-                        <Play className="h-5 w-5 fill-current translate-x-0.5" />
-                      </div>
-                    </Link>
-                  )}
+                  {/* Hover Play Button */}
+                  <Link
+                    href={`/projects/${p.id}`}
+                    className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]"
+                    aria-label={`Open editor for ${p.title}`}
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500 text-black font-bold shadow-xl shadow-cyan-500/40 group-hover:scale-110 transition-transform">
+                      <Play className="h-5 w-5 fill-current translate-x-0.5" />
+                    </div>
+                  </Link>
                 </div>
 
-                {/* Card Content */}
-                <div className="p-5 flex flex-col flex-1 justify-between">
+                {/* Primary Card Information: Title, Status, Duration, Date */}
+                <div className="p-4 flex flex-col justify-between gap-3 bg-[#0a0c13]">
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <h3 className="text-base font-bold text-white truncate max-w-[200px]">
-                        {p.title}
-                      </h3>
-                      <span
-                        className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full border ${
-                          isCompleted
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                            : p.status === "failed"
-                            ? "bg-red-500/10 text-red-400 border-red-500/20"
-                            : "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
-                        }`}
-                      >
-                        {p.status}
-                      </span>
+                    <h3 className="text-sm font-bold text-white truncate max-w-full group-hover:text-cyan-300 transition-colors">
+                      {p.title}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1 text-[11px] text-zinc-500">
+                      <span>{dateStr}</span>
+                      <span>•</span>
+                      <span className="capitalize">{p.mode} Reel</span>
                     </div>
-
-                    <p className="text-xs text-zinc-400 line-clamp-2 mb-4">
-                      {p.script}
-                    </p>
                   </div>
 
-                  <div className="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-500">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{dateStr}</span>
-                    </span>
+                  {/* Secondary Actions */}
+                  <div className="pt-2.5 border-t border-white/[0.06] flex items-center justify-between">
+                    <Link
+                      href={`/projects/${p.id}`}
+                      className="text-xs font-semibold text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+                    >
+                      <Sliders className="h-3.5 w-3.5 text-cyan-400" />
+                      <span>Edit Story</span>
+                    </Link>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       {p.video_url && (
                         <a
                           href={p.video_url}
                           download={`${p.title}.mp4`}
                           title="Download MP4"
-                          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
+                          aria-label={`Download ${p.title} video`}
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
                         >
                           <Download className="h-3.5 w-3.5" />
                         </a>
                       )}
-                      <Link
-                        href={`/projects/${p.id}`}
-                        title="Edit Story"
-                        className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
-                      >
-                        <Sliders className="h-3.5 w-3.5" />
-                      </Link>
                       <button
                         onClick={(e) => handleDelete(p.id, e)}
-                        title="Delete"
-                        className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
+                        title="Delete Reel"
+                        aria-label={`Delete ${p.title}`}
+                        className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
