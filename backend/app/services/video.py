@@ -175,7 +175,8 @@ def composite_render_plan(
         curr_scene = plan.scenes[i]
         trans_name = curr_scene.transition or "crossfade"
         if trans_name == "cut":
-            trans_durations.append(0.0)
+            # Instantaneous single-frame cut
+            trans_durations.append(0.04)
         else:
             # Conservative transition length: max 0.35s, not exceeding 25% of either scene
             max_allowed = min(0.35, curr_scene.duration * 0.25, plan.scenes[i + 1].duration * 0.25)
@@ -212,26 +213,30 @@ def composite_render_plan(
             # Chained xfade filters
             filter_parts = []
             current_stream = "[0:v]"
-            accumulated_offset = 0.0
+            # Initial stream duration is scene 0 plus its transition padding
+            current_stream_duration = plan.scenes[0].duration + (trans_durations[0] if trans_durations else 0.0)
 
             for i in range(num_scenes - 1):
-                accumulated_offset += plan.scenes[i].duration
                 curr_trans = plan.scenes[i].transition or "crossfade"
                 td = trans_durations[i]
+                offset = max(0.0, current_stream_duration - td)
 
                 if curr_trans == "directional_slide":
                     xfade_trans = "slideleft"
                 elif curr_trans == "short_fade":
                     xfade_trans = "fade"
-                else: # crossfade
-                    xfade_trans = "fade" # clean smooth fade through transition
+                else: # crossfade or cut
+                    xfade_trans = "fade"
 
                 next_stream = f"[{i+1}:v]"
                 out_label = f"[vx{i}]" if i < num_scenes - 2 else "[vconcat]"
                 filter_parts.append(
-                    f"{current_stream}{next_stream}xfade=transition={xfade_trans}:duration={td:.3f}:offset={accumulated_offset:.3f}{out_label}"
+                    f"{current_stream}{next_stream}xfade=transition={xfade_trans}:duration={td:.3f}:offset={offset:.3f}{out_label}"
                 )
                 current_stream = out_label
+                # Stream duration extends by next segment duration
+                next_seg_dur = plan.scenes[i + 1].duration + (trans_durations[i + 1] if i + 1 < len(trans_durations) else 0.0)
+                current_stream_duration = offset + next_seg_dur
 
             filter_complex = ";".join(filter_parts)
             video_stream_label = "[vconcat]"

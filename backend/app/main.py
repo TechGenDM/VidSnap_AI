@@ -30,6 +30,12 @@ app.include_router(jobs.router)
 app.include_router(projects.router)
 app.include_router(assets.router)
 
+from app.services.creator_presets import CREATOR_PRESETS
+
+@app.get("/api/presets")
+async def get_presets():
+    return [p.model_dump() for p in CREATOR_PRESETS.values()]
+
 @app.get("/api/health")
 async def health_check():
     ffmpeg_available = bool(shutil.which("ffmpeg"))

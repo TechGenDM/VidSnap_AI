@@ -34,6 +34,7 @@ import {
   Wand2,
   Film,
   Sparkle,
+  ShieldCheck,
 } from "lucide-react";
 
 interface VisualPlanData {
@@ -108,6 +109,83 @@ const TEMPLATE_PRESETS: Record<string, { script: string; style: string; voice: s
   },
 };
 
+interface HookAlternative {
+  id?: string;
+  strategy: string;
+  label?: string;
+  hook: string;
+  caption?: string;
+  suggested_caption?: string;
+}
+
+const CREATOR_PRESET_OPTIONS = [
+  {
+    id: "tech_creator",
+    label: "Tech Creator",
+    icon: "🚀",
+    tone: "Educational",
+    audience: "Tech Creators",
+    visualStyle: "Cinematic" as const,
+    captionStyle: "Kinetic" as const,
+    voice: "adam",
+    music: "Upbeat" as const,
+    length: "30s",
+    desc: "Fast technical breakdown with kinetic captions and driving score.",
+  },
+  {
+    id: "educational",
+    label: "Educational",
+    icon: "🎓",
+    tone: "Educational",
+    audience: "Students & Learners",
+    visualStyle: "Clean" as const,
+    captionStyle: "Highlight" as const,
+    voice: "rachel",
+    music: "Ambient" as const,
+    length: "30s",
+    desc: "Structured, clear explanation with clean framing and ambient score.",
+  },
+  {
+    id: "storytelling",
+    label: "Storytelling",
+    icon: "📖",
+    tone: "Documentary Story",
+    audience: "General Audience",
+    visualStyle: "Documentary" as const,
+    captionStyle: "Minimal" as const,
+    voice: "antoni",
+    music: "Lo-Fi" as const,
+    length: "45s",
+    desc: "Reflective narrative journey with cinematic atmosphere.",
+  },
+  {
+    id: "product_showcase",
+    label: "Product Showcase",
+    icon: "✨",
+    tone: "High Energy",
+    audience: "General Audience",
+    visualStyle: "Vibrant" as const,
+    captionStyle: "Kinetic" as const,
+    voice: "josh",
+    music: "Upbeat" as const,
+    length: "15s",
+    desc: "Snappy, benefit-first demo highlighting key value and quick CTA.",
+  },
+  {
+    id: "personal_story",
+    label: "Personal Story",
+    icon: "🎙️",
+    tone: "Thought-Provoking",
+    audience: "General Audience",
+    visualStyle: "Clean" as const,
+    captionStyle: "Highlight" as const,
+    voice: "rachel",
+    music: "Lo-Fi" as const,
+    length: "30s",
+    desc: "Intimate, conversational reflection with thoughtful pacing.",
+  },
+];
+
 // Quick inspiration prompts for Step 1
 const IDEA_CHIPS = [
   "Explain why AI agents are changing software development.",
@@ -167,6 +245,79 @@ function CreatePageContent() {
   const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
   const [reviewFeedback, setReviewFeedback] = useState<string | null>(null);
 
+  // Phase 6: Creator Presets, Qualitative Feedback, & Hook Alternatives
+  const [selectedPresetId, setSelectedPresetId] = useState<string>("tech_creator");
+  const [qualitativeFeedback, setQualitativeFeedback] = useState<string[]>([]);
+  const [showHookModal, setShowHookModal] = useState<boolean>(false);
+  const [hookAlternatives, setHookAlternatives] = useState<HookAlternative[]>([]);
+  const [isLoadingHooks, setIsLoadingHooks] = useState<boolean>(false);
+  const [isApplyingHook, setIsApplyingHook] = useState<boolean>(false);
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPresetId(presetId);
+    const p = CREATOR_PRESET_OPTIONS.find((opt) => opt.id === presetId);
+    if (p) {
+      setAiTone(p.tone);
+      setAiAudience(p.audience);
+      setHumanVisualStyle(p.visualStyle);
+      setHumanCaptions(p.captionStyle);
+      setAiVoice(p.voice);
+      setHumanMusic(p.music);
+      setAiLength(p.length);
+    }
+  };
+
+  const handleOpenHookModal = async () => {
+    if (!activeProjectId) return;
+    setShowHookModal(true);
+    setIsLoadingHooks(true);
+    try {
+      const res = await fetch(`/api/projects/${activeProjectId}/alternatives/hook`);
+      if (res.ok) {
+        const data = await res.json();
+        setHookAlternatives(data.alternatives || []);
+      }
+    } catch (e) {
+      console.error("Failed to fetch hook alternatives", e);
+    } finally {
+      setIsLoadingHooks(false);
+    }
+  };
+
+  const handleApplyHook = async (hookText: string, captionText?: string) => {
+    if (!activeProjectId) return;
+    setIsApplyingHook(true);
+    try {
+      const res = await fetch(`/api/projects/${activeProjectId}/apply-hook`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hook: hookText, caption: captionText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (plannedStory) {
+          const updatedScenes = [...plannedStory.scenes];
+          if (updatedScenes.length > 0) {
+            updatedScenes[0].narration = hookText;
+            if (captionText) updatedScenes[0].caption = captionText;
+          }
+          setPlannedStory({
+            ...plannedStory,
+            hook: hookText,
+            scenes: updatedScenes,
+          });
+        }
+        setShowHookModal(false);
+        setReviewFeedback("Applied alternative hook and updated canonical state!");
+        setTimeout(() => setReviewFeedback(null), 3000);
+      }
+    } catch (e) {
+      console.error("Failed to apply hook", e);
+    } finally {
+      setIsApplyingHook(false);
+    }
+  };
+
   // AI Reel State (Step 3: Style - Human Concepts)
   const [humanVisualStyle, setHumanVisualStyle] = useState<"Cinematic" | "Clean" | "Vibrant" | "Documentary">("Cinematic");
   const [humanMotion, setHumanMotion] = useState<"Subtle" | "Dynamic" | "Cinematic">("Subtle");
@@ -181,6 +332,7 @@ function CreatePageContent() {
   const [jobStep, setJobStep] = useState<string>("Initializing render...");
   const [jobProgress, setJobProgress] = useState<number>(0);
   const [renderedVideoUrl, setRenderedVideoUrl] = useState<string | null>(null);
+  const [qualityGateReport, setQualityGateReport] = useState<any>(null);
 
   // Restore active job from sessionStorage on refresh/mount
   useEffect(() => {
@@ -396,6 +548,7 @@ function CreatePageContent() {
           voice: aiVoice,
           music: backendParams.music,
           visual_source: aiVisualSource,
+          preset: selectedPresetId,
         }),
       });
 
@@ -405,6 +558,10 @@ function CreatePageContent() {
       }
 
       const data = await res.json();
+      if (data.qualitative_feedback) {
+        setQualitativeFeedback(data.qualitative_feedback);
+      }
+
       // Enrich story scenes with visual URLs if returned in data.scenes
       const enrichedScenes: StorySceneItem[] = data.story.scenes.map((s: any, idx: number) => {
         const matched = data.scenes && data.scenes[idx] ? data.scenes[idx] : {};
@@ -552,6 +709,15 @@ function CreatePageContent() {
           setIsSubmitting(false);
           if (typeof window !== "undefined") {
             sessionStorage.removeItem("vidsnap_active_job_id");
+          }
+          // Fetch Quality Gate Diagnostics (Phase 7)
+          if (activeProjectId) {
+            fetch(`/api/projects/${activeProjectId}/quality-gate`)
+              .then((r) => (r.ok ? r.json() : null))
+              .then((qData) => {
+                if (qData) setQualityGateReport(qData);
+              })
+              .catch((err) => console.error("Failed fetching quality gate", err));
           }
           clearInterval(interval);
         } else if (data.status === "failed") {
@@ -811,10 +977,29 @@ function CreatePageContent() {
 
             {/* Payoff Info & Actions */}
             <div className="flex-1 flex flex-col items-start">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400 mb-4">
-                <CheckCircle2 className="h-4 w-4" />
-                <span>1080×1920 HD Ready</span>
-              </div>
+              {qualityGateReport ? (
+                qualityGateReport.passed ? (
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/15 px-4 py-1.5 text-xs font-bold text-emerald-300 mb-4 shadow-sm shadow-emerald-500/20">
+                    <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                    <span>✨ Ready to Post</span>
+                  </div>
+                ) : qualityGateReport.blocking_issues?.length > 0 ? (
+                  <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/15 px-4 py-1.5 text-xs font-bold text-rose-300 mb-4">
+                    <AlertCircle className="h-4 w-4 text-rose-400" />
+                    <span>❌ Quality Gate: Action Required</span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/15 px-4 py-1.5 text-xs font-bold text-amber-300 mb-4">
+                    <AlertCircle className="h-4 w-4 text-amber-400" />
+                    <span>⚠️ Ready to Post (Review Observations)</span>
+                  </div>
+                )
+              ) : (
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400 mb-4">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>1080×1920 HD Ready</span>
+                </div>
+              )}
 
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
                 Your Reel is ready.
@@ -825,7 +1010,7 @@ function CreatePageContent() {
               </p>
 
               {/* Reel Metrics */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-lg mb-8">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-lg mb-4">
                 <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 text-left">
                   <span className="text-[11px] text-zinc-400 block mb-1">Duration</span>
                   <span className="text-base font-bold text-white">
@@ -849,6 +1034,50 @@ function CreatePageContent() {
                   </span>
                 </div>
               </div>
+
+              {/* Quality Gate Diagnostic Details */}
+              {qualityGateReport && (
+                <div className="w-full max-w-lg mb-6 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                      Reliability Quality Gate
+                    </span>
+                    <span className="text-[11px] font-mono text-cyan-400">
+                      Automated Verification
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-white/[0.04]">
+                    <div className="flex items-center gap-1.5 text-zinc-300">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>1080×1920 (9:16 Canvas)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-300">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Audio Sync & Volume</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-300">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Safe Caption Margins</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-300">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Visual Continuity</span>
+                    </div>
+                  </div>
+
+                  {qualityGateReport.warnings?.length > 0 && (
+                    <div className="mt-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 flex flex-col gap-1">
+                      {qualityGateReport.warnings.map((w: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-1.5">
+                          <AlertCircle className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />
+                          <span>{w}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-lg">
@@ -1147,6 +1376,42 @@ function CreatePageContent() {
                 </div>
               </div>
 
+              {/* Creator Presets (Phase 6: Starting Configurations) */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                    Creator Presets (1-Click Defaults)
+                  </span>
+                  <span className="text-[11px] text-zinc-500">Pick a starting baseline or customize below</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                  {CREATOR_PRESET_OPTIONS.map((p) => {
+                    const isSelected = selectedPresetId === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => handleSelectPreset(p.id)}
+                        className={`text-left p-2.5 rounded-xl border transition-all ${
+                          isSelected
+                            ? "bg-cyan-500/15 border-cyan-400 text-white shadow-lg shadow-cyan-500/10"
+                            : "bg-white/[0.02] border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-sm">{p.icon}</span>
+                          <span className="text-xs font-bold truncate">{p.label}</span>
+                        </div>
+                        <p className="text-[10px] text-zinc-400 line-clamp-2 leading-tight">
+                          {p.desc}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Topic Prompt Textarea */}
               <div className="mb-4">
                 <label htmlFor="ai-prompt-input" className="block text-xs font-semibold text-zinc-300 mb-2">
@@ -1338,6 +1603,24 @@ function CreatePageContent() {
                     </div>
                   )}
 
+                  {/* Qualitative Feedback Analysis */}
+                  {qualitativeFeedback.length > 0 && (
+                    <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/25 space-y-1.5 animate-fadeIn">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-300">
+                        <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
+                        <span>Story Diagnostic (Explainable Insights)</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        {qualitativeFeedback.map((fb, i) => (
+                          <div key={i} className="flex items-start gap-1.5 text-[11px] text-indigo-100">
+                            <span className="text-indigo-400 mt-0.5">•</span>
+                            <span>{fb}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Title & Opening Hook Card */}
                   <div className="glass-card rounded-2xl p-5 border-white/[0.08] space-y-3">
                     <div>
@@ -1353,9 +1636,21 @@ function CreatePageContent() {
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/25">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-purple-300 mb-1">
-                        <Flame className="h-3.5 w-3.5 text-amber-400" />
-                        <span>Opening Hook (First 2 Seconds)</span>
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-purple-300">
+                          <Flame className="h-3.5 w-3.5 text-amber-400" />
+                          <span>Opening Hook (First 2 Seconds)</span>
+                        </div>
+                        {activeProjectId && (
+                          <button
+                            type="button"
+                            onClick={handleOpenHookModal}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-amber-300 bg-amber-400/10 border border-amber-400/30 hover:bg-amber-400/20 transition-all shadow-sm"
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            <span>⚡ Try Another Hook</span>
+                          </button>
+                        )}
                       </div>
                       <p className="text-xs font-medium text-purple-100 leading-relaxed">
                         “{plannedStory.hook}”
@@ -1532,13 +1827,27 @@ function CreatePageContent() {
                           </span>
                         </div>
 
-                        {/* Bottom Kinetic Caption Overlay */}
+                        {/* Bottom Kinetic Caption Overlay (Matching ASS 1080x1920 layout) */}
                         <div className="phone-caption-overlay">
-                          <span className="text-[10px] uppercase font-bold text-cyan-400 block mb-0.5">
-                            Kinetic Caption
-                          </span>
-                          <p className="text-xs font-bold text-white leading-snug drop-shadow-md">
-                            {currentScene.caption || "CAPTION PREVIEW"}
+                          <p className="phone-caption-text">
+                            {(currentScene.caption || "CAPTION PREVIEW").split(" ").map((word, idx) => {
+                              const isFirst = idx === 0;
+                              const isEmphasis = word.length > 6 || word.toUpperCase() === word;
+                              return (
+                                <span
+                                  key={idx}
+                                  className={
+                                    isFirst
+                                      ? "phone-caption-active-word mr-1"
+                                      : isEmphasis
+                                      ? "phone-caption-emphasis-word mr-1"
+                                      : "mr-1"
+                                  }
+                                >
+                                  {word}
+                                </span>
+                              );
+                            })}
                           </p>
                         </div>
                       </div>
@@ -1799,6 +2108,75 @@ function CreatePageContent() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* HOOK ALTERNATIVES MODAL (Phase 6: Strategic Angles) */}
+      {showHookModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="glass-card max-w-lg w-full rounded-2xl border-white/[0.15] p-6 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/25">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Alternative Strategic Hooks</h3>
+                  <p className="text-xs text-zinc-400">High-retention angles faithful to your story topic</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHookModal(false)}
+                className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/[0.05]"
+              >
+                ✕
+              </button>
+            </div>
+
+            {isLoadingHooks ? (
+              <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-400">
+                <RefreshCw className="h-6 w-6 animate-spin text-amber-400" />
+                <p className="text-xs">Generating strategic alternatives...</p>
+              </div>
+            ) : hookAlternatives.length === 0 ? (
+              <div className="py-8 text-center text-zinc-400 text-xs">
+                No alternatives generated. Try again.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {hookAlternatives.map((alt, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-amber-400/40 transition-all space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                        {alt.strategy} Angle
+                      </span>
+                      <button
+                        type="button"
+                        disabled={isApplyingHook}
+                        onClick={() => handleApplyHook(alt.hook, alt.suggested_caption || alt.caption)}
+                        className="px-3 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-amber-400 hover:bg-amber-300 transition-all disabled:opacity-50"
+                      >
+                        {isApplyingHook ? "Applying..." : "Use This Hook"}
+                      </button>
+                    </div>
+                    <p className="text-xs text-zinc-200 font-medium leading-relaxed">
+                      “{alt.hook}”
+                    </p>
+                    {(alt.suggested_caption || alt.caption) && (
+                      <div className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+                        <span className="text-[10px] text-zinc-500 uppercase">Caption:</span>
+                        <span className="font-mono text-cyan-300">{alt.suggested_caption || alt.caption}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -18,6 +18,11 @@ class AIReelCreate(BaseModel):
     voice: str = "adam"
     music: Optional[str] = "ambient_chill"
     visual_source: str = "auto" # "auto" | "ai" | "local"
+    preset: Optional[str] = None
+
+class ApplyHookRequest(BaseModel):
+    hook: str
+    caption: Optional[str] = None
 
 class SceneUpdate(BaseModel):
     id: str
@@ -25,9 +30,12 @@ class SceneUpdate(BaseModel):
     caption: Optional[str] = None
     visual_direction: Optional[str] = None
     visual_filename: Optional[str] = None
+    visual_url: Optional[str] = None
     scene_role: Optional[str] = None
     motion: Optional[str] = None
     transition: Optional[str] = None
+    duration_seconds: Optional[float] = None
+    visual_prompt: Optional[str] = None
     visual_plan: Optional[VisualPlan] = None
     visual_source: Optional[str] = None
 
@@ -40,6 +48,17 @@ class RegenerateSceneRequest(BaseModel):
 class RegenerateVisualRequest(BaseModel):
     prompt: Optional[str] = None
     seed: Optional[int] = None
+
+class SelectVisualRequest(BaseModel):
+    visual_filename: str
+    visual_url: str
+    visual_type: Optional[str] = "custom_selected"
+
+class QualityGateResponse(BaseModel):
+    passed: bool
+    is_ready_to_post: bool
+    warnings: list[str] = Field(default_factory=list)
+    checks: dict[str, bool] = Field(default_factory=dict)
 
 class AssistantRequest(BaseModel):
     command: str
@@ -67,6 +86,7 @@ class ProjectResponse(BaseModel):
     title: str
     created_at: str
     status: JobStatus
+    lifecycle_state: str = "draft"
     duration_seconds: float
     video_url: Optional[str] = None
     thumbnail_url: Optional[str] = None
@@ -78,6 +98,7 @@ class ProjectResponse(BaseModel):
     mode: str
     source_type: str = "quick"
     visual_source: str = "auto"
+    active_preset: Optional[str] = None
     original_prompt: Optional[str] = None
     audience: Optional[str] = None
     tone: Optional[str] = None
@@ -85,6 +106,11 @@ class ProjectResponse(BaseModel):
     generated_story: Optional[Story] = None
     render_history: list[dict] = Field(default_factory=list)
     generation_diagnostics: list[dict] = Field(default_factory=list)
+    versions: list[dict] = Field(default_factory=list)
+    metrics: dict = Field(default_factory=dict)
+    qualitative_feedback: list[str] = Field(default_factory=list)
+    quality_gate: Optional[dict] = None
+    quality_warnings: list[str] = Field(default_factory=list)
 
 class MusicTrackResponse(BaseModel):
     id: str

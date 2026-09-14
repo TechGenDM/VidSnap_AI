@@ -16,6 +16,8 @@ import {
   Sliders,
   Sparkles,
   ArrowRight,
+  Copy,
+  Loader2,
 } from "lucide-react";
 
 interface ProjectItem {
@@ -23,6 +25,7 @@ interface ProjectItem {
   title: string;
   created_at: string;
   status: string;
+  lifecycle_state?: string;
   duration_seconds: number;
   video_url?: string;
   thumbnail_url?: string;
@@ -37,6 +40,8 @@ interface ProjectItem {
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+  const [actionNotice, setActionNotice] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -74,11 +79,49 @@ export default function ProjectsPage() {
     }
   };
 
+  const handleDuplicate = async (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDuplicatingId(id);
+    setActionNotice(null);
+
+    try {
+      const res = await fetch(`/api/projects/${id}/duplicate`, { method: "POST" });
+      if (res.ok) {
+        const newProj = await res.json();
+        setProjects((prev) => [newProj, ...prev]);
+        setActionNotice(`Created independent duplicate "${newProj.title}"`);
+        setTimeout(() => setActionNotice(null), 4000);
+      }
+    } catch (err) {
+      console.error("Failed to duplicate project", err);
+    } finally {
+      setDuplicatingId(null);
+    }
+  };
+
+  const getLifecycleBadge = (lifecycle?: string, status?: string) => {
+    const state = (lifecycle || status || "draft").toLowerCase();
+    if (state === "ready" || state === "completed") {
+      return { label: "Ready", color: "bg-emerald-950/80 text-emerald-400 border-emerald-500/30", icon: CheckCircle2 };
+    }
+    if (state === "rendering" || state === "processing") {
+      return { label: "Rendering...", color: "bg-amber-950/80 text-amber-300 border-amber-500/30 animate-pulse", icon: Loader2 };
+    }
+    if (state === "story_ready" || state === "planned") {
+      return { label: "Story Ready", color: "bg-indigo-950/80 text-indigo-300 border-indigo-500/30", icon: Sparkles };
+    }
+    if (state === "failed") {
+      return { label: "Failed", color: "bg-rose-950/80 text-rose-400 border-rose-500/30", icon: AlertCircle };
+    }
+    return { label: "Draft", color: "bg-zinc-900/80 text-zinc-300 border-zinc-700/40", icon: Film };
+  };
+
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.script.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || p.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || p.status === statusFilter || p.lifecycle_state === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -104,6 +147,14 @@ export default function ProjectsPage() {
         </Link>
       </div>
 
+      {/* Action Notice Banner */}
+      {actionNotice && (
+        <div className="mb-6 p-3 rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-cyan-200 text-xs flex items-center gap-2 animate-fadeIn">
+          <CheckCircle2 className="h-4 w-4 text-cyan-400 shrink-0" />
+          <span>{actionNotice}</span>
+        </div>
+      )}
+
       {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8">
         <div className="relative max-w-md w-full">
@@ -119,7 +170,7 @@ export default function ProjectsPage() {
         </div>
 
         <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.08] p-1 rounded-xl self-start sm:self-auto">
-          {["all", "completed", "queued"].map((f) => (
+          {["all", "ready", "story_ready", "rendering"].map((f) => (
             <button
               key={f}
               onClick={() => setStatusFilter(f)}
@@ -129,7 +180,7 @@ export default function ProjectsPage() {
                   : "text-zinc-400 hover:text-white"
               }`}
             >
-              {f}
+              {f.replace("_", " ")}
             </button>
           ))}
         </div>
@@ -171,7 +222,8 @@ export default function ProjectsPage() {
         /* Visual-First Cards: Thumbnail Dominates */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProjects.map((p) => {
-            const isCompleted = p.status === "completed";
+            const badge = getLifecycleBadge(p.lifecycle_state, p.status);
+            const BadgeIcon = badge.icon;
             const dateStr = new Date(p.created_at).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
@@ -206,19 +258,13 @@ export default function ProjectsPage() {
                     </div>
                   )}
 
-                  {/* Status Badge */}
+                  {/* Canonical Lifecycle Badge */}
                   <div className="absolute top-3 left-3">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase backdrop-blur-md border ${
-                        isCompleted
-                          ? "bg-emerald-950/80 text-emerald-400 border-emerald-500/30"
-                          : p.status === "failed"
-                          ? "bg-red-950/80 text-red-400 border-red-500/30"
-                          : "bg-cyan-950/80 text-cyan-300 border-cyan-500/30"
-                      }`}
+                      className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase backdrop-blur-md border ${badge.color}`}
                     >
-                      {isCompleted && <CheckCircle2 className="h-3 w-3" />}
-                      <span>{p.status}</span>
+                      <BadgeIcon className="h-3 w-3 shrink-0" />
+                      <span>{badge.label}</span>
                     </span>
                   </div>
 
@@ -258,6 +304,21 @@ export default function ProjectsPage() {
                     </Link>
 
                     <div className="flex items-center gap-1">
+                      {/* Duplicate Project Action */}
+                      <button
+                        onClick={(e) => handleDuplicate(p.id, e)}
+                        title="Duplicate as independent variant"
+                        disabled={duplicatingId === p.id}
+                        aria-label={`Duplicate ${p.title}`}
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors disabled:opacity-50"
+                      >
+                        {duplicatingId === p.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" />
+                        )}
+                      </button>
+
                       {p.video_url && (
                         <a
                           href={p.video_url}

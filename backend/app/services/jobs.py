@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 from app.config import settings
-from app.models import Job, Project, JobStatus, Scene
+from app.models import Job, Project, JobStatus, Scene, LifecycleState
 from app.database import db
 from app.services.ai import tts_service
 from app.services.audio import get_audio_duration, mix_voice_and_music
@@ -87,31 +87,43 @@ def process_quick_reel_job(job_id: str):
             img_file = project_dir / scene.visual_filename
             if img_file.exists():
                 image_paths.append(img_file)
+            elif (settings.MEDIA_DIR / "templates" / scene.visual_filename).exists():
+                image_paths.append(settings.MEDIA_DIR / "templates" / scene.visual_filename)
+            elif (settings.MEDIA_DIR / scene.visual_filename).exists():
+                image_paths.append(settings.MEDIA_DIR / scene.visual_filename)
+            else:
+                image_paths.append(settings.MEDIA_DIR / "templates" / "1.jpg")
 
         if not image_paths:
-            raise ValueError("No uploaded images found in project directory.")
+            raise ValueError("No visual assets found for scenes.")
 
         # Ensure project script exists
         if not project.script or len(project.script.strip()) < 3:
             project.script = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
 
-        # STEP 2: Generating Voice Narration
+        # Update Project lifecycle to rendering
+        project.lifecycle_state = LifecycleState.RENDERING
+        db.save_project(project)
+
+        # STEP 2: Scene-Level Audio Generation with Timeline Concatenation & Caching
         job.status = JobStatus.GENERATING_VOICE
-        job.step = "Synthesizing voice narration"
+        job.step = "Synthesizing voice narration (scene-level cached)"
         job.progress_percent = 35
         job.updated_at = now_iso()
         db.save_job(job)
 
-        raw_voice_path = project_dir / "voice_raw.mp3"
-        _, native_alignment = tts_service.generate_speech_with_alignment(
-            text=project.script,
-            voice_key=project.voice,
-            output_path=raw_voice_path,
-        )
+        from app.services.scene_audio import SceneAudioService
 
-        # Detect real narration audio duration
-        voice_duration = get_audio_duration(raw_voice_path)
-        logger.info(f"Generated voiceover duration: {voice_duration:.2f} seconds")
+        raw_voice_path, scene_durations, audio_telemetry = SceneAudioService.build_project_audio_plan(
+            project=project,
+            project_dir=project_dir,
+        )
+        tts_ms = audio_telemetry["assembly_ms"]
+        voice_duration = audio_telemetry["voice_duration"]
+        logger.info(
+            f"Voiceover assembled: {voice_duration:.2f}s in {tts_ms}ms "
+            f"({audio_telemetry['cached_scenes']} cached, {audio_telemetry['regenerated_scenes']} generated)"
+        )
 
         # STEP 3: Audio Balancing & Ducking
         job.step = "Balancing speech & background music"
@@ -133,50 +145,9 @@ def process_quick_reel_job(job_id: str):
         job.updated_at = now_iso()
         db.save_job(job)
 
-        from app.services.speech_alignment import SpeechAlignmentEngine
-
-        # Respect explicit scene captions if already present (AI Story or user edit)
-        existing_captions = [s.caption.strip() for s in project.scenes if s.caption and s.caption.strip()]
-        if len(existing_captions) == len(image_paths):
-            captions = existing_captions
-        else:
-            captions = split_script_into_captions(project.script, len(image_paths))
-            for idx, c in enumerate(captions):
-                if idx < len(project.scenes):
-                    project.scenes[idx].caption = c
-
-        # Calculate proportional scene durations to bound word-level alignment
-        num_scenes = len(project.scenes)
-        est_durs = [s.duration_seconds for s in project.scenes if s.duration_seconds and s.duration_seconds > 0]
-        if len(est_durs) == num_scenes and sum(est_durs) > 0:
-            total_est = sum(est_durs)
-            proportional_durations = [(d / total_est) * voice_duration for d in est_durs]
-        else:
-            proportional_durations = [voice_duration / max(1, num_scenes)] * num_scenes
-
-        # Align speech for each scene into kinetic CaptionSegments
-        align_sources_used = []
-        for idx, scene in enumerate(project.scenes):
-            scene_dur = proportional_durations[idx] if idx < len(proportional_durations) else 4.0
-            narration_text = scene.narration or scene.caption
-            words, segments, align_src = SpeechAlignmentEngine.align_scene(
-                narration=narration_text,
-                scene_duration=scene_dur,
-                audio_path=raw_voice_path,
-                native_alignment=native_alignment,
-                style="kinetic",
-            )
-            scene.caption_segments = segments
-            scene.alignment_source = align_src
-            align_sources_used.append(align_src)
-            if segments:
-                scene.caption_segment = segments[0]
-
-        primary_alignment_source = (
-            "native" if "native" in align_sources_used
-            else ("transcription" if "transcription" in align_sources_used else "estimated")
-        )
-        logger.info(f"Speech alignment completed for {num_scenes} scenes using '{primary_alignment_source}' source.")
+        # Captions and word-level alignment are already populated and synchronized by SceneAudioService
+        captions = [s.caption or s.narration for s in project.scenes]
+        logger.info(f"Speech alignment synchronized for {len(project.scenes)} scenes.")
 
         # STEP 5: Visual Planning & RenderPlan Construction
         job.step = "Constructing cinematic render plan with camera motion"
@@ -218,10 +189,12 @@ def process_quick_reel_job(job_id: str):
         job.updated_at = now_iso()
         db.save_job(job)
 
+        render_t0 = time.perf_counter()
         _, scene_durations = composite_render_plan(
             plan=render_plan,
             temp_dir=temp_dir,
         )
+        render_ms = round((time.perf_counter() - render_t0) * 1000, 1)
 
         # STEP 7: Quality Frame Inspection (15%, 50%, 85%)
         job.step = "Inspecting rendered frames for cinematic quality standards"
@@ -246,7 +219,33 @@ def process_quick_reel_job(job_id: str):
             f"Resolution: {inspection_result.resolution}, Metrics: {inspection_result.metrics}"
         )
 
-        # STEP 8: Thumbnail Generation
+        # STEP 8: Final Reel Quality Gate (Reliability & Social-Ready Standard)
+        job.step = "Executing final quality gate validation"
+        job.progress_percent = 95
+        job.updated_at = now_iso()
+        db.save_job(job)
+
+        from app.services.quality_gate import QualityGateService
+
+        quality_report = QualityGateService.validate_reel(
+            project=project,
+            video_path=output_video_path,
+            frame_inspection_issues=inspection_result.issues,
+        )
+
+        if not quality_report.passed:
+            critical_msg = "; ".join(quality_report.blocking_errors)
+            logger.error(f"Reel Quality Gate FAILED for {project.id}: {critical_msg}")
+            raise RuntimeError(f"Reel Quality Gate failed: {critical_msg}")
+
+        logger.info(
+            f"Quality Gate {quality_report.status_label} for {project.id}. "
+            f"ReadyToPost: {quality_report.is_ready_to_post}, Warnings: {quality_report.actionable_warnings}"
+        )
+        project.quality_gate = quality_report.model_dump()
+        project.quality_warnings = quality_report.actionable_warnings
+
+        # STEP 9: Thumbnail Generation
         thumbnail_path = settings.THUMBNAILS_DIR / f"{project.id}.jpg"
         generate_video_thumbnail(
             video_path=output_video_path,
@@ -264,23 +263,43 @@ def process_quick_reel_job(job_id: str):
             if idx < len(captions):
                 scene.caption = captions[idx]
 
+        # Update metrics & lifecycle
         project.status = JobStatus.COMPLETED
+        project.lifecycle_state = LifecycleState.READY
         project.duration_seconds = round(final_audio_duration, 2)
         project.video_filename = f"{project.id}.mp4"
         project.video_url = f"/media/reels/{project.id}.mp4"
         project.thumbnail_url = f"/media/thumbnails/{project.id}.jpg"
+
+        project.metrics.tts_generation_ms = tts_ms
+        project.metrics.render_ms = render_ms
+        if project.created_at:
+            try:
+                created_dt = datetime.fromisoformat(project.created_at)
+                now_dt = datetime.now(timezone.utc)
+                total_ms = (now_dt - created_dt).total_seconds() * 1000
+                project.metrics.total_creation_ms = round(total_ms, 1)
+                project.metrics.time_to_final_reel_ms = round(total_ms, 1)
+            except Exception:
+                pass
+
         project.render_history.append({
             "rendered_at": now_iso(),
             "duration_seconds": round(final_audio_duration, 2),
             "video_filename": f"{project.id}.mp4",
             "voice": project.voice,
             "music": project.music,
+            "render_ms": render_ms,
+            "tts_ms": tts_ms,
             "inspection": {
                 "passed": inspection_result.passed,
                 "resolution": inspection_result.resolution,
                 "metrics": inspection_result.metrics,
             },
         })
+
+        # Save immutable version snapshot of the rendered state
+        project.create_snapshot(f"Rendered Reel (v{len(project.versions) + 1})")
         db.save_project(project)
 
         # Mark Job Completed
@@ -290,7 +309,7 @@ def process_quick_reel_job(job_id: str):
         job.completed_at = now_iso()
         job.updated_at = now_iso()
         db.save_job(job)
-        logger.info(f"Job {job_id} successfully completed for Project {project.id}!")
+        logger.info(f"Job {job_id} successfully completed for Project {project.id} in {render_ms}ms render time!")
 
     except Exception as e:
         logger.exception(f"Job {job_id} failed: {e}")
@@ -301,4 +320,6 @@ def process_quick_reel_job(job_id: str):
         db.save_job(job)
 
         project.status = JobStatus.FAILED
+        project.lifecycle_state = LifecycleState.FAILED
         db.save_project(project)
+

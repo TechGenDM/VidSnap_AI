@@ -113,8 +113,11 @@ async def create_quick_reel(
         "message": "Quick Reel job enqueued successfully.",
     }
 
+import time
 from app.services.story_generation import get_story_provider
 from app.services.visual_provider import smart_visual_provider
+from app.services.creator_presets import evaluate_story_qualitative
+from app.models import LifecycleState, CreationMetrics
 
 @router.post("/ai")
 async def create_ai_reel(payload: AIReelCreate):
@@ -123,6 +126,7 @@ async def create_ai_reel(payload: AIReelCreate):
     Accepts idea prompt and parameters, produces structured Story, matches or generates visuals,
     and returns canonical project state for human review without auto-rendering.
     """
+    start_time = time.perf_counter()
     project_id = str(uuid.uuid4())
     now = now_iso()
 
@@ -150,13 +154,18 @@ async def create_ai_reel(payload: AIReelCreate):
 
     # 3. Formulate narration script from scenes
     full_script = " ".join([s.narration for s in story.scenes if s.narration])
+    elapsed_story_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
 
-    # 4. Save canonical Project
+    # 4. Derive qualitative feedback
+    qualitative_bullets = evaluate_story_qualitative(story, scenes)
+
+    # 5. Save canonical Project
     project = Project(
         id=project_id,
         title=story.title,
         created_at=now,
         status=JobStatus.QUEUED,
+        lifecycle_state=LifecycleState.STORY_READY,
         duration_seconds=story.estimated_duration,
         voice=payload.voice,
         music=payload.music or "ambient_chill",
@@ -166,6 +175,7 @@ async def create_ai_reel(payload: AIReelCreate):
         mode="ai",
         source_type="ai",
         visual_source=payload.visual_source,
+        active_preset=payload.preset,
         original_prompt=payload.prompt,
         audience=payload.audience,
         tone=payload.tone,
@@ -173,14 +183,25 @@ async def create_ai_reel(payload: AIReelCreate):
         generated_story=story,
         render_history=[],
         generation_diagnostics=diagnostics,
+        qualitative_feedback=qualitative_bullets,
+        metrics=CreationMetrics(
+            story_generation_ms=elapsed_story_ms,
+            time_to_first_story_ms=elapsed_story_ms,
+            time_to_first_preview_ms=elapsed_story_ms,
+        ),
     )
+    # 6. Immutable snapshot of Version 1
+    project.create_snapshot("Initial Story (v1)")
     db.save_project(project)
 
     return {
         "project_id": project_id,
         "status": "planned",
+        "lifecycle_state": project.lifecycle_state,
         "story": story.model_dump(),
         "scenes": [s.model_dump() for s in project.scenes],
         "script": full_script,
+        "qualitative_feedback": qualitative_bullets,
+        "metrics": project.metrics.model_dump(),
         "message": "AI Story generated successfully. Review and edit before rendering.",
     }

@@ -100,19 +100,53 @@ body {
   box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
-/* Kinetic Caption Overlay Simulator inside Phone */
+/* Authentic Kinetic Caption Simulator inside Phone (Matching 1080x1920 ASS Specs) */
 .phone-caption-overlay {
   position: absolute;
-  bottom: 60px;
-  left: 16px;
-  right: 16px;
-  padding: 10px 14px;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  bottom: 19.8%;
+  left: 5.5%;
+  right: 5.5%;
   text-align: center;
   z-index: 30;
+  pointer-events: none;
+}
+
+.phone-caption-text {
+  font-family: Arial, -apple-system, sans-serif;
+  font-weight: 900;
+  font-size: 13.5px;
+  line-height: 1.25;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow:
+    -1.5px -1.5px 0 #000,
+     1.5px -1.5px 0 #000,
+    -1.5px  1.5px 0 #000,
+     1.5px  1.5px 0 #000,
+     0px 2px 4px rgba(0, 0, 0, 0.95);
+  letter-spacing: 0.02em;
+}
+
+.phone-caption-active-word {
+  color: #00f0ff;
+  font-weight: 900;
+  text-shadow:
+    -1.5px -1.5px 0 #000,
+     1.5px -1.5px 0 #000,
+    -1.5px  1.5px 0 #000,
+     1.5px  1.5px 0 #000,
+     0 0 8px rgba(0, 240, 255, 0.8);
+}
+
+.phone-caption-emphasis-word {
+  color: #ffd700;
+  font-weight: 900;
+  text-shadow:
+    -1.5px -1.5px 0 #000,
+     1.5px -1.5px 0 #000,
+    -1.5px  1.5px 0 #000,
+     1.5px  1.5px 0 #000,
+     0 0 8px rgba(255, 215, 0, 0.7);
 }
 
 /* Touch-friendly min tap targets */

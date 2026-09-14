@@ -27,6 +27,16 @@ import {
   Eye,
   Flame,
   Film,
+  History,
+  Copy,
+  Loader2,
+  Check,
+  X,
+  ChevronRight,
+  Info,
+  Upload,
+  Image as ImageIcon,
+  ShieldCheck,
 } from "lucide-react";
 
 interface VisualPlanData {
@@ -59,11 +69,42 @@ interface SceneItem {
   caption_segments?: any[];
 }
 
+interface ProjectVersionItem {
+  version_number: number;
+  created_at: string;
+  label: string;
+  title: string;
+  hook: string;
+  duration_seconds: number;
+  voice: string;
+  music?: string;
+  style: string;
+  scenes_count?: number;
+  scenes?: any[];
+}
+
+interface HookAlternative {
+  id: string;
+  strategy: string;
+  label: string;
+  hook: string;
+  caption: string;
+}
+
+interface VisualAlternativeItem {
+  filename: string;
+  url: string;
+  label: string;
+  type: string;
+  domain?: string;
+}
+
 interface ProjectDetail {
   id: string;
   title: string;
   created_at: string;
   status: string;
+  lifecycle_state?: string;
   duration_seconds: number;
   video_url?: string;
   thumbnail_url?: string;
@@ -78,7 +119,24 @@ interface ProjectDetail {
   tone?: string;
   target_length?: string;
   scenes: SceneItem[];
+  qualitative_feedback?: string[];
+  quality_gate?: any;
+  quality_warnings?: string[];
+  versions?: ProjectVersionItem[];
+  metrics?: any;
 }
+
+const CREATOR_COMMAND_CHIPS = [
+  { label: "🪝 Stronger Hook", cmd: "Make the hook stronger" },
+  { label: "🔥 Provocative", cmd: "Make this more provocative" },
+  { label: "⏱️ 20s Reel", cmd: "Make this 20 seconds" },
+  { label: "✂️ Shorter", cmd: "Make this shorter" },
+  { label: "💻 Technical", cmd: "Make this more technical" },
+  { label: "💬 Conversational", cmd: "Make it sound more conversational" },
+  { label: "🔤 Simpler Language", cmd: "Use simpler language" },
+  { label: "🎯 Stronger Ending", cmd: "Give me a stronger ending" },
+  { label: "🧹 Deduplicate", cmd: "Remove unnecessary repetition" },
+];
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -108,29 +166,145 @@ export default function ProjectDetailPage() {
   const [regeneratingVisualSceneId, setRegeneratingVisualSceneId] = useState<string | null>(null);
   const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
 
+  // Version History Modal state
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [versions, setVersions] = useState<ProjectVersionItem[]>([]);
+  const [isLoadingVersions, setIsLoadingVersions] = useState(false);
+  const [isRestoringVersion, setIsRestoringVersion] = useState<number | null>(null);
+
+  // Hook Alternatives Modal state
+  const [showHookModal, setShowHookModal] = useState(false);
+  const [hookAlternatives, setHookAlternatives] = useState<HookAlternative[]>([]);
+  const [isLoadingHooks, setIsLoadingHooks] = useState(false);
+  const [isApplyingHook, setIsApplyingHook] = useState(false);
+
+  // Duplication state
+  const [isDuplicating, setIsDuplicating] = useState(false);
+
+  // Visual Alternatives & Custom B-Roll state (Phase 7)
+  const [showVisualAlternativesModal, setShowVisualAlternativesModal] = useState(false);
+  const [visualAlternativesSceneOrder, setVisualAlternativesSceneOrder] = useState<number | null>(null);
+  const [visualAlternatives, setVisualAlternatives] = useState<VisualAlternativeItem[]>([]);
+  const [isLoadingAlternatives, setIsLoadingAlternatives] = useState(false);
+  const [isUploadingBroll, setIsUploadingBroll] = useState<number | null>(null);
+  const fileInputRefs = useRef<{ [order: number]: HTMLInputElement | null }>({});
+
   // HTML5 Video ref to seek when selecting scenes in completed reels
   const videoPlayerRef = useRef<HTMLVideoElement | null>(null);
 
-  useEffect(() => {
-    if (!projectId) return;
+  const handleUploadBrollClick = (sceneOrder: number) => {
+    fileInputRefs.current[sceneOrder]?.click();
+  };
 
-    const loadProject = async () => {
-      try {
-        const res = await fetch(`/api/projects/${projectId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setProject(data);
-        } else {
-          setNotFound(true);
-        }
-      } catch (err) {
-        console.error("Failed to load project", err);
-        setNotFound(true);
-      } finally {
-        setIsLoading(false);
+  const handleBrollFileChange = async (sceneOrder: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !project) return;
+
+    setIsUploadingBroll(sceneOrder);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/upload-asset`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setAssistantFeedback(`✨ Custom B-Roll uploaded for Scene #${sceneOrder}!`);
+        setTimeout(() => setAssistantFeedback(null), 3500);
+      } else {
+        const err = await res.json();
+        alert(err.detail || "Failed to upload asset.");
       }
-    };
+    } catch (err) {
+      console.error("Upload error", err);
+    } finally {
+      setIsUploadingBroll(null);
+      if (e.target) e.target.value = "";
+    }
+  };
 
+  const handleOpenVisualAlternatives = async (sceneOrder: number) => {
+    if (!project) return;
+    setVisualAlternativesSceneOrder(sceneOrder);
+    setShowVisualAlternativesModal(true);
+    setIsLoadingAlternatives(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/visual-alternatives`);
+      if (res.ok) {
+        const data = await res.json();
+        setVisualAlternatives(data.alternatives || []);
+      }
+    } catch (e) {
+      console.error("Failed loading visual alternatives", e);
+    } finally {
+      setIsLoadingAlternatives(false);
+    }
+  };
+
+  const handleSelectVisualAlternative = async (alt: VisualAlternativeItem) => {
+    if (!project || visualAlternativesSceneOrder === null) return;
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${visualAlternativesSceneOrder}/select-visual`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visual_filename: alt.filename,
+          visual_url: alt.url,
+          visual_type: alt.type,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setShowVisualAlternativesModal(false);
+        setAssistantFeedback(`Visual for Scene #${visualAlternativesSceneOrder} set to '${alt.label}'.`);
+        setTimeout(() => setAssistantFeedback(null), 3000);
+      }
+    } catch (e) {
+      console.error("Failed selecting visual alternative", e);
+    }
+  };
+
+  const handleRemoveCustomVisual = async (sceneOrder: number) => {
+    if (!project) return;
+    try {
+      const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/visual`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setAssistantFeedback(`Reverted Scene #${sceneOrder} to stock fallback visual.`);
+        setTimeout(() => setAssistantFeedback(null), 3000);
+      }
+    } catch (e) {
+      console.error("Failed removing visual", e);
+    }
+  };
+
+  const loadProject = async () => {
+    if (!projectId) return;
+    try {
+      const res = await fetch(`/api/projects/${projectId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data);
+      } else {
+        setNotFound(true);
+      }
+    } catch (err) {
+      console.error("Failed to load project", err);
+      setNotFound(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadProject();
   }, [projectId]);
 
@@ -138,7 +312,6 @@ export default function ProjectDetailPage() {
   const handleSelectScene = (index: number) => {
     setSelectedSceneIndex(index);
     if (project?.video_url && videoPlayerRef.current && project.scenes) {
-      // Calculate scene start timestamp
       let startSecs = 0;
       for (let i = 0; i < index; i++) {
         startSecs += project.scenes[i]?.duration_seconds || 4;
@@ -154,7 +327,7 @@ export default function ProjectDetailPage() {
 
   const handleSceneChange = (
     sceneId: string,
-    field: "narration" | "caption" | "visual_direction",
+    field: "narration" | "caption" | "visual_direction" | "motion" | "transition" | "visual_prompt",
     value: string
   ) => {
     if (!project) return;
@@ -180,11 +353,11 @@ export default function ProjectDetailPage() {
             scenes: prev.scenes.map((s) => (s.order === sceneOrder ? { ...s, ...data.scene } : s)),
           };
         });
-        setAssistantFeedback(`✨ Scene #${sceneOrder} regenerated!`);
+        setAssistantFeedback(`Scene #${sceneOrder} regenerated.`);
         setTimeout(() => setAssistantFeedback(null), 3000);
       }
     } catch (e) {
-      console.error("Regenerate scene failed", e);
+      console.error("Regenerate scene error", e);
     } finally {
       setRegeneratingSceneId(null);
     }
@@ -196,19 +369,21 @@ export default function ProjectDetailPage() {
     try {
       const res = await fetch(`/api/projects/${project.id}/scenes/${sceneOrder}/regenerate-visual`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
       });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to regenerate visual.");
+      if (res.ok) {
+        const data = await res.json();
+        setProject((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            scenes: prev.scenes.map((s) => (s.order === sceneOrder ? { ...s, ...data.scene } : s)),
+          };
+        });
+        setAssistantFeedback(`Visual for Scene #${sceneOrder} regenerated.`);
+        setTimeout(() => setAssistantFeedback(null), 3000);
       }
-      const data = await res.json();
-      setProject(data.project);
-      setAssistantFeedback(`✨ Visual for Scene #${sceneOrder} regenerated!`);
-      setTimeout(() => setAssistantFeedback(null), 3000);
-    } catch (e: any) {
-      alert("Could not regenerate visual: " + e.message);
+    } catch (e) {
+      console.error("Regenerate visual error", e);
     } finally {
       setRegeneratingVisualSceneId(null);
     }
@@ -289,6 +464,10 @@ export default function ProjectDetailPage() {
             narration: s.narration,
             caption: s.caption,
             visual_direction: s.visual_direction,
+            motion: s.motion,
+            transition: s.transition,
+            duration_seconds: s.duration_seconds,
+            visual_source: s.visual_source,
           })),
         }),
       });
@@ -368,6 +547,7 @@ export default function ProjectDetailPage() {
     }
   };
 
+  // Ask VidSnap Handler
   const handleAskAssistant = async (commandOverride?: string) => {
     const cmd = commandOverride || assistantPrompt;
     if (!cmd.trim() || !project) return;
@@ -385,7 +565,11 @@ export default function ProjectDetailPage() {
       if (res.ok) {
         const data = await res.json();
         setProject(data.project);
-        setAssistantFeedback(data.action || "Story updated by Ask VidSnap.");
+        if (data.success) {
+          setAssistantFeedback(`✨ ${data.action} (Snapshot saved to history)`);
+        } else {
+          setAssistantFeedback(`ℹ️ ${data.action}`);
+        }
         setAssistantPrompt("");
       }
     } catch (err) {
@@ -393,6 +577,125 @@ export default function ProjectDetailPage() {
     } finally {
       setIsAssistantWorking(false);
     }
+  };
+
+  // Phase 6: Version History Handlers
+  const fetchVersions = async () => {
+    if (!projectId) return;
+    setIsLoadingVersions(true);
+    try {
+      const res = await fetch(`/api/projects/${projectId}/versions`);
+      if (res.ok) {
+        const data = await res.json();
+        setVersions(data);
+      }
+    } catch (e) {
+      console.error("Failed to load versions", e);
+    } finally {
+      setIsLoadingVersions(false);
+    }
+  };
+
+  const handleOpenHistory = () => {
+    setShowHistoryModal(true);
+    fetchVersions();
+  };
+
+  const handleRestoreVersion = async (versionNum: number) => {
+    if (!project) return;
+    setIsRestoringVersion(versionNum);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/versions/${versionNum}/restore`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setShowHistoryModal(false);
+        setAssistantFeedback(`Restored project state from Version ${versionNum}!`);
+        setTimeout(() => setAssistantFeedback(null), 4000);
+      }
+    } catch (e) {
+      console.error("Failed to restore version", e);
+    } finally {
+      setIsRestoringVersion(null);
+    }
+  };
+
+  // Phase 6: Project Duplication Handler
+  const handleDuplicateProject = async () => {
+    if (!project) return;
+    setIsDuplicating(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/duplicate`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const newProj = await res.json();
+        router.push(`/projects/${newProj.id}`);
+      }
+    } catch (e) {
+      console.error("Failed to duplicate project", e);
+      setIsDuplicating(false);
+    }
+  };
+
+  // Phase 6: Hook Alternatives Handlers
+  const handleOpenHookModal = async () => {
+    if (!project) return;
+    setShowHookModal(true);
+    setIsLoadingHooks(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/alternatives/hook`);
+      if (res.ok) {
+        const data = await res.json();
+        setHookAlternatives(data.alternatives || []);
+      }
+    } catch (e) {
+      console.error("Failed to fetch hook alternatives", e);
+    } finally {
+      setIsLoadingHooks(false);
+    }
+  };
+
+  const handleApplyHook = async (hookText: string, captionText?: string) => {
+    if (!project) return;
+    setIsApplyingHook(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/apply-hook`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hook: hookText, caption: captionText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data.project);
+        setShowHookModal(false);
+        setAssistantFeedback("Applied alternative hook and saved snapshot!");
+        setTimeout(() => setAssistantFeedback(null), 4000);
+      }
+    } catch (e) {
+      console.error("Failed to apply hook", e);
+    } finally {
+      setIsApplyingHook(false);
+    }
+  };
+
+  const getLifecycleBadge = (lifecycle?: string, status?: string) => {
+    const state = (lifecycle || status || "draft").toLowerCase();
+    if (state === "ready" || state === "completed") {
+      return { label: "Ready", color: "bg-emerald-950/80 text-emerald-400 border-emerald-500/30", icon: CheckCircle2 };
+    }
+    if (state === "rendering" || state === "processing") {
+      return { label: "Rendering...", color: "bg-amber-950/80 text-amber-300 border-amber-500/30 animate-pulse", icon: Loader2 };
+    }
+    if (state === "story_ready" || state === "planned") {
+      return { label: "Story Ready", color: "bg-indigo-950/80 text-indigo-300 border-indigo-500/30", icon: Sparkles };
+    }
+    if (state === "failed") {
+      return { label: "Failed", color: "bg-rose-950/80 text-rose-400 border-rose-500/30", icon: AlertCircle };
+    }
+    return { label: "Draft", color: "bg-zinc-900/80 text-zinc-300 border-zinc-700/40", icon: Film };
   };
 
   if (notFound) {
@@ -409,12 +712,12 @@ export default function ProjectDetailPage() {
               {projectId}
             </code>
           </p>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex justify-center gap-3">
             <Link
               href="/projects"
-              className="rounded-xl bg-white/[0.05] hover:bg-white/[0.1] px-5 py-2.5 text-xs font-semibold text-white transition-all"
+              className="rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2.5 text-xs font-semibold text-white hover:bg-white/[0.1]"
             >
-              ← Return to Projects
+              Go to Projects
             </Link>
             <Link
               href="/create"
@@ -442,6 +745,9 @@ export default function ProjectDetailPage() {
       ? project.scenes[selectedSceneIndex] || project.scenes[0]
       : null;
 
+  const badge = getLifecycleBadge(project.lifecycle_state, project.status);
+  const BadgeIcon = badge.icon;
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 w-full">
       {/* Top Header & Breadcrumbs */}
@@ -455,22 +761,49 @@ export default function ProjectDetailPage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h1 className="text-lg sm:text-xl font-bold text-white truncate max-w-xs sm:max-w-md">
                 {project.title}
               </h1>
-              <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-2 py-0.5 rounded-full uppercase">
-                {project.mode} Reel
+              {/* Lifecycle State Badge */}
+              <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${badge.color}`}>
+                <BadgeIcon className="h-3 w-3 shrink-0" />
+                <span>{badge.label}</span>
               </span>
             </div>
             <p className="text-xs text-zinc-400">
-              Story Editor • Total duration: ~{Math.round(project.duration_seconds)}s • {project.scenes.length} Scenes
+              Story Editor • ~{Math.round(project.duration_seconds)}s • {project.scenes.length} Scenes • Voice: {project.voice}
             </p>
           </div>
         </div>
 
         {/* Primary Action Buttons */}
         <div className="flex flex-wrap items-center gap-2">
+          {/* Version History Trigger */}
+          <button
+            onClick={handleOpenHistory}
+            className="flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.07] px-3 py-2 text-xs font-semibold text-zinc-300 hover:text-white transition-all"
+            title="View immutable version history and restore points"
+          >
+            <History className="h-3.5 w-3.5 text-cyan-400" />
+            <span>History ({project.versions?.length || 1})</span>
+          </button>
+
+          {/* Duplicate Project Trigger */}
+          <button
+            onClick={handleDuplicateProject}
+            disabled={isDuplicating}
+            className="flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.07] px-3 py-2 text-xs font-semibold text-zinc-300 hover:text-white transition-all disabled:opacity-50"
+            title="Duplicate as an independent project variant"
+          >
+            {isDuplicating ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-purple-400" />
+            ) : (
+              <Copy className="h-3.5 w-3.5 text-purple-400" />
+            )}
+            <span>Duplicate</span>
+          </button>
+
           <button
             onClick={saveScenes}
             disabled={isSaving || isRendering}
@@ -518,30 +851,49 @@ export default function ProjectDetailPage() {
           <RefreshCw className="h-4 w-4 animate-spin text-cyan-400 flex-shrink-0" />
           <div>
             <span className="font-semibold block text-white mb-0.5">VidSnap is rendering your story into video</span>
-            <span>{renderStep || "Processing speech synchronization and 1080×1920 video canvas..."}</span>
+            <span>{renderStep}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Qualitative Feedback Card (Honest, explainable review bullets) */}
+      {project.qualitative_feedback && project.qualitative_feedback.length > 0 && (
+        <div className="mb-6 p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300">
+            <Info className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Story Pacing & Structure Insights</span>
+          </div>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {project.qualitative_feedback.map((bullet, bIdx) => (
+              <span
+                key={bIdx}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs bg-cyan-950/40 border border-cyan-500/25 text-cyan-200"
+              >
+                <Check className="h-3 w-3 text-cyan-400 shrink-0" />
+                <span>{bullet}</span>
+              </span>
+            ))}
           </div>
         </div>
       )}
 
       {/* Mobile Tab Switcher */}
-      <div className="lg:hidden flex items-center gap-1.5 p-1 mb-6 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+      <div className="flex lg:hidden items-center justify-center p-1 bg-white/[0.03] border border-white/[0.08] rounded-xl mb-6">
         <button
-          type="button"
           onClick={() => setMobileTab("storyboard")}
-          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
             mobileTab === "storyboard"
-              ? "bg-white/[0.1] text-white border border-white/[0.15]"
+              ? "bg-cyan-500 text-black shadow-md"
               : "text-zinc-400 hover:text-white"
           }`}
         >
           Storyboard ({project.scenes.length})
         </button>
         <button
-          type="button"
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
             mobileTab === "preview"
-              ? "bg-white/[0.1] text-white border border-white/[0.15]"
+              ? "bg-cyan-500 text-black shadow-md"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -549,32 +901,41 @@ export default function ProjectDetailPage() {
         </button>
       </div>
 
-      {/* Desktop 2-Column Layout */}
+      {/* 2-Column Responsive Layout: Left Storyboard, Right Sticky Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Storyboard Scene Cards */}
+        {/* Left Column: Storyboard Scenes (VidSnap edits the story!) */}
         <div className={`lg:col-span-7 flex flex-col gap-6 ${mobileTab === "preview" ? "hidden lg:flex" : "flex"}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-cyan-400" />
-              <h2 className="text-base font-bold text-white">Storyboard Scenes</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+                Story Scenes ({project.scenes.length})
+              </h2>
             </div>
-            <span className="text-xs text-zinc-500">
-              Click any scene to focus companion preview
-            </span>
+
+            <button
+              onClick={handleRegenerateStory}
+              disabled={isRegeneratingStory}
+              className="flex items-center gap-1 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              <RotateCcw className={`h-3.5 w-3.5 ${isRegeneratingStory ? "animate-spin" : ""}`} />
+              <span>Regenerate Angle</span>
+            </button>
           </div>
 
           {/* Scene Cards List */}
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {project.scenes.map((scene, idx) => {
               const isSelected = selectedSceneIndex === idx;
+
               return (
                 <div
                   key={scene.id}
                   onClick={() => handleSelectScene(idx)}
-                  className={`glass-card rounded-2xl p-5 transition-all cursor-pointer flex flex-col gap-4 ${
+                  className={`glass-card rounded-2xl p-4 transition-all cursor-pointer border ${
                     isSelected
-                      ? "glass-card-active"
-                      : "border-white/[0.08] hover:border-white/[0.15]"
+                      ? "border-cyan-500 shadow-lg shadow-cyan-500/10 bg-cyan-950/20"
+                      : "border-white/[0.08] hover:border-white/[0.18]"
                   }`}
                 >
                   {/* Top Header of Scene Card */}
@@ -594,6 +955,23 @@ export default function ProjectDetailPage() {
                           {scene.scene_role}
                         </span>
                       )}
+
+                      {/* Try Another Hook Button on Scene 1 */}
+                      {scene.order === 1 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenHookModal();
+                          }}
+                          className="flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 hover:bg-amber-500/25 transition-all shadow-sm"
+                          title="Try 2 distinct strategic hook alternatives"
+                        >
+                          <Sparkles className="h-3 w-3 text-amber-400" />
+                          <span>Try Another Hook</span>
+                        </button>
+                      )}
+
                       {(scene.visual_plan?.motion || scene.motion) && (
                         <span className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide bg-blue-500/10 text-blue-300 border border-blue-500/20 capitalize">
                           {(scene.visual_plan?.motion || scene.motion || "").replace(/_/g, " ")}
@@ -657,32 +1035,85 @@ export default function ProjectDetailPage() {
                   </div>
 
                   {/* Scene Body: Thumbnail + Script Fields */}
-                  <div className="flex flex-col sm:flex-row items-start gap-4">
-                    {/* Visual Thumbnail */}
-                    <div className="flex flex-col gap-2 w-full sm:w-32 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                      <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-zinc-900 border border-white/[0.1]">
+                  <div className="flex flex-col sm:flex-row items-start gap-4 pt-3">
+                    {/* Visual Thumbnail & Direct Creative Controls */}
+                    <div className="flex flex-col gap-1.5 w-full sm:w-36 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                      <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-zinc-900 border border-white/[0.1] group">
                         <img
                           src={scene.visual_url}
                           alt={`Scene ${scene.order}`}
                           className="w-full h-full object-cover"
                         />
-                        {scene.visual_source === "ai" && (
-                          <div className="absolute top-1.5 right-1.5 bg-purple-900/90 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-purple-200">
-                            AI
-                          </div>
-                        )}
+                        <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
+                          {scene.visual_source === "custom" && (
+                            <span className="bg-emerald-600/90 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-white">
+                              CUSTOM
+                            </span>
+                          )}
+                          {scene.visual_source === "ai" && (
+                            <span className="bg-purple-900/90 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-purple-200">
+                              AI
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Regenerate Visual Button */}
-                      <button
-                        type="button"
-                        disabled={regeneratingVisualSceneId === scene.id}
-                        onClick={() => handleRegenerateVisual(scene.order, scene.id)}
-                        className="w-full flex items-center justify-center gap-1 py-1 px-2 rounded-lg text-[10px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/25 transition-all disabled:opacity-40"
-                      >
-                        <Sparkles className={`h-3 w-3 ${regeneratingVisualSceneId === scene.id ? "animate-spin" : ""}`} />
-                        <span>{regeneratingVisualSceneId === scene.id ? "Generating..." : "Regen Visual"}</span>
-                      </button>
+                      {/* Hidden file input for custom B-roll upload */}
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        ref={(el) => { fileInputRefs.current[scene.order] = el; }}
+                        onChange={(e) => handleBrollFileChange(scene.order, e)}
+                        className="hidden"
+                      />
+
+                      {/* Action buttons: Upload B-Roll & Choose Alternatives */}
+                      <div className="grid grid-cols-2 gap-1 w-full">
+                        <button
+                          type="button"
+                          disabled={isUploadingBroll === scene.order}
+                          onClick={() => handleUploadBrollClick(scene.order)}
+                          className="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg text-[10px] font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/25 hover:bg-emerald-500/20 transition-all disabled:opacity-40"
+                          title="Upload custom B-roll image or video"
+                        >
+                          <Upload className="h-3 w-3" />
+                          <span>{isUploadingBroll === scene.order ? "..." : "Upload"}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleOpenVisualAlternatives(scene.order)}
+                          className="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg text-[10px] font-semibold text-cyan-300 bg-cyan-500/10 border border-cyan-500/25 hover:bg-cyan-500/20 transition-all"
+                          title="Select from stock or project visual alternatives"
+                        >
+                          <ImageIcon className="h-3 w-3" />
+                          <span>Alts</span>
+                        </button>
+                      </div>
+
+                      {/* Row 2: Regenerate AI Visual & Reset */}
+                      <div className="flex items-center gap-1 w-full">
+                        <button
+                          type="button"
+                          disabled={regeneratingVisualSceneId === scene.id}
+                          onClick={() => handleRegenerateVisual(scene.order, scene.id)}
+                          className="flex-1 flex items-center justify-center gap-1 py-1 px-2 rounded-lg text-[10px] font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/25 transition-all disabled:opacity-40"
+                        >
+                          <Sparkles className={`h-3 w-3 ${regeneratingVisualSceneId === scene.id ? "animate-spin" : ""}`} />
+                          <span>{regeneratingVisualSceneId === scene.id ? "..." : "Regen AI"}</span>
+                        </button>
+
+                        {scene.visual_source === "custom" && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCustomVisual(scene.order)}
+                            className="p-1 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 border border-white/[0.08] transition-all"
+                            title="Revert to stock fallback"
+                          >
+                            <RotateCcw className="h-3 w-3" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Script Fields */}
@@ -699,29 +1130,65 @@ export default function ProjectDetailPage() {
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-1">
                             Screen Caption
                           </label>
                           <input
                             type="text"
                             value={scene.caption}
                             onChange={(e) => handleSceneChange(scene.id, "caption", e.target.value)}
-                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white focus:border-cyan-400 focus:outline-none"
+                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-2.5 py-1.5 text-xs font-bold text-cyan-300 placeholder-zinc-500 focus:border-cyan-400 focus:outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
-                            Visual Direction
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-1">
+                            Visual Prompt Direction
                           </label>
                           <input
                             type="text"
                             value={scene.visual_direction || ""}
                             onChange={(e) => handleSceneChange(scene.id, "visual_direction", e.target.value)}
-                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-300 focus:border-cyan-400 focus:outline-none"
+                            placeholder="Visual scene direction..."
+                            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.02] px-2.5 py-1.5 text-xs text-zinc-300 placeholder-zinc-600 focus:border-cyan-400 focus:outline-none"
                           />
+                        </div>
+                      </div>
+
+                      {/* Camera Motion & Transition Controls */}
+                      <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/[0.04]">
+                        <div>
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-1">
+                            Camera Motion
+                          </label>
+                          <select
+                            value={scene.motion || scene.visual_plan?.motion || "slow_zoom_in"}
+                            onChange={(e) => handleSceneChange(scene.id, "motion", e.target.value)}
+                            className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-300 focus:border-cyan-400 focus:outline-none capitalize"
+                          >
+                            <option value="slow_zoom_in">Slow Zoom In</option>
+                            <option value="slow_zoom_out">Slow Zoom Out</option>
+                            <option value="pan_left">Pan Left</option>
+                            <option value="pan_right">Pan Right</option>
+                            <option value="tilt_up">Tilt Up</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-1">
+                            Transition
+                          </label>
+                          <select
+                            value={scene.transition || scene.visual_plan?.transition || "crossfade"}
+                            onChange={(e) => handleSceneChange(scene.id, "transition", e.target.value)}
+                            className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-300 focus:border-cyan-400 focus:outline-none capitalize"
+                          >
+                            <option value="crossfade">Crossfade (0.3s)</option>
+                            <option value="short_fade">Short Fade</option>
+                            <option value="cut">Direct Cut</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -731,33 +1198,29 @@ export default function ProjectDetailPage() {
             })}
           </div>
 
-          {/* Ask VidSnap: Compact AI Command Interface */}
-          <div className="glass-card rounded-2xl p-5 border-cyan-500/20 bg-[#0c0e17]">
+          {/* Ask VidSnap: Compact Creative Control Layer */}
+          <div className="glass-card rounded-2xl p-4 border border-cyan-500/30 bg-gradient-to-br from-cyan-950/20 via-zinc-900/40 to-purple-950/20 shadow-xl">
             <div className="flex items-center gap-2 mb-2">
               <Bot className="h-4 w-4 text-cyan-400" />
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Ask VidSnap (AI Director)</h3>
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                Ask VidSnap AI
+              </h3>
+              <span className="text-[10px] text-zinc-400">
+                • 1-Click Creative Commands & Snapshot Protection
+              </span>
             </div>
-            <p className="text-xs text-zinc-400 mb-3">
-              Direct and reshape the story with natural language commands:
-            </p>
 
-            {/* Quick Action Chips */}
+            {/* Quick Command Chips */}
             <div className="flex flex-wrap gap-1.5 mb-3">
-              {[
-                "Make the hook stronger",
-                "Make this shorter",
-                "Make this more technical",
-                "Change the voice to Rachel",
-                "Make the tone punchy",
-                "Regenerate full story",
-              ].map((chip) => (
+              {CREATOR_COMMAND_CHIPS.map((chip) => (
                 <button
-                  key={chip}
+                  key={chip.label}
                   type="button"
-                  onClick={() => handleAskAssistant(chip)}
-                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white hover:border-cyan-500/40 transition-all"
+                  disabled={isAssistantWorking}
+                  onClick={() => handleAskAssistant(chip.cmd)}
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white hover:border-cyan-500/40 transition-all active:scale-98 disabled:opacity-50"
                 >
-                  {chip}
+                  {chip.label}
                 </button>
               ))}
             </div>
@@ -769,7 +1232,7 @@ export default function ProjectDetailPage() {
                 value={assistantPrompt}
                 onChange={(e) => setAssistantPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAskAssistant()}
-                placeholder="Ask VidSnap to adjust tone, pacing, or scene details..."
+                placeholder="Type a creative intent (e.g. 'Make this 20 seconds', 'Replace scene 2')..."
                 aria-label="Ask VidSnap command input"
                 className="flex-1 rounded-xl border border-white/[0.1] bg-white/[0.02] px-3 py-2 text-xs text-white placeholder-zinc-500 focus:border-cyan-400 focus:outline-none"
               />
@@ -789,8 +1252,8 @@ export default function ProjectDetailPage() {
             </div>
 
             {assistantFeedback && (
-              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-400 animate-fadeIn">
-                <CheckCircle2 className="h-3.5 w-3.5" />
+              <div className="mt-3 p-2.5 rounded-xl bg-white/[0.04] border border-cyan-500/30 text-xs text-cyan-200 animate-fadeIn flex items-start gap-2">
+                <CheckCircle2 className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
                 <span>{assistantFeedback}</span>
               </div>
             )}
@@ -856,13 +1319,27 @@ export default function ProjectDetailPage() {
                   </span>
                 </div>
 
-                {/* Bottom Kinetic Caption Overlay */}
+                {/* Bottom Kinetic Caption Overlay (Matching ASS 1080x1920 layout) */}
                 <div className="phone-caption-overlay">
-                  <span className="text-[10px] uppercase font-bold text-cyan-400 block mb-0.5">
-                    Screen Caption
-                  </span>
-                  <p className="text-xs font-bold text-white leading-snug drop-shadow-md">
-                    {currentScene.caption}
+                  <p className="phone-caption-text">
+                    {currentScene.caption.split(" ").map((word, idx) => {
+                      const isFirst = idx === 0;
+                      const isEmphasis = word.length > 6 || word.toUpperCase() === word;
+                      return (
+                        <span
+                          key={idx}
+                          className={
+                            isFirst
+                              ? "phone-caption-active-word mr-1"
+                              : isEmphasis
+                              ? "phone-caption-emphasis-word mr-1"
+                              : "mr-1"
+                          }
+                        >
+                          {word}
+                        </span>
+                      );
+                    })}
                   </p>
                 </div>
               </div>
@@ -893,8 +1370,340 @@ export default function ProjectDetailPage() {
               <span className="text-zinc-200 font-semibold">1080×1920 (9:16)</span>
             </div>
           </div>
+
+          {/* Quality Gate Diagnostic (Phase 7: Real Reliability Gate) */}
+          <div className="mt-3 w-full max-w-[320px] glass-card rounded-2xl p-4 border border-white/[0.1] bg-[#0c0f18]/90 shadow-xl flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Quality Gate
+                </span>
+              </div>
+              {project.video_url ? (
+                project.quality_gate?.passed ? (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    ✨ Ready to Post
+                  </span>
+                ) : project.quality_gate?.blocking_issues?.length > 0 ? (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                    ❌ Action Required
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                    ⚠️ Review Warnings
+                  </span>
+                )
+              ) : (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-800 text-zinc-400 border border-white/5">
+                  Pre-render Plan
+                </span>
+              )}
+            </div>
+
+            {/* Check Matrix */}
+            <div className="grid grid-cols-2 gap-1.5 text-[11px] pt-1 border-t border-white/[0.04]">
+              <div className="flex items-center gap-1 text-zinc-300">
+                <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                <span>1080×1920 (9:16)</span>
+              </div>
+              <div className="flex items-center gap-1 text-zinc-300">
+                <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                <span>Audio Sync</span>
+              </div>
+              <div className="flex items-center gap-1 text-zinc-300">
+                <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                <span>Safe Caption Zone</span>
+              </div>
+              <div className="flex items-center gap-1 text-zinc-300">
+                <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                <span>Best-Effort Continuity</span>
+              </div>
+            </div>
+
+            {/* Quality Warnings (if any) */}
+            {((project.quality_gate?.warnings && project.quality_gate.warnings.length > 0) ||
+              (project.quality_warnings && project.quality_warnings.length > 0)) && (
+              <div className="mt-1 p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200 flex flex-col gap-1">
+                {(project.quality_gate?.warnings || project.quality_warnings || []).map((w: string, i: number) => (
+                  <div key={i} className="flex items-start gap-1.5">
+                    <AlertCircle className="h-3 w-3 text-amber-400 shrink-0 mt-0.5" />
+                    <span>{w}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Modal 1: Version History Drawer / Modal */}
+      {showHistoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="glass-card rounded-3xl p-6 max-w-xl w-full border border-white/[0.12] bg-[#0c0f18] shadow-2xl max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2">
+                <History className="h-5 w-5 text-cyan-400" />
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Version History
+                  </h3>
+                  <p className="text-[11px] text-zinc-400">
+                    Immutable snapshots of past story states. Restoring never overwrites history.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-3">
+              {isLoadingVersions ? (
+                <div className="py-12 text-center text-zinc-400 flex flex-col items-center gap-2">
+                  <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+                  <span className="text-xs">Loading immutable snapshots...</span>
+                </div>
+              ) : versions.length === 0 ? (
+                <div className="py-12 text-center text-zinc-500 text-xs">
+                  No previous snapshots found for this project.
+                </div>
+              ) : (
+                [...versions].reverse().map((v) => {
+                  const vDate = new Date(v.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  return (
+                    <div
+                      key={v.version_number}
+                      className="p-3.5 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.15] transition-all flex flex-col gap-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                            v{v.version_number}
+                          </span>
+                          <span className="text-xs font-semibold text-white">
+                            {v.label}
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-mono text-zinc-500">
+                          {vDate}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-zinc-300 italic line-clamp-1">
+                        "{v.hook}"
+                      </p>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-white/[0.04]">
+                        <span className="text-[10px] text-zinc-400">
+                          {v.scenes?.length || 0} scenes • ~{Math.round(v.duration_seconds)}s • Voice: {v.voice}
+                        </span>
+                        <button
+                          onClick={() => handleRestoreVersion(v.version_number)}
+                          disabled={isRestoringVersion === v.version_number}
+                          className="px-3 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition-all disabled:opacity-50 flex items-center gap-1"
+                        >
+                          {isRestoringVersion === v.version_number ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <RotateCcw className="h-3 w-3" />
+                          )}
+                          <span>Restore</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 2: Hook Alternatives Modal */}
+      {showHookModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="glass-card rounded-3xl p-6 max-w-lg w-full border border-amber-500/30 bg-[#0c0f18] shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-amber-400" />
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Try Another Hook
+                  </h3>
+                  <p className="text-[11px] text-zinc-400">
+                    2 distinct strategic angles faithful to your topic and domain.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowHookModal(false)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="py-4 flex flex-col gap-4">
+              {isLoadingHooks ? (
+                <div className="py-12 text-center text-zinc-400 flex flex-col items-center gap-2">
+                  <Loader2 className="h-6 w-6 animate-spin text-amber-400" />
+                  <span className="text-xs">Formulating strategic alternative hooks...</span>
+                </div>
+              ) : hookAlternatives.length === 0 ? (
+                <div className="py-8 text-center text-zinc-500 text-xs">
+                  No hook alternatives available.
+                </div>
+              ) : (
+                hookAlternatives.map((alt) => (
+                  <div
+                    key={alt.id}
+                    className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-amber-500/40 transition-all flex flex-col gap-2.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                        {alt.label}
+                      </span>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase">
+                        Strategy: {alt.strategy}
+                      </span>
+                    </div>
+
+                    <p className="text-xs font-medium text-white leading-relaxed">
+                      "{alt.hook}"
+                    </p>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                      <span className="text-[10px] font-bold text-cyan-400 uppercase">
+                        Caption: {alt.caption}
+                      </span>
+                      <button
+                        onClick={() => handleApplyHook(alt.hook, alt.caption)}
+                        disabled={isApplyingHook}
+                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-bold text-xs shadow-md shadow-amber-500/20 transition-all disabled:opacity-50 flex items-center gap-1 active:scale-98"
+                      >
+                        {isApplyingHook ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-black" />
+                        ) : (
+                          <Check className="h-3.5 w-3.5 text-black" />
+                        )}
+                        <span>Use This Hook</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 3: Visual Alternatives & Asset Selector Modal (Phase 7) */}
+      {showVisualAlternativesModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="glass-card rounded-3xl p-6 max-w-2xl w-full border border-cyan-500/30 bg-[#0c0f18] shadow-2xl max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-cyan-400" />
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Select Visual for Scene #{visualAlternativesSceneOrder}
+                  </h3>
+                  <p className="text-[11px] text-zinc-400">
+                    Choose from stock library, project assets, or revert to default.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowVisualAlternativesModal(false)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4">
+              {isLoadingAlternatives ? (
+                <div className="py-12 text-center text-zinc-400 flex flex-col items-center gap-2">
+                  <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+                  <span className="text-xs">Loading visual candidates...</span>
+                </div>
+              ) : visualAlternatives.length === 0 ? (
+                <div className="py-8 text-center text-zinc-500 text-xs">
+                  No visual alternatives found.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {visualAlternatives.map((alt) => (
+                    <div
+                      key={alt.filename}
+                      className="group relative rounded-2xl overflow-hidden border border-white/[0.08] hover:border-cyan-400/50 bg-white/[0.02] flex flex-col transition-all cursor-pointer"
+                      onClick={() => handleSelectVisualAlternative(alt)}
+                    >
+                      <div className="aspect-[9/16] w-full bg-black/50 overflow-hidden relative">
+                        {alt.filename.endsWith(".mp4") ? (
+                          <video
+                            src={alt.url}
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <img
+                            src={alt.url}
+                            alt={alt.label}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        )}
+                        <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-black/75 text-cyan-300 border border-white/10">
+                          {alt.domain || alt.type}
+                        </span>
+                      </div>
+                      <div className="p-2.5 flex items-center justify-between gap-1">
+                        <span className="text-xs font-semibold text-zinc-200 truncate">
+                          {alt.label}
+                        </span>
+                        <button
+                          type="button"
+                          className="shrink-0 px-2 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-500 group-hover:text-black text-[10px] font-bold transition-all"
+                        >
+                          Use
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  if (visualAlternativesSceneOrder !== null) {
+                    handleRemoveCustomVisual(visualAlternativesSceneOrder);
+                    setShowVisualAlternativesModal(false);
+                  }
+                }}
+                className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1.5 transition-colors"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>Revert to Stock Fallback</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowVisualAlternativesModal(false)}
+                className="px-4 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 text-xs font-semibold transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

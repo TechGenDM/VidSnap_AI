@@ -102,6 +102,10 @@ class TTSProvider:
                     return output_path, native_alignment
             except Exception as e:
                 logger.warning(f"ElevenLabs TTS with timestamps failed ({e}). Falling back to local TTS engine...")
+                err_str = str(e).lower()
+                if "authentication_error" in err_str or "invalid_api_key" in err_str or "401" in err_str or "api_key_id" in err_str:
+                    logger.warning("ElevenLabs key is invalid or an ID; disabling ElevenLabs client to avoid network delays.")
+                    self.client = None
 
         # Fallback Engine (macOS 'say' command converted to MP3 via ffmpeg)
         logger.info(f"Using local TTS fallback (Voice: {voice_info['macos_voice']})...")
