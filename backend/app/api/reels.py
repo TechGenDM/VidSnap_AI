@@ -188,6 +188,7 @@ async def create_ai_reel(payload: AIReelCreate):
             story_generation_ms=elapsed_story_ms,
             time_to_first_story_ms=elapsed_story_ms,
             time_to_first_preview_ms=elapsed_story_ms,
+            is_activated=True,
         ),
     )
     # 6. Immutable snapshot of Version 1

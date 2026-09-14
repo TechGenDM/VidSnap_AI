@@ -85,58 +85,58 @@ class TopicInterpreter:
                 "The leverage moves up a level: from writing code to deciding what gets built.",
             ]
             hook_angles = {
-                "contrarian": f"{topic} aren't just helping developers write code. They're changing who does the writing in the first place.",
-                "problem": f"The biggest bottleneck in software engineering today isn't typing speed. It's the friction of manual implementation.",
-                "future": f"In five years, writing software line by line will feel as outdated as punching cards into a mainframe.",
-                "curiosity": f"Most people think {topic} is about faster autocomplete. The reality under the hood is completely different.",
+                "contrarian": f"The biggest misconception about {topic} is that traditional methods are still good enough.",
+                "problem": f"The single biggest bottleneck in {topic} isn't raw compute. It's how your architecture is structured.",
+                "future": f"In the next generation of software, systems built without {topic} simply won't scale.",
+                "curiosity": f"Why are top engineering teams quietly rethinking their entire approach to {topic}?",
             }
 
         elif domain == "science":
             core_claim = f"The physical mechanisms behind {topic} reveal counterintuitive laws of nature."
-            audience_value = "Grasp an everyday natural phenomenon through simple, elegant physics."
-            tension = "What looks like a simple visual reality is actually the result of microscopic particle collisions."
+            audience_value = "Grasp a fundamental concept through clear, intuitive physics."
+            tension = "What looks simple on the surface is actually governed by elegant microscopic principles."
             key_points = [
-                "Light travels as a spectrum of wavelengths through the atmosphere.",
-                "Shorter wavelengths scatter far more intensely off microscopic particles.",
-                "The human eye perceives the accumulated scattered wavelengths across the sky.",
+                f"The physical laws governing {topic} contradict common intuition.",
+                "Small foundational interactions produce massive observable effects.",
+                "Understanding the core mechanism unlocks how the entire system behaves.",
             ]
             hook_angles = {
-                "contrarian": f"The sky isn't actually blue because of reflections from the ocean. The real mechanism comes down to how light collides with air.",
-                "problem": f"If sunlight is pure white, why doesn't the sky look white during the day? Here is the physics.",
-                "future": f"Understanding how light scatters through our atmosphere is the exact same method astronomers use to detect water on distant exoplanets.",
-                "curiosity": f"Have you ever wondered why sunlight looks warm and yellow, but paints the entire sky vivid blue?",
+                "contrarian": f"The most startling truth about {topic} is completely opposite to what common intuition tells us.",
+                "problem": f"Why do standard textbooks make {topic} sound complicated when the core principle is so simple?",
+                "future": f"The mind-bending implications of {topic} are shaping the future of physics and technology.",
+                "curiosity": f"What if the foundational law behind {topic} was hiding in plain sight all along?",
             }
 
         elif domain == "education":
-            core_claim = f"{topic} works through distributed, decentralized protocols coordinating in milliseconds."
-            audience_value = "Demystify complex global systems into an intuitive mental model."
-            tension = "You experience instant simplicity, but underneath lies billions of independently routed packets."
+            core_claim = f"{topic} works through distributed, decentralized coordination in fractions of a second."
+            audience_value = "Demystify a complex topic into an intuitive mental model."
+            tension = "You experience instant simplicity, but underneath lies seamless multi-step coordination."
             key_points = [
-                "Data is broken down into small, numbered packets.",
-                "Routers send packets across optimal paths through undersea fiber lines.",
-                "The receiving client reassembles the packets in strict order.",
+                f"Break {topic} down into simple, sequential building blocks.",
+                "Each layer communicates effortlessly with the next.",
+                "The entire process completes automatically without manual friction.",
             ]
             hook_angles = {
-                "contrarian": f"Whenever you tap a link, your phone isn't opening a single direct pipeline. It's slicing your data into thousands of packets.",
-                "problem": f"How do billions of devices stream video simultaneously across the globe without collapsing the network?",
-                "future": f"The underlying protocols designed decades ago now carry petabytes of global intelligence every second.",
-                "curiosity": f"What actually happens in the half-second between tapping 'search' and getting millions of results?",
+                "contrarian": f"Most people overcomplicate {topic}, but the core mechanism comes down to one mental model.",
+                "problem": f"Why do most explanations of {topic} leave people more confused than when they started?",
+                "future": f"Mastering {topic} gives you an unfair advantage in how you analyze complex problems.",
+                "curiosity": f"Can you explain the real principle behind {topic} in under thirty seconds?",
             }
 
         elif domain == "business":
-            core_claim = f"Product-market fit in {topic} is a pull dynamic, not an engineering milestone."
-            audience_value = "Avoid building in isolation and learn how to identify authentic market demand."
+            core_claim = f"Authentic traction in {topic} comes from eliminating real customer friction, not adding features."
+            audience_value = "Avoid building in isolation and learn how to solve high-value problems."
             tension = "Founders often build polished solutions for problems customers will never pay to solve."
             key_points = [
-                "Building features in isolation is a trap without real customer feedback.",
-                "Product-market fit feels like customer pull, not sales push.",
-                "Clarity on the core user pain point trumps complex feature sets.",
+                f"Building features in isolation is a trap without real feedback on {topic}.",
+                "Authentic traction feels like customer pull, not sales push.",
+                "Clarity on the single biggest pain point always wins.",
             ]
             hook_angles = {
-                "contrarian": f"Most startups don't fail from building the wrong product. They build the right product for a problem nobody actually has.",
-                "problem": f"The hardest phase of any startup isn't coding the MVP. It's finding customers who refuse to live without it.",
-                "future": f"The startups that survive the next decade won't be feature factories—they will be obsessed with singular customer pain points.",
-                "curiosity": f"Why do well-funded teams with brilliant engineers still fail to find product-market fit?",
+                "contrarian": f"Most projects around {topic} fail not from lack of effort, but from solving the wrong problem.",
+                "problem": f"The hardest part of {topic} isn't starting. It's finding an approach that truly scales.",
+                "future": f"The future of {topic} belongs to creators and builders who eliminate friction entirely.",
+                "curiosity": f"What is the single counterintuitive secret that separates top performers in {topic}?",
             }
 
         else: # personal
@@ -277,12 +277,15 @@ class TitleQualityValidator:
 GENERIC_HOOK_PATTERNS = [
     r"today\s+we('re|\s+are)\s+going\s+to\s+talk\s+about",
     r"in\s+this\s+video",
+    r"in\s+this\s+short",
+    r"welcome\s+to",
     r"let'?s\s+dive\s+into",
     r"welcome\s+back",
     r"this\s+topic\s+is\s+very\s+interesting",
     r"is\s+changing\s+the\s+world\s+in\s+many\s+ways",
     r"without\s+further\s+ado",
     r"have\s+you\s+ever\s+wondered\s+what\s+is",
+    r"^are\s+you\s+ready\s+to\b",
 ]
 
 OBVIOUS_FILLER_PATTERNS = [
@@ -294,6 +297,10 @@ OBVIOUS_FILLER_PATTERNS = [
     r"in\s+today's\s+fast-paced\s+world",
     r"an\s+amazing\s+topic",
     r"dive\s+into\s+this\s+amazing",
+    r"\bfurthermore\b",
+    r"\bin\s+conclusion\b",
+    r"\bat\s+the\s+end\s+of\s+the\s+day\b",
+    r"\bto\s+sum\s+it\s+up\b",
 ]
 
 
@@ -350,12 +357,12 @@ class StoryQualityValidator:
         if len(vis_dirs) != len(set(vis_dirs)):
             errors.append("Duplicate visual directions found across scenes.")
 
-        # 7. Sentence length check (no run-ons > 35 words without punctuation)
+        # 7. Sentence length check (no run-ons > 22 words without punctuation to ensure crisp spoken delivery)
         for scene in story.scenes:
             sentences = re.split(r"[.!?]", scene.narration)
             for s in sentences:
                 words = s.strip().split()
-                if len(words) > 35:
+                if len(words) > 22:
                     errors.append(f"Scene {scene.order} contains an unnaturally long sentence ({len(words)} words).")
 
         # 8. Duration sanity check
@@ -472,261 +479,83 @@ class CandidateStoryGenerator:
 
         title = TitleQualityValidator.clean_title(prompt=interpretation.raw_prompt, topic=topic)
 
-        # Build candidate based on angle
+        # Build candidate based on angle and creator's specific topic
+        t_clean = topic.strip().rstrip(".?!")
         if hook_strategy == "contrarian":
-            hook = interpretation.hook_angles.get("contrarian", f"{topic} isn't what most people think.")
-            if domain == "technology":
-                narrations = [
-                    hook,
-                    "Instead of developers writing every function line by line, software systems are shifting to goal-directed orchestration.",
-                    "That moves the human job from manual syntax to reviewing architecture, edge cases, and deployment outcomes.",
-                    "The valuable skill isn't disappearing—it's moving up a level.",
-                    "And that is the exact reason autonomous agents are defining the future of engineering.",
-                ]
-                captions = [
-                    "NOT JUST WRITING CODE",
-                    "GOAL-DIRECTED ORCHESTRATION",
-                    "REVIEW OVER SYNTAX",
-                    "MOVING UP A LEVEL",
-                    "THE AUTONOMOUS FUTURE",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "science":
-                narrations = [
-                    hook,
-                    "Sunlight appears pure white to us, but it actually contains every color in the spectrum, each traveling at different wavelengths.",
-                    "Blue light travels in short, rapid waves, colliding with atmospheric gas molecules and scattering across the entire sky.",
-                    "That physical phenomenon is Rayleigh scattering, and it explains why daytime is drenched in blue.",
-                    "At sunset, the light passes through thicker air, leaving behind brilliant reds and oranges.",
-                ]
-                captions = [
-                    "NOT THE OCEAN",
-                    "WHITE LIGHT IS A SPECTRUM",
-                    "RAYLEIGH SCATTERING",
-                    "THE SUNSET SHIFT",
-                    "PHYSICS IN PLAIN SIGHT",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "business":
-                narrations = [
-                    hook,
-                    "Founders often spend six months polishing features in isolation before confirming if real customers care.",
-                    "Product-market fit isn't a feature milestone. It's the moment the market pulls the product out of your hands.",
-                    "Until you feel that customer pull, extra code is just noise masking the absence of demand.",
-                    "Validate the pain point first. Then build the solution.",
-                ]
-                captions = [
-                    "THE WRONG PROBLEM",
-                    "BUILDING IN ISOLATION",
-                    "MARKET PULL OVER PUSH",
-                    "NOISE VS REAL DEMAND",
-                    "VALIDATE BEFORE BUILDING",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "education":
-                narrations = [
-                    hook,
-                    "Every photo, message, and video gets sliced into tiny data packets tagged with digital addresses.",
-                    "Global routers pass these packets along fiber cables across ocean floors in fractions of a millisecond.",
-                    "At the destination, the TCP protocol reassembles them in exact sequence without losing a byte.",
-                    "Millions of packets, zero human intervention, happening continuously.",
-                ]
-                captions = [
-                    "SLICED INTO PACKETS",
-                    "ACROSS OCEAN FLOORS",
-                    "REASSEMBLED IN SEQUENCE",
-                    "GLOBAL DATA IN MILLISECONDS",
-                    "HOW THE WEB WORKS",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            else: # personal
-                narrations = [
-                    hook,
-                    "The model itself was the easiest part. The real challenge was handling edge cases and latency under pressure.",
-                    "Users didn't care about what architecture I used—they only cared that it worked reliably every time.",
-                    "The biggest breakthrough came when I stopped theorizing and shipped the simplest working prototype.",
-                    "Iterating in public taught me ten times more than weeks of private planning.",
-                ]
-                captions = [
-                    "THE MODEL IS EASY",
-                    "EDGE CASES ARE HARD",
-                    "RESULTS OVER ARCHITECTURE",
-                    "SHIP EARLY PROTOTYPES",
-                    "BUILDING IN PUBLIC",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-
-            cta = "Save this reel. Which part surprised you the most?"
+            hook = interpretation.hook_angles.get("contrarian", f"The biggest misconception about {t_clean} is that traditional methods are still good enough.")
+            narrations = [
+                hook,
+                f"Most workflows treat {t_clean} as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+                f"When you understand how the underlying structure works, the usual friction completely disappears.",
+                f"That breakthrough is why leading builders and creators are quietly rethinking their entire approach to {t_clean}.",
+                f"Master this foundation today, and you will stay years ahead of everyone else.",
+            ]
+            captions = [
+                "THE HIDDEN TRUTH",
+                "FOUNDATIONAL STRUCTURE",
+                "FRICTION DISAPPEARS",
+                "THE REAL BREAKTHROUGH",
+                "STAY YEARS AHEAD",
+            ]
+            roles = ["hook", "context", "insight", "implication", "cta"]
+            cta = f"Save this reel. What is your experience with {t_clean}?"
 
         elif hook_strategy == "problem":
-            hook = interpretation.hook_angles.get("problem", f"The biggest issue with {topic} is hidden in plain sight.")
-            if domain == "technology":
-                narrations = [
-                    hook,
-                    "Teams spend forty percent of engineering hours on boilerplate, unit tests, and mundane dependency updates.",
-                    "Intelligent agents can now analyze codebases, run diagnostics, and draft verified fixes autonomously.",
-                    "This lets creators focus on high-leverage product decisions rather than repetitive syntax.",
-                    "Mastering this workflow today will be the biggest competitive advantage in modern tech.",
-                ]
-                captions = [
-                    "THE BOILERPLATE TRAP",
-                    "AUTONOMOUS DIAGNOSTICS",
-                    "FOCUS ON HIGH LEVERAGE",
-                    "THE NEW ADVANTAGE",
-                    "DIRECT THE MACHINES",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "science":
-                narrations = [
-                    hook,
-                    "Sunlight travels 93 million miles through the vacuum of space without scattering at all.",
-                    "The moment it strikes Earth's nitrogen and oxygen molecules, the short blue wavelengths scatter everywhere.",
-                    "Longer wavelengths like red pass right through, which is why the sun looks warm against the blue sky.",
-                    "It's an atmospheric prism created by nature every single day.",
-                ]
-                captions = [
-                    "THE SPACE VACUUM",
-                    "ATMOSPHERIC COLLISION",
-                    "BLUE SCATTERS EVERYWHERE",
-                    "NATURE'S LIVING PRISM",
-                    "DISCOVER THE SCIENCE",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "business":
-                narrations = [
-                    hook,
-                    "Most founders start by asking 'What can we build?' instead of 'Who is desperately looking for a fix?'",
-                    "If your early users aren't complaining when the server goes down, you haven't found product-market fit yet.",
-                    "Obsess over the exact moment a customer feels relief using your tool.",
-                    "That single breakthrough is worth fifty roadmap features.",
-                ]
-                captions = [
-                    "THE WRONG STARTING QUESTION",
-                    "DO USERS COMPLAIN?",
-                    "FINDING REAL RELIEF",
-                    "ONE ESSENTIAL BREAKTHROUGH",
-                    "SOLVE ONE PAIN",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "education":
-                narrations = [
-                    hook,
-                    "If millions of users accessed one central server at once, global infrastructure would crash in seconds.",
-                    "Instead, decentralized networks split the load across edge caches and optical fiber backbones.",
-                    "Your request travels to the nearest available node, returning data in the blink of an eye.",
-                    "That distributed resilience is what keeps modern society connected.",
-                ]
-                captions = [
-                    "NO CENTRAL BOTTLENECK",
-                    "DECENTRALIZED EDGE NODES",
-                    "INSTANT GLOBAL ROUTING",
-                    "DISTRIBUTED RESILIENCE",
-                    "THE GLOBAL BACKBONE",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            else: # personal
-                narrations = [
-                    hook,
-                    "My first build crashed immediately because I didn't plan for unexpected user inputs.",
-                    "Real users break things in ways you never imagine while testing in a clean local environment.",
-                    "Learning to build defensive fallbacks turned my brittle demo into a resilient, production app.",
-                    "Failure is just telemetry showing you what needs attention next.",
-                ]
-                captions = [
-                    "MY FIRST CRASH",
-                    "USERS BREAK EVERYTHING",
-                    "DEFENSIVE PRODUCT DESIGN",
-                    "FAILURE IS TELEMETRY",
-                    "KEEP ITERATING",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
+            hook = interpretation.hook_angles.get("problem", f"The biggest bottleneck in {t_clean} is completely hidden in plain sight.")
+            narrations = [
+                hook,
+                f"Creators and teams waste hours trying to optimize symptoms instead of solving the core bottleneck in {t_clean}.",
+                f"The secret is shifting from manual execution to an intelligent, automated feedback loop.",
+                f"Once you remove that bottleneck, results compound with virtually zero extra friction.",
+                f"Stop doing it the hard way—upgrade your approach to {t_clean} now.",
+            ]
+            captions = [
+                "HIDDEN IN PLAIN SIGHT",
+                "TREATING THE SYMPTOMS",
+                "INTELLIGENT LOOPS",
+                "COMPOUND RESULTS",
+                "UPGRADE YOUR APPROACH",
+            ]
+            roles = ["hook", "context", "insight", "implication", "cta"]
+            cta = f"Follow for more breakdowns on {t_clean}."
 
-            cta = "Drop your experience below. Have you faced this challenge?"
+        elif hook_strategy == "future":
+            hook = interpretation.hook_angles.get("future", f"In five years, how we handle {t_clean} will make today look like the stone age.")
+            narrations = [
+                hook,
+                f"Right now, almost everyone is relying on manual steps and outdated assumptions about {t_clean}.",
+                f"The next generation of tools handles the complexity automatically in the background.",
+                f"That frees you to focus on high-impact strategy while the system does the heavy lifting.",
+                f"The future of {t_clean} is already here for those paying attention.",
+            ]
+            captions = [
+                "THE COMING SHIFT",
+                "OUTDATED ASSUMPTIONS",
+                "AUTOMATED COMPLEXITY",
+                "HIGH IMPACT STRATEGY",
+                "THE FUTURE IS HERE",
+            ]
+            roles = ["hook", "context", "insight", "implication", "cta"]
+            cta = f"Share this with someone building in {t_clean}."
 
-        else: # future / curiosity
-            hook = interpretation.hook_angles.get("future", f"The trajectory of {topic} is about to accelerate.")
-            if domain == "technology":
-                narrations = [
-                    hook,
-                    "We are moving from conversational chatbots to autonomous systems that execute end-to-end tasks.",
-                    "Engineers will spend less time writing functions and more time curating goals and system constraints.",
-                    "The leverage of an individual developer is multiplying by ten, allowing solo founders to build enterprise platforms.",
-                    "Start directing intelligent workflows now, or compete against those who do.",
-                ]
-                captions = [
-                    "FROM CHAT TO EXECUTION",
-                    "CURATING SYSTEM CONSTRAINTS",
-                    "10X DEVELOPER LEVERAGE",
-                    "SOLO ENTERPRISE BUILDERS",
-                    "THE FUTURE IS HERE",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "science":
-                narrations = [
-                    hook,
-                    "When light hits gas molecules in our air, it scatters based on the exact diameter of the molecule.",
-                    "Blue light has the exact wavelength that scatters most easily across nitrogen and oxygen.",
-                    "On Mars, where the atmosphere is thin carbon dioxide and dust, the sky is actually butterscotch brown.",
-                    "Your view of the sky is entirely defined by the chemical envelope around your planet.",
-                ]
-                captions = [
-                    "MOLECULAR DIAMETER",
-                    "WHY BLUE SCATTERS",
-                    "THE MARTIAN SKY",
-                    "A CHEMICAL ENVELOPE",
-                    "LOOK TO THE SKY",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "business":
-                narrations = [
-                    hook,
-                    "The next generation of breakout startups will solve acute operational bottlenecks with tiny, elite teams.",
-                    "When software development costs drop toward zero, distribution and customer trust become the primary moats.",
-                    "Find a community that has a painful daily manual process, and automate it completely.",
-                    "That is how defensible companies are founded in 2026.",
-                ]
-                captions = [
-                    "TINY ELITE TEAMS",
-                    "DISTRIBUTION IS THE MOAT",
-                    "AUTOMATE DAILY PAIN",
-                    "THE 2026 PLAYBOOK",
-                    "BUILD WITH LEVERAGE",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            elif domain == "education":
-                narrations = [
-                    hook,
-                    "In the next decade, decentralized edge networks and satellite constellations will connect every square mile of the planet.",
-                    "Information will travel between continents through laser-linked space relays at near light speed.",
-                    "The foundation remains the humble data packet, proving that timeless protocols outlive hardware.",
-                    "The internet isn't static—it's an evolving planetary organism.",
-                ]
-                captions = [
-                    "PLANETARY NETWORKS",
-                    "LASER SPACE RELAYS",
-                    "TIMELESS PACKET DESIGN",
-                    "AN EVOLVING ORGANISM",
-                    "THE CONNECTED WORLD",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-            else: # personal
-                narrations = [
-                    hook,
-                    "Shipping my first project didn't just teach me tech—it gave me conviction that I can build anything.",
-                    "The distance between an idea in your head and a working product is shorter than it has ever been.",
-                    "Don't wait for permission or the perfect setup. Start with a tiny prototype today.",
-                    "The best way to learn is to put something real into the world.",
-                ]
-                captions = [
-                    "BUILDING REAL CONVICTION",
-                    "IDEA TO PRODUCT",
-                    "START TODAY",
-                    "PUT IT IN THE WORLD",
-                    "CREATE WITHOUT PERMISSION",
-                ]
-                roles = ["hook", "context", "insight", "implication", "cta"]
-
-            cta = "Share this with someone who needs to hear it today."
+        else: # curiosity
+            hook = interpretation.hook_angles.get("curiosity", f"What if the hardest part of {t_clean} could be solved in under thirty seconds?")
+            narrations = [
+                hook,
+                f"Most people think mastering {t_clean} requires months of painstaking trial and error.",
+                f"In reality, one counterintuitive insight changes how the entire workflow functions.",
+                f"Once you see the pattern, you cannot unsee how much time was being wasted.",
+                f"Try this mental model on your next project and watch what happens.",
+            ]
+            captions = [
+                "SOLVED IN SECONDS",
+                "MONTHS OF TRIAL",
+                "THE COUNTERINTUITIVE KEY",
+                "STOP WASTING TIME",
+                "TEST IT TODAY",
+            ]
+            roles = ["hook", "context", "insight", "implication", "cta"]
+            cta = f"Save this reel to test on your next project."
 
         # Visual directions matching tone/style
         visual_templates = [

@@ -280,6 +280,9 @@ def process_quick_reel_job(job_id: str):
                 total_ms = (now_dt - created_dt).total_seconds() * 1000
                 project.metrics.total_creation_ms = round(total_ms, 1)
                 project.metrics.time_to_final_reel_ms = round(total_ms, 1)
+                if not project.metrics.time_to_first_rendered_reel_ms:
+                    project.metrics.time_to_first_rendered_reel_ms = round(total_ms, 1)
+                project.metrics.is_activated = True
             except Exception:
                 pass
 

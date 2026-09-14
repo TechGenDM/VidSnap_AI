@@ -91,9 +91,17 @@ class CreationMetrics(BaseModel):
     tts_generation_ms: Optional[float] = None
     render_ms: Optional[float] = None
     total_creation_ms: Optional[float] = None
+    time_to_first_idea_ms: Optional[float] = None
     time_to_first_story_ms: Optional[float] = None
     time_to_first_preview_ms: Optional[float] = None
+    time_to_first_rendered_reel_ms: Optional[float] = None
     time_to_final_reel_ms: Optional[float] = None
+    has_edited_scene: bool = False
+    has_used_ask_vidsnap: bool = False
+    has_regenerated_version: bool = False
+    has_duplicated: bool = False
+    is_activated: bool = False # Defined as: Creator generates and successfully previews their first Reel
+    session_id: Optional[str] = None
 
 class ProjectVersion(BaseModel):
     version_number: int

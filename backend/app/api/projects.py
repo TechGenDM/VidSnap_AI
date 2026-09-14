@@ -122,6 +122,7 @@ async def update_project_scenes(project_id: str, payload: UpdateProjectScenes):
     if combined_script:
         project.script = combined_script
 
+    project.metrics.has_edited_scene = True
     db.save_project(project)
     return project.model_dump()
 
@@ -253,6 +254,7 @@ async def select_scene_visual(
     target_scene.visual_url = payload.visual_url
     target_scene.visual_source = payload.visual_type or "custom_selected"
 
+    project.metrics.has_edited_scene = True
     project.create_snapshot(f"Selected visual '{payload.visual_filename}' for Scene {scene_order}")
     db.save_project(project)
 
@@ -560,6 +562,8 @@ async def duplicate_project(project_id: str):
         versions=[],
         metrics=project.metrics.model_copy() if hasattr(project, "metrics") and project.metrics else None,
     )
+    if new_project.metrics:
+        new_project.metrics.has_duplicated = True
     # Independent version history snapshot
     new_project.create_snapshot(f"Initial Version (Duplicated from {project.id[:8]})")
     db.save_project(new_project)
@@ -591,6 +595,8 @@ async def restore_project_version(project_id: str, version_number: int):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    if project.metrics:
+        project.metrics.has_regenerated_version = True
     db.save_project(project)
     return {
         "status": "success",
@@ -652,6 +658,8 @@ async def apply_hook_alternative(project_id: str, payload: ApplyHookRequest):
     if project.generated_story:
         project.qualitative_feedback = evaluate_story_qualitative(project.generated_story, project.scenes)
 
+    if project.metrics:
+        project.metrics.has_edited_scene = True
     project.create_snapshot(f"Applied Alternative Hook: '{payload.hook[:30]}...'")
     db.save_project(project)
     return {
@@ -919,6 +927,8 @@ async def ask_vidsnap_assistant(project_id: str, payload: AssistantCommandReques
         )
 
     if success:
+        if project.metrics:
+            project.metrics.has_used_ask_vidsnap = True
         # Re-sync script & feedback
         combined = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
         if combined:

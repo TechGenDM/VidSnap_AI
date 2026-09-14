@@ -49,26 +49,26 @@ export default function HomePage() {
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-400 mb-6">
                 <Sparkles className="h-3.5 w-3.5 text-indigo-400 animate-pulse" />
-                <span>Next-Gen Video Generation Engine</span>
+                <span>Idea-to-Explainer Video Studio</span>
               </div>
 
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6">
-                Turn your ideas <br className="hidden sm:inline" />
-                into <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">videos.</span>
+                From raw idea <br className="hidden sm:inline" />
+                to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">high-retention Reel.</span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed">
-                Create polished short-form videos with AI-generated narration, captions, motion and music —{" "}
-                <span className="text-zinc-200 font-medium">without editing timelines.</span>
+              <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mb-8 leading-relaxed">
+                VidSnap helps solo creators, technical builders, and educators create short-form explainers{" "}
+                <span className="text-zinc-200 font-medium">significantly faster than manual timeline editors like CapCut.</span>
               </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-6">
                 <Link
                   href="/create"
                   className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-7 py-3.5 text-base font-semibold text-white shadow-xl shadow-indigo-500/25 hover:from-indigo-600 hover:to-purple-700 hover:shadow-indigo-500/40 transition-all active:scale-98"
                 >
                   <Zap className="h-5 w-5" />
-                  <span>Create a Reel</span>
+                  <span>Start Creating Free</span>
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Link>
 
@@ -78,6 +78,39 @@ export default function HomePage() {
                 >
                   <span>See how it works</span>
                 </a>
+              </div>
+
+              {/* 1-Click Starter Prompts for immediate creator activation */}
+              <div className="w-full max-w-xl">
+                <span className="block text-[11px] font-medium text-zinc-400 uppercase tracking-wider mb-2.5">
+                  ⚡ 1-Click Starter Topics (Jump directly into studio):
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/create?prompt=How%20Vector%20Databases%20Actually%20Work&preset=tech_creator"
+                    className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-indigo-950/40 border border-zinc-800 hover:border-indigo-500/50 rounded-lg px-3 py-1.5 transition-all"
+                  >
+                    <span>⚡ Vector Databases</span>
+                  </Link>
+                  <Link
+                    href="/create?prompt=The%20Feynman%20Technique%20for%20Rapid%20Learning&preset=educational"
+                    className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-indigo-950/40 border border-zinc-800 hover:border-indigo-500/50 rounded-lg px-3 py-1.5 transition-all"
+                  >
+                    <span>🎓 Feynman Technique</span>
+                  </Link>
+                  <Link
+                    href="/create?prompt=Why%2090%25%20of%20Startups%20Fail%20at%20Distribution&preset=product_showcase"
+                    className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-indigo-950/40 border border-zinc-800 hover:border-indigo-500/50 rounded-lg px-3 py-1.5 transition-all"
+                  >
+                    <span>🚀 Startup Distribution</span>
+                  </Link>
+                  <Link
+                    href="/create?prompt=What%20Nobody%20Tells%20You%20About%20Creative%20Burnout&preset=personal_story"
+                    className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-indigo-950/40 border border-zinc-800 hover:border-indigo-500/50 rounded-lg px-3 py-1.5 transition-all"
+                  >
+                    <span>🎙️ Creator Burnout</span>
+                  </Link>
+                </div>
               </div>
 
               {/* Trust/Philosophy Badge */}

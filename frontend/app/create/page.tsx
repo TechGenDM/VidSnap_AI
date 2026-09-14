@@ -121,68 +121,68 @@ interface HookAlternative {
 const CREATOR_PRESET_OPTIONS = [
   {
     id: "tech_creator",
-    label: "Tech Creator",
-    icon: "🚀",
-    tone: "Educational",
-    audience: "Tech Creators",
+    label: "Tech Explainer",
+    icon: "⚡",
+    tone: "Fast-Paced Explainer",
+    audience: "Tech Creators & Engineers",
     visualStyle: "Cinematic" as const,
     captionStyle: "Kinetic" as const,
     voice: "adam",
     music: "Upbeat" as const,
     length: "30s",
-    desc: "Fast technical breakdown with kinetic captions and driving score.",
+    desc: "High-momentum engineering & tech breakdown with kinetic captions & driving score.",
   },
   {
     id: "educational",
-    label: "Educational",
+    label: "Educational Concept",
     icon: "🎓",
-    tone: "Educational",
+    tone: "Conceptual Breakdown",
     audience: "Students & Learners",
     visualStyle: "Clean" as const,
     captionStyle: "Highlight" as const,
     voice: "rachel",
     music: "Ambient" as const,
     length: "30s",
-    desc: "Structured, clear explanation with clean framing and ambient score.",
+    desc: "Clear step-by-step concept breakdown with calm focus music & clean framing.",
   },
   {
     id: "storytelling",
-    label: "Storytelling",
+    label: "Cinematic Story",
     icon: "📖",
     tone: "Documentary Story",
     audience: "General Audience",
     visualStyle: "Documentary" as const,
     captionStyle: "Minimal" as const,
     voice: "antoni",
-    music: "Lo-Fi" as const,
+    music: "Cinematic" as const,
     length: "45s",
-    desc: "Reflective narrative journey with cinematic atmosphere.",
+    desc: "Atmospheric narrative journey with personal stakes, rich visuals & reflective pacing.",
   },
   {
     id: "product_showcase",
-    label: "Product Showcase",
-    icon: "✨",
-    tone: "High Energy",
-    audience: "General Audience",
+    label: "Product / Launch",
+    icon: "🚀",
+    tone: "Punchy Product Hook",
+    audience: "Early Adopters & Customers",
     visualStyle: "Vibrant" as const,
     captionStyle: "Kinetic" as const,
     voice: "josh",
     music: "Upbeat" as const,
-    length: "15s",
-    desc: "Snappy, benefit-first demo highlighting key value and quick CTA.",
+    length: "20s",
+    desc: "Punchy 20s product hook highlighting pain point, mechanism & decisive CTA.",
   },
   {
     id: "personal_story",
-    label: "Personal Story",
+    label: "Personal Reflection",
     icon: "🎙️",
-    tone: "Thought-Provoking",
-    audience: "General Audience",
+    tone: "First-Person Reflection",
+    audience: "Community & Peers",
     visualStyle: "Clean" as const,
     captionStyle: "Highlight" as const,
-    voice: "rachel",
+    voice: "bella",
     music: "Lo-Fi" as const,
     length: "30s",
-    desc: "Intimate, conversational reflection with thoughtful pacing.",
+    desc: "Intimate, conversational first-person reflection with warm lo-fi score.",
   },
 ];
 
@@ -197,11 +197,15 @@ const IDEA_CHIPS = [
 function CreatePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const initialMode = searchParams.get("mode") === "ai" ? "ai" : "quick";
+  const initialMode = searchParams.get("mode") === "quick" ? "quick" : "ai";
   const templateKey = searchParams.get("template");
+  const urlPrompt = searchParams.get("prompt");
+  const urlPreset = searchParams.get("preset");
 
-  // Mode Selection
+  // Mode Selection (default directly to AI Story Studio)
   const [activeMode, setActiveMode] = useState<"quick" | "ai" | "repurpose">(initialMode);
+  const [showQuickstartBanner, setShowQuickstartBanner] = useState<boolean>(true);
+  const [showFineTuning, setShowFineTuning] = useState<boolean>(false);
   
   // Navigational 4-Step Studio Flow (Idea -> Story -> Style -> Generate)
   const [currentStep, setCurrentStep] = useState<StudioStep>(1);
@@ -232,10 +236,10 @@ function CreatePageContent() {
 
   // AI Reel State (Step 1: Idea)
   const [aiPrompt, setAiPrompt] = useState(
-    "Explain why AI agents are changing software development."
+    urlPrompt || "Explain why AI agents are changing software development."
   );
-  const [aiAudience, setAiAudience] = useState("Tech Creators");
-  const [aiTone, setAiTone] = useState("Educational");
+  const [aiAudience, setAiAudience] = useState("Tech Creators & Engineers");
+  const [aiTone, setAiTone] = useState("Fast-Paced Explainer");
   const [aiLength, setAiLength] = useState("30s");
   const [aiVisualSource, setAiVisualSource] = useState("auto"); // "auto" | "ai" | "local"
 
@@ -245,8 +249,8 @@ function CreatePageContent() {
   const [isRegeneratingStory, setIsRegeneratingStory] = useState(false);
   const [reviewFeedback, setReviewFeedback] = useState<string | null>(null);
 
-  // Phase 6: Creator Presets, Qualitative Feedback, & Hook Alternatives
-  const [selectedPresetId, setSelectedPresetId] = useState<string>("tech_creator");
+  // Phase 6 & 8: Creator Presets, Qualitative Feedback, & Hook Alternatives
+  const [selectedPresetId, setSelectedPresetId] = useState<string>(urlPreset || "tech_creator");
   const [qualitativeFeedback, setQualitativeFeedback] = useState<string[]>([]);
   const [showHookModal, setShowHookModal] = useState<boolean>(false);
   const [hookAlternatives, setHookAlternatives] = useState<HookAlternative[]>([]);
@@ -266,6 +270,15 @@ function CreatePageContent() {
       setAiLength(p.length);
     }
   };
+
+  useEffect(() => {
+    if (urlPrompt) {
+      setAiPrompt(urlPrompt);
+    }
+    if (urlPreset && CREATOR_PRESET_OPTIONS.some((opt) => opt.id === urlPreset)) {
+      handleSelectPreset(urlPreset);
+    }
+  }, [urlPrompt, urlPreset]);
 
   const handleOpenHookModal = async () => {
     if (!activeProjectId) return;
@@ -322,7 +335,7 @@ function CreatePageContent() {
   const [humanVisualStyle, setHumanVisualStyle] = useState<"Cinematic" | "Clean" | "Vibrant" | "Documentary">("Cinematic");
   const [humanMotion, setHumanMotion] = useState<"Subtle" | "Dynamic" | "Cinematic">("Subtle");
   const [humanCaptions, setHumanCaptions] = useState<"Kinetic" | "Highlight" | "Minimal">("Kinetic");
-  const [humanMusic, setHumanMusic] = useState<"Ambient" | "Upbeat" | "Lo-Fi" | "None">("Ambient");
+  const [humanMusic, setHumanMusic] = useState<"Ambient" | "Upbeat" | "Lo-Fi" | "Cinematic" | "None">("Ambient");
   const [aiVoice, setAiVoice] = useState("adam");
 
   // Rendering & Job State
@@ -363,6 +376,7 @@ function CreatePageContent() {
       Ambient: "ambient_chill",
       Upbeat: "upbeat_pulse",
       "Lo-Fi": "lofi_beat",
+      Cinematic: "cinematic_acoustic",
       None: "none",
     };
     return {
@@ -1376,7 +1390,30 @@ function CreatePageContent() {
                 </div>
               </div>
 
-              {/* Creator Presets (Phase 6: Starting Configurations) */}
+              {/* Lightweight Onboarding Quickstart Banner */}
+              {showQuickstartBanner && (
+                <div className="mb-6 p-4 rounded-2xl border border-cyan-500/30 bg-cyan-950/30 flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-2.5">
+                    <Sparkles className="h-4 w-4 text-cyan-400 mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-xs font-semibold text-cyan-200">How VidSnap Works:</p>
+                      <p className="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                        <strong className="text-zinc-200">1. Pick a preset & idea</strong> → <strong className="text-zinc-200">2. Review storyboard & visuals</strong> → <strong className="text-zinc-200">3. Render 1080×1920 Reel.</strong> No keyframing or timeline editing required.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowQuickstartBanner(false)}
+                    className="text-zinc-500 hover:text-zinc-300 p-1"
+                    title="Dismiss"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Creator Presets (Phase 6 & 8: Starting Configurations) */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
@@ -1422,13 +1459,25 @@ function CreatePageContent() {
                   rows={4}
                   value={aiPrompt}
                   onChange={(e) => setAiPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                      e.preventDefault();
+                      if (aiPrompt.trim() && !isPlanning) {
+                        handleAiStoryGenerate();
+                      }
+                    }
+                  }}
                   placeholder="e.g. “Explain why AI agents are changing software development.”"
                   className="w-full rounded-2xl border border-white/[0.1] bg-white/[0.02] p-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-cyan-400 focus:outline-none resize-none leading-relaxed transition-all"
                 />
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-1.5 px-1">
+                  <span>Tip: Be specific about the core problem or insight</span>
+                  <span>Press ⌘+Enter to build storyboard</span>
+                </div>
               </div>
 
               {/* Quick Inspiration Chips */}
-              <div className="mb-8">
+              <div className="mb-6">
                 <span className="block text-[11px] text-zinc-500 mb-2">Need inspiration? Click a concept:</span>
                 <div className="flex flex-wrap gap-2">
                   {IDEA_CHIPS.map((chip) => (
@@ -1444,69 +1493,87 @@ function CreatePageContent() {
                 </div>
               </div>
 
-              {/* Creative Controls Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Target Audience
-                  </label>
-                  <select
-                    value={aiAudience}
-                    onChange={(e) => setAiAudience(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="Tech Creators">Tech Creators</option>
-                    <option value="General Audience">General Audience</option>
-                    <option value="Startup Founders">Startup Founders</option>
-                    <option value="Students & Learners">Students & Learners</option>
-                  </select>
-                </div>
+              {/* Optional Fine-Tuning Parameters (Accordion) */}
+              <div className="mb-8 border border-white/[0.08] rounded-2xl p-3.5 bg-white/[0.01]">
+                <button
+                  type="button"
+                  onClick={() => setShowFineTuning(!showFineTuning)}
+                  className="w-full flex items-center justify-between text-xs font-semibold text-zinc-400 hover:text-zinc-200"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Sliders className="h-3.5 w-3.5 text-zinc-400" />
+                    <span>Fine-Tune Story Parameters ({aiAudience}, {aiTone}, {aiLength})</span>
+                  </span>
+                  <span className="text-[10px] text-zinc-500">{showFineTuning ? "▲ Hide Options" : "▼ Customize"}</span>
+                </button>
+                {showFineTuning && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-3 border-t border-white/[0.06] animate-fadeIn">
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        Target Audience
+                      </label>
+                      <select
+                        value={aiAudience}
+                        onChange={(e) => setAiAudience(e.target.value)}
+                        className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+                      >
+                        <option value="Tech Creators & Engineers">Tech Creators & Engineers</option>
+                        <option value="General Audience">General Audience</option>
+                        <option value="Early Adopters & Customers">Early Adopters & Customers</option>
+                        <option value="Students & Learners">Students & Learners</option>
+                        <option value="Community & Peers">Community & Peers</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Narrative Tone
-                  </label>
-                  <select
-                    value={aiTone}
-                    onChange={(e) => setAiTone(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="Educational">Educational & Calm</option>
-                    <option value="High Energy">High Energy (Punchy)</option>
-                    <option value="Thought-Provoking">Thought-Provoking</option>
-                    <option value="Documentary Story">Documentary Story</option>
-                  </select>
-                </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        Narrative Tone
+                      </label>
+                      <select
+                        value={aiTone}
+                        onChange={(e) => setAiTone(e.target.value)}
+                        className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+                      >
+                        <option value="Fast-Paced Explainer">Fast-Paced Explainer</option>
+                        <option value="Conceptual Breakdown">Conceptual Breakdown</option>
+                        <option value="Punchy Product Hook">Punchy Product Hook</option>
+                        <option value="Documentary Story">Documentary Story</option>
+                        <option value="First-Person Reflection">First-Person Reflection</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Target Duration
-                  </label>
-                  <select
-                    value={aiLength}
-                    onChange={(e) => setAiLength(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="15s">15 seconds (Viral Hook)</option>
-                    <option value="30s">30 seconds (Standard Reel)</option>
-                    <option value="60s">60 seconds (Deep Dive)</option>
-                  </select>
-                </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        Target Duration
+                      </label>
+                      <select
+                        value={aiLength}
+                        onChange={(e) => setAiLength(e.target.value)}
+                        className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+                      >
+                        <option value="20s">20 seconds (Punchy Hook)</option>
+                        <option value="30s">30 seconds (Standard Reel)</option>
+                        <option value="45s">45 seconds (Cinematic Story)</option>
+                        <option value="60s">60 seconds (Deep Dive)</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Visual Source
-                  </label>
-                  <select
-                    value={aiVisualSource}
-                    onChange={(e) => setAiVisualSource(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="auto">Smart (Fast & Curated)</option>
-                    <option value="ai">Real AI Visuals</option>
-                    <option value="local">Stock Library</option>
-                  </select>
-                </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        Visual Source
+                      </label>
+                      <select
+                        value={aiVisualSource}
+                        onChange={(e) => setAiVisualSource(e.target.value)}
+                        className="w-full rounded-xl border border-white/[0.1] bg-zinc-900 px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+                      >
+                        <option value="auto">Smart (Fast & Curated)</option>
+                        <option value="ai">Real AI Visuals</option>
+                        <option value="local">Stock Library</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Build Story Button */}
@@ -1970,8 +2037,8 @@ function CreatePageContent() {
                   <label className="block text-xs font-semibold text-zinc-300 mb-2">
                     Background Music Track
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {(["Ambient", "Upbeat", "Lo-Fi", "None"] as const).map((track) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {(["Ambient", "Upbeat", "Lo-Fi", "Cinematic", "None"] as const).map((track) => (
                       <button
                         key={track}
                         type="button"
