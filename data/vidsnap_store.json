@@ -102356,6 +102356,1035 @@
         }
       },
       "quality_warnings": []
+    },
+    "598c8321-c003-456d-a344-1ba3c2819337": {
+      "id": "598c8321-c003-456d-a344-1ba3c2819337",
+      "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+      "created_at": "2026-09-15T02:24:27.133825+00:00",
+      "status": "queued",
+      "lifecycle_state": "rendering",
+      "duration_seconds": 28.0,
+      "video_filename": null,
+      "video_url": null,
+      "thumbnail_url": null,
+      "voice": "antoni",
+      "music": "cinematic_acoustic",
+      "style": "documentary",
+      "script": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough. Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward. When you understand how the underlying structure works, the usual friction completely disappears. That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+      "scenes": [
+        {
+          "id": "scene_1",
+          "order": 1,
+          "visual_filename": "scene_1.jpg",
+          "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_1.jpg",
+          "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+          "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+          "caption": "THE HIDDEN TRUTH",
+          "duration_seconds": 7.0,
+          "scene_role": "hook",
+          "match_quality": "fallback_local",
+          "visual_plan": {
+            "scene_id": 1,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in documentary",
+            "composition": "medium_close_up",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "cut",
+            "emphasis": "opening tension"
+          },
+          "caption_segment": {
+            "text": "THE HIDDEN TRUTH",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "THE"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "THE HIDDEN TRUTH",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "THE"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "cut",
+          "visual_source": "fallback_stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_2",
+          "order": 2,
+          "visual_filename": "scene_2.jpg",
+          "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_2.jpg",
+          "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+          "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+          "caption": "FOUNDATIONAL STRUCTURE",
+          "duration_seconds": 7.0,
+          "scene_role": "context",
+          "match_quality": "fallback_local",
+          "visual_plan": {
+            "scene_id": 2,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in documentary",
+            "composition": "wide_context",
+            "mood": "reflective",
+            "motion": "pan_left",
+            "transition": "crossfade",
+            "emphasis": "broad framing"
+          },
+          "caption_segment": {
+            "text": "FOUNDATIONAL STRUCTURE",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "FOUNDATIONAL"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "FOUNDATIONAL STRUCTURE",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "FOUNDATIONAL"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "pan_left",
+          "transition": "crossfade",
+          "visual_source": "fallback_stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_3",
+          "order": 3,
+          "visual_filename": "scene_3.jpg",
+          "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_3.jpg",
+          "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+          "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+          "caption": "FRICTION DISAPPEARS",
+          "duration_seconds": 7.0,
+          "scene_role": "insight",
+          "match_quality": "fallback_local",
+          "visual_plan": {
+            "scene_id": 3,
+            "visual_type": "global_network",
+            "subject": "network_graph",
+            "environment": "modern tech studio in documentary",
+            "composition": "macro_focus",
+            "mood": "focused",
+            "motion": "slow_zoom_in",
+            "transition": "crossfade",
+            "emphasis": "core revelation"
+          },
+          "caption_segment": {
+            "text": "FRICTION DISAPPEARS",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "FRICTION"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "FRICTION DISAPPEARS",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "FRICTION"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_in",
+          "transition": "crossfade",
+          "visual_source": "fallback_stock",
+          "alignment_source": "estimated"
+        },
+        {
+          "id": "scene_4",
+          "order": 4,
+          "visual_filename": "scene_4.jpg",
+          "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_4.jpg",
+          "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+          "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+          "caption": "THE REAL BREAKTHROUGH",
+          "duration_seconds": 7.0,
+          "scene_role": "implication",
+          "match_quality": "fallback_local",
+          "visual_plan": {
+            "scene_id": 4,
+            "visual_type": "developer_workstation",
+            "subject": "developer",
+            "environment": "dark minimalist workspace in documentary",
+            "composition": "clean_center",
+            "mood": "inviting",
+            "motion": "slow_zoom_out",
+            "transition": "crossfade",
+            "emphasis": "final payoff"
+          },
+          "caption_segment": {
+            "text": "THE REAL BREAKTHROUGH",
+            "start_time": 0.0,
+            "end_time": 7.0,
+            "words": [],
+            "emphasis_words": [
+              "THE"
+            ],
+            "style": "bold_pill"
+          },
+          "caption_segments": [
+            {
+              "text": "THE REAL BREAKTHROUGH",
+              "start_time": 0.0,
+              "end_time": 7.0,
+              "words": [],
+              "emphasis_words": [
+                "THE"
+              ],
+              "style": "bold_pill"
+            }
+          ],
+          "motion": "slow_zoom_out",
+          "transition": "crossfade",
+          "visual_source": "fallback_stock",
+          "alignment_source": "estimated"
+        }
+      ],
+      "mode": "ai",
+      "source_type": "ai",
+      "visual_source": "ai",
+      "active_preset": "storytelling",
+      "original_prompt": "Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy. ",
+      "audience": "General Audience",
+      "tone": "Documentary Story",
+      "target_length": "45s",
+      "generated_story": {
+        "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+        "hook": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+        "scenes": [
+          {
+            "order": 1,
+            "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+            "caption": "THE HIDDEN TRUTH",
+            "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+            "estimated_duration": 7.0,
+            "scene_role": "hook",
+            "visual_plan": {
+              "scene_id": 1,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in documentary",
+              "composition": "medium_close_up",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "emphasis": "opening tension"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 2,
+            "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+            "caption": "FOUNDATIONAL STRUCTURE",
+            "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+            "estimated_duration": 7.0,
+            "scene_role": "context",
+            "visual_plan": {
+              "scene_id": 2,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in documentary",
+              "composition": "wide_context",
+              "mood": "reflective",
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "emphasis": "broad framing"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 3,
+            "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+            "caption": "FRICTION DISAPPEARS",
+            "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+            "estimated_duration": 7.0,
+            "scene_role": "insight",
+            "visual_plan": {
+              "scene_id": 3,
+              "visual_type": "global_network",
+              "subject": "network_graph",
+              "environment": "modern tech studio in documentary",
+              "composition": "macro_focus",
+              "mood": "focused",
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "emphasis": "core revelation"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          },
+          {
+            "order": 4,
+            "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+            "caption": "THE REAL BREAKTHROUGH",
+            "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+            "estimated_duration": 7.0,
+            "scene_role": "implication",
+            "visual_plan": {
+              "scene_id": 4,
+              "visual_type": "developer_workstation",
+              "subject": "developer",
+              "environment": "dark minimalist workspace in documentary",
+              "composition": "clean_center",
+              "mood": "inviting",
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "emphasis": "final payoff"
+            },
+            "caption_segment": null,
+            "caption_segments": [],
+            "visual_source": "stock"
+          }
+        ],
+        "cta": "Save this reel. What is your experience with Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy?",
+        "estimated_duration": 28.0,
+        "hook_strategy": "contrarian",
+        "quality_score": 0.8,
+        "domain": "technology"
+      },
+      "render_history": [],
+      "generation_diagnostics": [
+        {
+          "scene_order": 1,
+          "prompt": "cinematic 35mm film still, anamorphic framing, clean shallow depth of field, sharp edge highlights, developer workstation set in dark minimalist workspace in documentary, showing developer, emphasizing opening tension, medium close up, focused atmosphere, color palette of deep midnight blue, slate obsidian, cool ambient backlight, subtle electric cyan accents, photorealistic, masterwork detail, 8k resolution, crisp focus, vertical 9:16 portrait composition, tailored for mobile vertical screen framing, no text, no typography, no watermarks, no logos, no distorted interface elements, no unreadable UI artifacts",
+          "prompt_hash": "164e4e3e07d38d84d3088754",
+          "cache_hit": false,
+          "error": "Pollinations authentication error (HTTP 401 Unauthorized: {\"success\":false,\"error\":{\"message\":\"A valid API key is required. Get one at https://enter.pollinations.ai/keys\",\"code\":\"UNAUTHORIZED\",\"timestamp\":\"2026-09-15T02:24:28.110Z\"},\"status\":401}). Verify POLLINATIONS_API_KEY.",
+          "fallback": "LocalAssetProvider",
+          "visual_source": "fallback_stock"
+        },
+        {
+          "scene_order": 2,
+          "prompt": "cinematic 35mm film still, anamorphic framing, clean shallow depth of field, sharp edge highlights, developer workstation set in dark minimalist workspace in documentary, showing developer, emphasizing broad framing, wide context, reflective atmosphere, color palette of deep midnight blue, slate obsidian, cool ambient backlight, subtle electric cyan accents, photorealistic, masterwork detail, 8k resolution, crisp focus, vertical 9:16 portrait composition, tailored for mobile vertical screen framing, no text, no typography, no watermarks, no logos, no distorted interface elements, no unreadable UI artifacts",
+          "prompt_hash": "d94e45ef388805592acdeb1f",
+          "cache_hit": false,
+          "error": "Pollinations authentication error (HTTP 401 Unauthorized: {\"success\":false,\"error\":{\"message\":\"A valid API key is required. Get one at https://enter.pollinations.ai/keys\",\"code\":\"UNAUTHORIZED\",\"timestamp\":\"2026-09-15T02:24:28.884Z\"},\"status\":401}). Verify POLLINATIONS_API_KEY.",
+          "fallback": "LocalAssetProvider",
+          "visual_source": "fallback_stock"
+        },
+        {
+          "scene_order": 3,
+          "prompt": "cinematic 35mm film still, anamorphic framing, clean shallow depth of field, sharp edge highlights, global network set in modern tech studio in documentary, showing network_graph, emphasizing core revelation, macro focus, focused atmosphere, color palette of deep midnight blue, slate obsidian, cool ambient backlight, subtle electric cyan accents, photorealistic, masterwork detail, 8k resolution, crisp focus, vertical 9:16 portrait composition, tailored for mobile vertical screen framing, no text, no typography, no watermarks, no logos, no distorted interface elements, no unreadable UI artifacts",
+          "prompt_hash": "c7d722c7210001d4ae582642",
+          "cache_hit": false,
+          "error": "Pollinations authentication error (HTTP 401 Unauthorized: {\"success\":false,\"error\":{\"message\":\"A valid API key is required. Get one at https://enter.pollinations.ai/keys\",\"code\":\"UNAUTHORIZED\",\"timestamp\":\"2026-09-15T02:24:29.522Z\"},\"status\":401}). Verify POLLINATIONS_API_KEY.",
+          "fallback": "LocalAssetProvider",
+          "visual_source": "fallback_stock"
+        },
+        {
+          "scene_order": 4,
+          "prompt": "cinematic 35mm film still, anamorphic framing, clean shallow depth of field, sharp edge highlights, developer workstation set in dark minimalist workspace in documentary, showing developer, emphasizing final payoff, clean center, inviting atmosphere, color palette of deep midnight blue, slate obsidian, cool ambient backlight, subtle electric cyan accents, photorealistic, masterwork detail, 8k resolution, crisp focus, vertical 9:16 portrait composition, tailored for mobile vertical screen framing, no text, no typography, no watermarks, no logos, no distorted interface elements, no unreadable UI artifacts",
+          "prompt_hash": "2b23fbdcf65da253302474b4",
+          "cache_hit": false,
+          "error": "Pollinations authentication error (HTTP 401 Unauthorized: {\"success\":false,\"error\":{\"message\":\"A valid API key is required. Get one at https://enter.pollinations.ai/keys\",\"code\":\"UNAUTHORIZED\",\"timestamp\":\"2026-09-15T02:24:30.195Z\"},\"status\":401}). Verify POLLINATIONS_API_KEY.",
+          "fallback": "LocalAssetProvider",
+          "visual_source": "fallback_stock"
+        }
+      ],
+      "versions": [
+        {
+          "version_number": 1,
+          "created_at": "2026-09-15T02:24:30.040371+00:00",
+          "label": "Initial Story (v1)",
+          "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+          "script": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough. Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward. When you understand how the underlying structure works, the usual friction completely disappears. That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+          "hook": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+          "duration_seconds": 28.0,
+          "voice": "antoni",
+          "music": "cinematic_acoustic",
+          "style": "documentary",
+          "mode": "ai",
+          "source_type": "ai",
+          "visual_source": "ai",
+          "audience": "General Audience",
+          "tone": "Documentary Story",
+          "target_length": "45s",
+          "scenes": [
+            {
+              "id": "scene_1",
+              "order": 1,
+              "visual_filename": "scene_1.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_1.jpg",
+              "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+              "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+              "caption": "THE HIDDEN TRUTH",
+              "duration_seconds": 7.0,
+              "scene_role": "hook",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 1,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "medium_close_up",
+                "mood": "focused",
+                "motion": "slow_zoom_in",
+                "transition": "cut",
+                "emphasis": "opening tension"
+              },
+              "caption_segment": {
+                "text": "THE HIDDEN TRUTH",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "THE"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "THE HIDDEN TRUTH",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "THE"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_2",
+              "order": 2,
+              "visual_filename": "scene_2.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_2.jpg",
+              "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+              "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+              "caption": "FOUNDATIONAL STRUCTURE",
+              "duration_seconds": 7.0,
+              "scene_role": "context",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 2,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "wide_context",
+                "mood": "reflective",
+                "motion": "pan_left",
+                "transition": "crossfade",
+                "emphasis": "broad framing"
+              },
+              "caption_segment": {
+                "text": "FOUNDATIONAL STRUCTURE",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "FOUNDATIONAL"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "FOUNDATIONAL STRUCTURE",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "FOUNDATIONAL"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_3",
+              "order": 3,
+              "visual_filename": "scene_3.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_3.jpg",
+              "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+              "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+              "caption": "FRICTION DISAPPEARS",
+              "duration_seconds": 7.0,
+              "scene_role": "insight",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 3,
+                "visual_type": "global_network",
+                "subject": "network_graph",
+                "environment": "modern tech studio in documentary",
+                "composition": "macro_focus",
+                "mood": "focused",
+                "motion": "slow_zoom_in",
+                "transition": "crossfade",
+                "emphasis": "core revelation"
+              },
+              "caption_segment": {
+                "text": "FRICTION DISAPPEARS",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "FRICTION"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "FRICTION DISAPPEARS",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "FRICTION"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_4",
+              "order": 4,
+              "visual_filename": "scene_4.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_4.jpg",
+              "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+              "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+              "caption": "THE REAL BREAKTHROUGH",
+              "duration_seconds": 7.0,
+              "scene_role": "implication",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 4,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "clean_center",
+                "mood": "inviting",
+                "motion": "slow_zoom_out",
+                "transition": "crossfade",
+                "emphasis": "final payoff"
+              },
+              "caption_segment": {
+                "text": "THE REAL BREAKTHROUGH",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "THE"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "THE REAL BREAKTHROUGH",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "THE"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            }
+          ],
+          "generated_story": {
+            "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+            "hook": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+            "scenes": [
+              {
+                "order": 1,
+                "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+                "caption": "THE HIDDEN TRUTH",
+                "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+                "estimated_duration": 7.0,
+                "scene_role": "hook",
+                "visual_plan": {
+                  "scene_id": 1,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "medium_close_up",
+                  "mood": "focused",
+                  "motion": "slow_zoom_in",
+                  "transition": "cut",
+                  "emphasis": "opening tension"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 2,
+                "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+                "caption": "FOUNDATIONAL STRUCTURE",
+                "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+                "estimated_duration": 7.0,
+                "scene_role": "context",
+                "visual_plan": {
+                  "scene_id": 2,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "wide_context",
+                  "mood": "reflective",
+                  "motion": "pan_left",
+                  "transition": "crossfade",
+                  "emphasis": "broad framing"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 3,
+                "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+                "caption": "FRICTION DISAPPEARS",
+                "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+                "estimated_duration": 7.0,
+                "scene_role": "insight",
+                "visual_plan": {
+                  "scene_id": 3,
+                  "visual_type": "global_network",
+                  "subject": "network_graph",
+                  "environment": "modern tech studio in documentary",
+                  "composition": "macro_focus",
+                  "mood": "focused",
+                  "motion": "slow_zoom_in",
+                  "transition": "crossfade",
+                  "emphasis": "core revelation"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 4,
+                "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+                "caption": "THE REAL BREAKTHROUGH",
+                "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+                "estimated_duration": 7.0,
+                "scene_role": "implication",
+                "visual_plan": {
+                  "scene_id": 4,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "clean_center",
+                  "mood": "inviting",
+                  "motion": "slow_zoom_out",
+                  "transition": "crossfade",
+                  "emphasis": "final payoff"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              }
+            ],
+            "cta": "Save this reel. What is your experience with Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy?",
+            "estimated_duration": 28.0,
+            "hook_strategy": "contrarian",
+            "quality_score": 0.8,
+            "domain": "technology"
+          },
+          "video_url": null,
+          "video_filename": null,
+          "thumbnail_url": null,
+          "lifecycle_state": "story_ready",
+          "quality_gate": null,
+          "quality_warnings": []
+        },
+        {
+          "version_number": 2,
+          "created_at": "2026-09-15T02:25:11.711768+00:00",
+          "label": "Edited scenes",
+          "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+          "script": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough. Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward. When you understand how the underlying structure works, the usual friction completely disappears. That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+          "hook": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+          "duration_seconds": 28.0,
+          "voice": "antoni",
+          "music": "cinematic_acoustic",
+          "style": "documentary",
+          "mode": "ai",
+          "source_type": "ai",
+          "visual_source": "ai",
+          "audience": "General Audience",
+          "tone": "Documentary Story",
+          "target_length": "45s",
+          "scenes": [
+            {
+              "id": "scene_1",
+              "order": 1,
+              "visual_filename": "scene_1.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_1.jpg",
+              "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+              "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+              "caption": "THE HIDDEN TRUTH",
+              "duration_seconds": 7.0,
+              "scene_role": "hook",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 1,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "medium_close_up",
+                "mood": "focused",
+                "motion": "slow_zoom_in",
+                "transition": "cut",
+                "emphasis": "opening tension"
+              },
+              "caption_segment": {
+                "text": "THE HIDDEN TRUTH",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "THE"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "THE HIDDEN TRUTH",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "THE"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_in",
+              "transition": "cut",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_2",
+              "order": 2,
+              "visual_filename": "scene_2.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_2.jpg",
+              "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+              "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+              "caption": "FOUNDATIONAL STRUCTURE",
+              "duration_seconds": 7.0,
+              "scene_role": "context",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 2,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "wide_context",
+                "mood": "reflective",
+                "motion": "pan_left",
+                "transition": "crossfade",
+                "emphasis": "broad framing"
+              },
+              "caption_segment": {
+                "text": "FOUNDATIONAL STRUCTURE",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "FOUNDATIONAL"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "FOUNDATIONAL STRUCTURE",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "FOUNDATIONAL"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "pan_left",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_3",
+              "order": 3,
+              "visual_filename": "scene_3.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_3.jpg",
+              "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+              "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+              "caption": "FRICTION DISAPPEARS",
+              "duration_seconds": 7.0,
+              "scene_role": "insight",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 3,
+                "visual_type": "global_network",
+                "subject": "network_graph",
+                "environment": "modern tech studio in documentary",
+                "composition": "macro_focus",
+                "mood": "focused",
+                "motion": "slow_zoom_in",
+                "transition": "crossfade",
+                "emphasis": "core revelation"
+              },
+              "caption_segment": {
+                "text": "FRICTION DISAPPEARS",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "FRICTION"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "FRICTION DISAPPEARS",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "FRICTION"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_in",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            },
+            {
+              "id": "scene_4",
+              "order": 4,
+              "visual_filename": "scene_4.jpg",
+              "visual_url": "/media/uploads/598c8321-c003-456d-a344-1ba3c2819337/scene_4.jpg",
+              "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+              "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+              "caption": "THE REAL BREAKTHROUGH",
+              "duration_seconds": 7.0,
+              "scene_role": "implication",
+              "match_quality": "fallback_local",
+              "visual_plan": {
+                "scene_id": 4,
+                "visual_type": "developer_workstation",
+                "subject": "developer",
+                "environment": "dark minimalist workspace in documentary",
+                "composition": "clean_center",
+                "mood": "inviting",
+                "motion": "slow_zoom_out",
+                "transition": "crossfade",
+                "emphasis": "final payoff"
+              },
+              "caption_segment": {
+                "text": "THE REAL BREAKTHROUGH",
+                "start_time": 0.0,
+                "end_time": 7.0,
+                "words": [],
+                "emphasis_words": [
+                  "THE"
+                ],
+                "style": "bold_pill"
+              },
+              "caption_segments": [
+                {
+                  "text": "THE REAL BREAKTHROUGH",
+                  "start_time": 0.0,
+                  "end_time": 7.0,
+                  "words": [],
+                  "emphasis_words": [
+                    "THE"
+                  ],
+                  "style": "bold_pill"
+                }
+              ],
+              "motion": "slow_zoom_out",
+              "transition": "crossfade",
+              "visual_source": "fallback_stock",
+              "alignment_source": "estimated"
+            }
+          ],
+          "generated_story": {
+            "title": "Hello Everyone, I Am Devasish Misra, a Second-year and a Great Student at Birla Institute of Technology and Science Pilani, Pursuing My Computer Science Degree. Also, I Am a Freelancer, a Software Engineer or a Developer with AI Automation Consultancy",
+            "hook": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+            "scenes": [
+              {
+                "order": 1,
+                "narration": "The biggest misconception about Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy is that traditional methods are still good enough.",
+                "caption": "THE HIDDEN TRUTH",
+                "visual_direction": "Cinematic close-up of creator at a sleek workstation reviewing autonomous decisions in a documentary environment.",
+                "estimated_duration": 7.0,
+                "scene_role": "hook",
+                "visual_plan": {
+                  "scene_id": 1,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "medium_close_up",
+                  "mood": "focused",
+                  "motion": "slow_zoom_in",
+                  "transition": "cut",
+                  "emphasis": "opening tension"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 2,
+                "narration": "Most workflows treat Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+                "caption": "FOUNDATIONAL STRUCTURE",
+                "visual_direction": "Abstract minimal visualization of interconnected nodes and data streams against a deep dark background.",
+                "estimated_duration": 7.0,
+                "scene_role": "context",
+                "visual_plan": {
+                  "scene_id": 2,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "wide_context",
+                  "mood": "reflective",
+                  "motion": "pan_left",
+                  "transition": "crossfade",
+                  "emphasis": "broad framing"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 3,
+                "narration": "When you understand how the underlying structure works, the usual friction completely disappears.",
+                "caption": "FRICTION DISAPPEARS",
+                "visual_direction": "High-contrast aesthetic shot of modern creator dashboard with smooth motion curves.",
+                "estimated_duration": 7.0,
+                "scene_role": "insight",
+                "visual_plan": {
+                  "scene_id": 3,
+                  "visual_type": "global_network",
+                  "subject": "network_graph",
+                  "environment": "modern tech studio in documentary",
+                  "composition": "macro_focus",
+                  "mood": "focused",
+                  "motion": "slow_zoom_in",
+                  "transition": "crossfade",
+                  "emphasis": "core revelation"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              },
+              {
+                "order": 4,
+                "narration": "That breakthrough is why leading builders and creators are quietly rethinking their entire approach to Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy.",
+                "caption": "THE REAL BREAKTHROUGH",
+                "visual_direction": "Dynamic isometric view of decentralized systems routing information effortlessly.",
+                "estimated_duration": 7.0,
+                "scene_role": "implication",
+                "visual_plan": {
+                  "scene_id": 4,
+                  "visual_type": "developer_workstation",
+                  "subject": "developer",
+                  "environment": "dark minimalist workspace in documentary",
+                  "composition": "clean_center",
+                  "mood": "inviting",
+                  "motion": "slow_zoom_out",
+                  "transition": "crossfade",
+                  "emphasis": "final payoff"
+                },
+                "caption_segment": null,
+                "caption_segments": [],
+                "visual_source": "stock"
+              }
+            ],
+            "cta": "Save this reel. What is your experience with Hello everyone, I am Devasish Misra, a second-year and a great student at Birla Institute of Technology and Science Pilani, pursuing my computer science degree. Also, I am a freelancer, a software engineer or a developer with AI automation consultancy?",
+            "estimated_duration": 28.0,
+            "hook_strategy": "contrarian",
+            "quality_score": 0.8,
+            "domain": "technology"
+          },
+          "video_url": null,
+          "video_filename": null,
+          "thumbnail_url": null,
+          "lifecycle_state": "story_ready",
+          "quality_gate": null,
+          "quality_warnings": []
+        }
+      ],
+      "metrics": {
+        "story_generation_ms": 2906.33,
+        "tts_generation_ms": null,
+        "render_ms": null,
+        "total_creation_ms": null,
+        "time_to_first_idea_ms": null,
+        "time_to_first_story_ms": 2906.33,
+        "time_to_first_preview_ms": 2906.33,
+        "time_to_first_rendered_reel_ms": null,
+        "time_to_final_reel_ms": null,
+        "has_edited_scene": true,
+        "has_used_ask_vidsnap": false,
+        "has_regenerated_version": false,
+        "has_duplicated": false,
+        "is_activated": true,
+        "session_id": null
+      },
+      "qualitative_feedback": [
+        "Opening hook clearly establishes the central topic.",
+        "Progression is well-paced across 4 distinct narrative beats.",
+        "Screen captions are tight and punchy for fast mobile reading.",
+        "Noticeable keyword overlap between consecutive scenes ('devasish').",
+        "Ending serves as a reflective conclusion; consider adding a direct action."
+      ],
+      "quality_gate": null,
+      "quality_warnings": []
     }
   },
   "jobs": {
@@ -103337,6 +104366,17 @@
       "created_at": "2026-09-14T14:57:39.737538+00:00",
       "updated_at": "2026-09-14T14:57:59.332196+00:00",
       "completed_at": "2026-09-14T14:57:59.332190+00:00"
+    },
+    "4804be14-763a-46d0-b7e9-c10dc78f7951": {
+      "id": "4804be14-763a-46d0-b7e9-c10dc78f7951",
+      "project_id": "598c8321-c003-456d-a344-1ba3c2819337",
+      "status": "rendering",
+      "step": "Compositing 1080x1920 Reel with cinematic motion & transitions",
+      "progress_percent": 85,
+      "error_message": null,
+      "created_at": "2026-09-15T02:25:11.877419+00:00",
+      "updated_at": "2026-09-15T02:25:24.172955+00:00",
+      "completed_at": null
     }
   }
 }
