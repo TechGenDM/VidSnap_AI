@@ -1,0 +1,58 @@
+# =====================================================================
+# VidSnap AI — Production Docker Compose Architecture
+# Multi-container orchestration with persistent disk volume mounts
+# =====================================================================
+
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=VidSnap AI
+      - VERSION=2.0.0
+      - DEBUG=false
+      - DATA_DIR=/app/data
+      - MEDIA_DIR=/app/media
+      - CORS_ORIGINS=["http://localhost:3000","https://vidsnap.app"]
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - ELEVENLABS_DEFAULT_VOICE=${ELEVENLABS_DEFAULT_VOICE:-Adam}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - POLLINATIONS_API_KEY=${POLLINATIONS_API_KEY:-}
+      - FFMPEG_TIMEOUT_SECONDS=120
+      - MAX_UPLOAD_SIZE_MB=15
+    volumes:
+      - vidsnap_data:/app/data
+      - vidsnap_media:/app/media
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - BACKEND_INTERNAL_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  vidsnap_data:
+    name: vidsnap_data
+  vidsnap_media:
+    name: vidsnap_media

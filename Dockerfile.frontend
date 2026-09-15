@@ -1,0 +1,38 @@
+# =====================================================================
+# VidSnap AI — Production Frontend Dockerfile
+# Next.js 16 (App Router) Standalone / Production Build
+# =====================================================================
+
+FROM node:20-alpine AS builder
+
+WORKDIR /app/frontend
+
+COPY frontend/package*.json ./
+RUN npm ci
+
+COPY frontend/ ./
+
+# Build Next.js production bundle
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    NODE_ENV=production
+
+RUN npm run build
+
+# Runner stage
+FROM node:20-alpine AS runner
+
+WORKDIR /app/frontend
+
+ENV NODE_ENV=production \
+    PORT=3000 \
+    NEXT_TELEMETRY_DISABLED=1
+
+COPY --from=builder /app/frontend/package*.json ./
+COPY --from=builder /app/frontend/node_modules ./node_modules
+COPY --from=builder /app/frontend/.next ./.next
+COPY --from=builder /app/frontend/public ./public
+COPY --from=builder /app/frontend/next.config.ts ./
+
+EXPOSE 3000
+
+CMD ["npx", "next", "start", "-p", "3000", "-H", "0.0.0.0"]
