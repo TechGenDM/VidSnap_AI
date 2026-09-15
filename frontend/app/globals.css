@@ -71,20 +71,38 @@ body {
   background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
 }
 
-/* Phone Bezel Simulator */
+/* Phone Bezel Simulator - Fully Responsive */
 .phone-mockup {
   position: relative;
   width: 100%;
-  max-width: 320px;
+  max-width: min(320px, calc(100vw - 32px));
   aspect-ratio: 9 / 18.5;
   height: auto;
   max-height: 640px;
   background: #000;
-  border-radius: 40px;
-  box-shadow: 0 0 0 10px #181a24, 0 0 0 12px #262a3b, 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+  border-radius: 32px;
+  box-shadow: 0 0 0 4px #181a24, 0 0 0 6px #262a3b, 0 15px 35px -10px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .phone-mockup {
+    border-radius: 40px;
+    box-shadow: 0 0 0 10px #181a24, 0 0 0 12px #262a3b, 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 360px) {
+  .phone-mockup {
+    border-radius: 24px;
+    box-shadow: 0 0 0 2px #181a24, 0 0 0 3px #262a3b, 0 10px 20px -5px rgba(0, 0, 0, 0.7);
+    max-width: min(280px, calc(100vw - 20px));
+  }
 }
 
 .phone-notch {

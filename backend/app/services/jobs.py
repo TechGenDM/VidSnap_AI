@@ -18,38 +18,117 @@ logger = logging.getLogger("vidsnap.jobs")
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
+def derive_scene_caption(narration: str) -> str:
+    """
+    Derives a punchy 2-5 word uppercase caption from a scene narration.
+    """
+    clean = re.sub(r"[^\w\s]", "", narration).strip()
+    words = clean.split()
+    if not words:
+        return "KEY INSIGHT"
+    if len(words) <= 5:
+        return " ".join(words).upper()
+    return " ".join(words[:4]).upper()
+
+def partition_script_across_scenes(script: str, scenes: list[Scene]) -> None:
+    """
+    Intelligently partitions a complete creator script across N scenes so that:
+    1. Every scene gets a faithful spoken narration slice.
+    2. Concatenating all scene narrations in order preserves the full script content.
+    3. Every scene gets a relevant, punchy caption.
+    """
+    if not scenes or not script:
+        return
+
+    num_scenes = len(scenes)
+    clean_script = script.strip()
+
+    # Split into sentences
+    raw_sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", clean_script) if s.strip()]
+    if not raw_sentences:
+        raw_sentences = [clean_script]
+
+    if len(raw_sentences) == num_scenes:
+        chunks = raw_sentences
+    elif len(raw_sentences) > num_scenes:
+        # Group sentences into num_scenes roughly equal word count buckets
+        total_words = len(clean_script.split())
+        target_words_per_scene = max(1, total_words // num_scenes)
+        chunks = []
+        current_chunk = []
+        current_word_count = 0
+        remaining_scenes = num_scenes
+
+        for i, sent in enumerate(raw_sentences):
+            remaining_sentences = len(raw_sentences) - i
+            if remaining_sentences == remaining_scenes and current_chunk:
+                chunks.append(" ".join(current_chunk))
+                current_chunk = [sent]
+                current_word_count = len(sent.split())
+                remaining_scenes -= 1
+            else:
+                current_chunk.append(sent)
+                current_word_count += len(sent.split())
+                if current_word_count >= target_words_per_scene and remaining_scenes > 1:
+                    chunks.append(" ".join(current_chunk))
+                    current_chunk = []
+                    current_word_count = 0
+                    remaining_scenes -= 1
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
+
+        while len(chunks) < num_scenes:
+            longest_idx = max(range(len(chunks)), key=lambda idx: len(chunks[idx].split()))
+            words = chunks[longest_idx].split()
+            if len(words) >= 2:
+                mid = len(words) // 2
+                c1 = " ".join(words[:mid])
+                c2 = " ".join(words[mid:])
+                chunks[longest_idx] = c1
+                chunks.insert(longest_idx + 1, c2)
+            else:
+                chunks.append(chunks[-1])
+    else:
+        # Fewer sentences than scenes: split longer sentences by clauses or word counts
+        chunks = list(raw_sentences)
+        while len(chunks) < num_scenes:
+            longest_idx = max(range(len(chunks)), key=lambda idx: len(chunks[idx].split()))
+            text_to_split = chunks[longest_idx]
+            
+            clause_parts = [c.strip() for c in re.split(r"[,;—–\-]\s*", text_to_split) if c.strip()]
+            if len(clause_parts) >= 2:
+                mid_clause = len(clause_parts) // 2
+                c1 = ", ".join(clause_parts[:mid_clause])
+                c2 = ", ".join(clause_parts[mid_clause:])
+                chunks[longest_idx] = c1
+                chunks.insert(longest_idx + 1, c2)
+            else:
+                words = text_to_split.split()
+                if len(words) >= 2:
+                    mid = len(words) // 2
+                    c1 = " ".join(words[:mid])
+                    c2 = " ".join(words[mid:])
+                    chunks[longest_idx] = c1
+                    chunks.insert(longest_idx + 1, c2)
+                else:
+                    chunks.append("")
+
+    # Assign to scenes
+    role_defaults = ["hook", "context", "insight", "implication", "cta"]
+    for idx, scene in enumerate(scenes):
+        narration_chunk = chunks[idx] if idx < len(chunks) else ""
+        scene.narration = narration_chunk.strip()
+        if not scene.caption or scene.caption.strip() == "":
+            scene.caption = derive_scene_caption(scene.narration)
+        if not scene.scene_role:
+            scene.scene_role = role_defaults[idx] if idx < len(role_defaults) else "insight"
+
 def split_script_into_captions(script: str, num_scenes: int) -> list[str]:
-    """
-    Intelligently splits narration script into readable captions across scenes.
-    """
-    sentences = re.split(r"[.!?]+", script)
-    sentences = [s.strip() for s in sentences if s.strip()]
+    """Legacy compatibility helper."""
+    dummy_scenes = [Scene(id=f"dummy_{i}", order=i+1, narration="", caption="") for i in range(num_scenes)]
+    partition_script_across_scenes(script, dummy_scenes)
+    return [s.caption for s in dummy_scenes]
 
-    if not sentences:
-        return [f"Scene {i+1}" for i in range(num_scenes)]
-
-    if len(sentences) == num_scenes:
-        return sentences
-
-    if len(sentences) > num_scenes:
-        # Group sentences evenly
-        chunk_size = len(sentences) / num_scenes
-        captions = []
-        for i in range(num_scenes):
-            start = int(i * chunk_size)
-            end = int((i + 1) * chunk_size)
-            captions.append(" ".join(sentences[start:end]))
-        return captions
-
-    # Fewer sentences than scenes: divide sentences by clauses/words
-    words = script.split()
-    words_per_scene = max(1, len(words) // num_scenes)
-    captions = []
-    for i in range(num_scenes):
-        start = i * words_per_scene
-        end = (i + 1) * words_per_scene if i < num_scenes - 1 else len(words)
-        captions.append(" ".join(words[start:end]))
-    return captions
 
 def process_quick_reel_job(job_id: str):
     """
@@ -100,6 +179,12 @@ def process_quick_reel_job(job_id: str):
         # Ensure project script exists
         if not project.script or len(project.script.strip()) < 3:
             project.script = " ".join([s.narration or s.caption for s in project.scenes if (s.narration or s.caption)])
+
+        # Ensure all scenes have spoken narration partitioned from script
+        scenes_missing_narration = [s for s in project.scenes if not (s.narration and s.narration.strip())]
+        if scenes_missing_narration and project.script and project.script.strip():
+            logger.info(f"Distributing project script ({len(project.script.split())} words) across {len(project.scenes)} scenes...")
+            partition_script_across_scenes(project.script, project.scenes)
 
         # Update Project lifecycle to rendering
         project.lifecycle_state = LifecycleState.RENDERING

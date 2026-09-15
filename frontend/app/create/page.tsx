@@ -222,6 +222,7 @@ function CreatePageContent() {
 
   // Mobile View Switcher between Storyboard & Preview on small screens
   const [mobileActiveTab, setMobileActiveTab] = useState<"storyboard" | "preview">("storyboard");
+  const [mobileQuickTab, setMobileQuickTab] = useState<"form" | "preview">("form");
 
   // Quick Reel State
   const defaultTemplate = templateKey && TEMPLATE_PRESETS[templateKey] ? TEMPLATE_PRESETS[templateKey] : null;
@@ -1140,11 +1141,38 @@ function CreatePageContent() {
 
       {/* 4. QUICK REEL MODE */}
       {activeMode === "quick" && jobStatus !== "completed" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Upload & Script */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            {/* Upload Box */}
-            <div className="glass-card rounded-2xl p-6">
+        <div className="w-full">
+          {/* Mobile View Toggle for Quick Reel */}
+          <div className="lg:hidden flex items-center gap-1.5 p-1 mb-6 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+            <button
+              type="button"
+              onClick={() => setMobileQuickTab("form")}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                mobileQuickTab === "form"
+                  ? "bg-white/[0.1] text-white border border-white/[0.15]"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Configure Reel ({uploadedImages.length} {uploadedImages.length === 1 ? "Slide" : "Slides"})
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileQuickTab("preview")}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                mobileQuickTab === "preview"
+                  ? "bg-white/[0.1] text-white border border-white/[0.15]"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Phone Preview
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Column: Upload & Script */}
+            <div className={`lg:col-span-7 flex flex-col gap-6 ${mobileQuickTab === "preview" ? "hidden lg:flex" : "flex"}`}>
+              {/* Upload Box */}
+              <div className="glass-card rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
                   <ImageIcon className="h-5 w-5 text-cyan-400" />
@@ -1332,7 +1360,7 @@ function CreatePageContent() {
           </div>
 
           {/* Right Column: Companion Preview */}
-          <div className="lg:col-span-5 flex flex-col items-center sticky top-24">
+          <div className={`lg:col-span-5 flex flex-col items-center sticky top-24 ${mobileQuickTab === "form" ? "hidden lg:flex" : "flex"}`}>
             <div className="phone-mockup relative">
               <div className="phone-notch" />
               {uploadedImages.length > 0 && uploadedImages[selectedSceneIndex] ? (
@@ -1370,6 +1398,7 @@ function CreatePageContent() {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {/* 5. AI REEL MODE (4-STEP STUDIO EXPERIENCE) */}

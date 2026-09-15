@@ -37,9 +37,26 @@ class SceneAudioService:
         return cache_dir
 
     @classmethod
-    def compute_scene_audio_hash(cls, scene_id: str, text: str, voice: str) -> str:
-        raw = f"{scene_id.strip()}:{text.strip()}:{voice.strip().lower()}"
+    def compute_scene_audio_hash(cls, scene_id: str, text: str, voice: str, project_id: str = "") -> str:
+        raw = f"{project_id.strip()}:{scene_id.strip()}:{text.strip()}:{voice.strip().lower()}"
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+
+    @classmethod
+    def invalidate_scene_cache(cls, project_dir: Path, scene_order: Optional[int] = None) -> int:
+        """
+        Invalidates cached audio files for a specific scene or the entire project.
+        Returns the number of files deleted.
+        """
+        cache_dir = cls.get_cache_dir(project_dir)
+        deleted = 0
+        pattern = f"scene_{scene_order}_*" if scene_order is not None else "scene_*"
+        for f in cache_dir.glob(pattern):
+            try:
+                f.unlink(missing_ok=True)
+                deleted += 1
+            except Exception as e:
+                logger.warning(f"Could not delete cache file {f}: {e}")
+        return deleted
 
     @classmethod
     def generate_or_reuse_scene_audio(
@@ -56,10 +73,43 @@ class SceneAudioService:
         """
         cache_dir = cls.get_cache_dir(project_dir)
         narration_text = (scene.narration or scene.caption or "").strip()
-        if not narration_text:
-            narration_text = "Scene preview"
+        project_id = project_dir.name
 
-        hash_key = cls.compute_scene_audio_hash(scene.id, narration_text, voice)
+        # Critical fix: If narration is empty, NEVER synthesize a placeholder phrase like "Scene preview".
+        # Instead, generate clean silence matching scene duration with empty captions.
+        if not narration_text:
+            duration = max(1.0, float(scene.duration_seconds or 2.0))
+            hash_key = cls.compute_scene_audio_hash(scene.id, "__EMPTY_SILENCE__", voice, project_id)
+            cached_audio = cache_dir / f"scene_{scene.order}_{hash_key}.mp3"
+            cached_meta = cache_dir / f"scene_{scene.order}_{hash_key}.json"
+
+            if not cached_audio.exists() or cached_audio.stat().st_size < 100:
+                cmd = [
+                    "ffmpeg", "-y",
+                    "-f", "lavfi",
+                    "-i", "anullsrc=r=44100:cl=mono",
+                    "-t", str(duration),
+                    "-q:a", "9",
+                    str(cached_audio),
+                ]
+                subprocess.run(cmd, check=True, capture_output=True)
+
+            meta_content = {
+                "scene_id": scene.id,
+                "order": scene.order,
+                "narration": "",
+                "voice": voice,
+                "duration": duration,
+                "alignment_source": "silence",
+                "segments": [],
+            }
+            try:
+                cached_meta.write_text(json.dumps(meta_content, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+            return cached_audio, duration, [], "silence", False
+
+        hash_key = cls.compute_scene_audio_hash(scene.id, narration_text, voice, project_id)
         cached_audio = cache_dir / f"scene_{scene.order}_{hash_key}.mp3"
         cached_meta = cache_dir / f"scene_{scene.order}_{hash_key}.json"
 

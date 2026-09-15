@@ -71,6 +71,10 @@ async def create_quick_reel(
             )
         )
 
+    # Partition user's script across all scenes so every scene has spoken narration & captions
+    from app.services.jobs import partition_script_across_scenes
+    partition_script_across_scenes(script.strip(), saved_scenes)
+
     # Derive clean title from first few words of script
     words = script.strip().split()
     title = " ".join(words[:5]) + ("..." if len(words) > 5 else "")

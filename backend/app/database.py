@@ -1,5 +1,6 @@
 import json
 import threading
+import tempfile
 from pathlib import Path
 from typing import Optional
 from app.config import settings
@@ -30,10 +31,23 @@ class Database:
 
     def _write_data(self, data: dict):
         with _lock:
-            temp_file = self.db_path.with_suffix(".tmp")
-            with open(temp_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2)
-            temp_file.replace(self.db_path)
+            self.db_path.parent.mkdir(parents=True, exist_ok=True)
+            # Create a unique temp file in the same directory to guarantee atomic replace
+            fd, tmp_path_str = tempfile.mkstemp(
+                dir=self.db_path.parent,
+                prefix="vidsnap_store_",
+                suffix=".tmp"
+            )
+            try:
+                with open(fd, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2)
+                Path(tmp_path_str).replace(self.db_path)
+            except Exception:
+                try:
+                    Path(tmp_path_str).unlink(missing_ok=True)
+                except Exception:
+                    pass
+                raise
 
     # Project Operations
     def save_project(self, project: Project) -> Project:

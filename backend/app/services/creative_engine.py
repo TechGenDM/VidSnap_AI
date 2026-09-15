@@ -483,13 +483,22 @@ class CandidateStoryGenerator:
         t_clean = topic.strip().rstrip(".?!")
         if hook_strategy == "contrarian":
             hook = interpretation.hook_angles.get("contrarian", f"The biggest misconception about {t_clean} is that traditional methods are still good enough.")
-            narrations = [
-                hook,
-                f"Most workflows treat {t_clean} as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
-                f"When you understand how the underlying structure works, the usual friction completely disappears.",
-                f"That breakthrough is why leading builders and creators are quietly rethinking their entire approach to {t_clean}.",
-                f"Master this foundation today, and you will stay years ahead of everyone else.",
-            ]
+            if domain == "technology" and any(k in interpretation.raw_prompt.lower() for k in ["software", "code", "syntax", "develop", "engineer"]):
+                narrations = [
+                    hook,
+                    f"Most workflows treat {t_clean} as typing syntax faster, but the real breakthrough is orchestration.",
+                    f"Autonomous systems now explore repository architecture, state constraints, and test suites at the intent level.",
+                    f"That breakthrough is why leading builders and creators are quietly rethinking their entire approach to {t_clean}.",
+                    f"Master this leverage today, and you will stay years ahead of everyone else.",
+                ]
+            else:
+                narrations = [
+                    hook,
+                    f"Most workflows treat {t_clean} as a complicated afterthought, but the core mechanism is surprisingly straightforward.",
+                    f"When you understand how the underlying structure works, the usual friction completely disappears.",
+                    f"That breakthrough is why leading builders and creators are quietly rethinking their entire approach to {t_clean}.",
+                    f"Master this foundation today, and you will stay years ahead of everyone else.",
+                ]
             captions = [
                 "THE HIDDEN TRUTH",
                 "FOUNDATIONAL STRUCTURE",

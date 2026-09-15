@@ -169,7 +169,7 @@ export default function ProjectsPage() {
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.08] p-1 rounded-xl self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.08] p-1 rounded-xl self-start sm:self-auto max-w-full overflow-x-auto">
           {["all", "ready", "story_ready", "rendering"].map((f) => (
             <button
               key={f}
