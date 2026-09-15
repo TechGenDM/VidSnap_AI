@@ -71,6 +71,40 @@ body {
   background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
 }
 
+.radial-glow-purple {
+  background: radial-gradient(circle at 50% 20%, rgba(168, 85, 247, 0.16) 0%, rgba(99, 102, 241, 0.06) 45%, rgba(0, 0, 0, 0) 75%);
+}
+
+.radial-glow-hero {
+  background: radial-gradient(ellipse at 70% 30%, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.08) 35%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Gentle floating animations for hero floating cards */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float-slow {
+  animation: gentleFloat 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: gentleFloat 5s ease-in-out 2.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-float-delayed {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 /* Phone Bezel Simulator - Fully Responsive */
 .phone-mockup {
   position: relative;

@@ -4,9 +4,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
-  title: "VidSnap AI — Turn your ideas into videos",
+  title: "VidSnap AI — Turn Ideas Into Reels",
   description:
-    "Create polished short-form videos with AI-generated narration, captions, motion and music — without editing timelines.",
+    "Turn ideas, notes, or scripts into polished short-form videos with AI-written stories, matched visuals, voice, and captions.",
 };
 
 export default function RootLayout({
