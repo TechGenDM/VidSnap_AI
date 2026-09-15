@@ -749,29 +749,29 @@ export default function ProjectDetailPage() {
   const BadgeIcon = badge.icon;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 w-full max-w-full overflow-x-clip">
       {/* Top Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/[0.08]">
-        <div className="flex items-center gap-3.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/[0.08] min-w-0">
+        <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1">
           <Link
             href="/projects"
             aria-label="Back to Projects"
-            className="p-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="p-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors shrink-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
-          <div>
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <h1 className="text-lg sm:text-xl font-bold text-white truncate max-w-xs sm:max-w-md">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap min-w-0">
+              <h1 className="text-base sm:text-xl font-bold text-white truncate max-w-[calc(100vw-130px)] sm:max-w-md">
                 {project.title}
               </h1>
               {/* Lifecycle State Badge */}
-              <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${badge.color}`}>
+              <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border shrink-0 ${badge.color}`}>
                 <BadgeIcon className="h-3 w-3 shrink-0" />
                 <span>{badge.label}</span>
               </span>
             </div>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 truncate">
               Story Editor • ~{Math.round(project.duration_seconds)}s • {project.scenes.length} Scenes • Voice: {project.voice}
             </p>
           </div>
@@ -904,7 +904,7 @@ export default function ProjectDetailPage() {
       {/* 2-Column Responsive Layout: Left Storyboard, Right Sticky Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Storyboard Scenes (VidSnap edits the story!) */}
-        <div className={`lg:col-span-7 flex flex-col gap-6 ${mobileTab === "preview" ? "hidden lg:flex" : "flex"}`}>
+        <div className={`lg:col-span-7 flex flex-col gap-6 min-w-0 max-w-full ${mobileTab === "preview" ? "hidden lg:flex" : "flex"}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-cyan-400" />
