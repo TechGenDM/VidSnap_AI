@@ -69,7 +69,24 @@ def mix_voice_and_music(
     total_duration = raw_voice_duration + 0.4
 
     music_info = MUSIC_CATALOG.get(music_key.lower()) if music_key else None
+    if not music_info and music_key:
+        alias_map = {
+            "calm_focus": "ambient_chill",
+            "energetic_beat": "upbeat_pulse",
+            "ambient_flow": "lofi_beat",
+            "ambient_chill": "ambient_chill",
+            "upbeat_pulse": "upbeat_pulse",
+            "lofi_beat": "lofi_beat",
+        }
+        mapped_key = alias_map.get(music_key.lower().replace(".mp3", ""))
+        if mapped_key:
+            music_info = MUSIC_CATALOG.get(mapped_key)
+
     music_file = settings.SONGS_DIR / music_info["filename"] if music_info else None
+    if (not music_file or not music_file.exists()) and settings.SONGS_DIR.exists():
+        available = list(settings.SONGS_DIR.glob("*.mp3"))
+        if available:
+            music_file = available[0]
 
     # If no music or music file missing, pad voice with 0.4s natural tail
     if not music_file or not music_file.exists():

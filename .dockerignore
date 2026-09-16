@@ -1,0 +1,40 @@
+# Git & IDE
+.git
+.gitignore
+.DS_Store
+.idea
+.vscode
+
+# Python virtualenvs & caches
+venv/
+.venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+node_modules/
+.next/
+
+# Ephemeral data, caches & media outputs
+media/uploads/
+media/reels/
+media/thumbnails/
+media/cache/
+user_uploads/
+static/reels/
+test_final.mp4
+scratch/
+scratch_test/
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+*.env

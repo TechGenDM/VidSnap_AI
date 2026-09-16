@@ -17,21 +17,24 @@ app = FastAPI(
 
 # Seed default media assets if mounted volume is new / empty
 def _seed_default_media():
-    bundled_templates = PROJECT_ROOT / "media" / "templates"
-    bundled_songs = PROJECT_ROOT / "media" / "songs"
+    default_templates = Path("/app/default_media/templates")
+    default_songs = Path("/app/default_media/songs")
     
-    if bundled_templates.exists() and settings.TEMPLATES_DIR != bundled_templates:
+    src_templates = default_templates if default_templates.exists() else (PROJECT_ROOT / "media" / "templates")
+    src_songs = default_songs if default_songs.exists() else (PROJECT_ROOT / "media" / "songs")
+    
+    if src_templates.exists():
         settings.TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
-        for t_file in bundled_templates.glob("*.*"):
+        for t_file in src_templates.glob("*.*"):
             dest = settings.TEMPLATES_DIR / t_file.name
-            if not dest.exists():
+            if not dest.exists() and t_file.resolve() != dest.resolve():
                 shutil.copy2(t_file, dest)
 
-    if bundled_songs.exists() and settings.SONGS_DIR != bundled_songs:
+    if src_songs.exists():
         settings.SONGS_DIR.mkdir(parents=True, exist_ok=True)
-        for s_file in bundled_songs.glob("*.*"):
+        for s_file in src_songs.glob("*.*"):
             dest = settings.SONGS_DIR / s_file.name
-            if not dest.exists():
+            if not dest.exists() and s_file.resolve() != dest.resolve():
                 shutil.copy2(s_file, dest)
 
 _seed_default_media()

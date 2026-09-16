@@ -3,7 +3,6 @@
 # Multi-container orchestration with persistent disk volume mounts
 # =====================================================================
 
-version: "3.8"
 
 services:
   backend:
