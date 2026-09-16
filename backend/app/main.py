@@ -17,6 +17,25 @@ app = FastAPI(
 
 # Seed default media assets if mounted volume is new / empty
 def _seed_default_media():
+    # If legacy /app/media exists and has content from prior deployments, migrate to settings.MEDIA_DIR
+    legacy_media = Path("/app/media")
+    if legacy_media.exists() and legacy_media.is_dir() and legacy_media.resolve() != settings.MEDIA_DIR.resolve():
+        for sub in ["uploads", "reels", "thumbnails", "cache"]:
+            legacy_sub = legacy_media / sub
+            if legacy_sub.exists() and legacy_sub.is_dir():
+                target_sub = settings.MEDIA_DIR / sub
+                target_sub.mkdir(parents=True, exist_ok=True)
+                for item in legacy_sub.glob("*"):
+                    target_item = target_sub / item.name
+                    if not target_item.exists():
+                        try:
+                            if item.is_dir():
+                                shutil.copytree(item, target_item)
+                            else:
+                                shutil.copy2(item, target_item)
+                        except Exception:
+                            pass
+
     default_templates = Path("/app/default_media/templates")
     default_songs = Path("/app/default_media/songs")
     
@@ -72,12 +91,17 @@ async def health_check():
     ffprobe_available = bool(shutil.which("ffprobe"))
     elevenlabs_configured = bool(settings.ELEVENLABS_API_KEY)
 
-    # Verify storage directory writeability
+    # Verify storage directory writeability for both DATA_DIR and MEDIA_DIR
     storage_writable = False
     try:
         test_file = settings.DATA_DIR / ".write_test"
         test_file.write_text("ok")
         test_file.unlink()
+
+        media_test_file = settings.MEDIA_DIR / ".write_test"
+        media_test_file.write_text("ok")
+        media_test_file.unlink()
+
         storage_writable = True
     except Exception:
         storage_writable = False

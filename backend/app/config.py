@@ -73,6 +73,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def derive_subdirectories(self) -> "Settings":
+        # If DATA_DIR is overridden to a custom location and MEDIA_DIR is still default, nest MEDIA_DIR inside DATA_DIR
+        if self.DATA_DIR != (PROJECT_ROOT / "data") and self.MEDIA_DIR == (PROJECT_ROOT / "media"):
+            object.__setattr__(self, "MEDIA_DIR", self.DATA_DIR / "media")
+
         # Align subdirectories to MEDIA_DIR if MEDIA_DIR is set to custom mount path
         object.__setattr__(self, "UPLOADS_DIR", self.MEDIA_DIR / "uploads")
         object.__setattr__(self, "REELS_DIR", self.MEDIA_DIR / "reels")

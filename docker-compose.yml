@@ -17,7 +17,7 @@ services:
       - VERSION=2.0.0
       - DEBUG=false
       - DATA_DIR=/app/data
-      - MEDIA_DIR=/app/media
+      - MEDIA_DIR=/app/data/media
       - CORS_ORIGINS=["http://localhost:3000","https://vidsnap.app"]
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
       - ELEVENLABS_DEFAULT_VOICE=${ELEVENLABS_DEFAULT_VOICE:-Adam}
@@ -27,7 +27,6 @@ services:
       - MAX_UPLOAD_SIZE_MB=15
     volumes:
       - vidsnap_data:/app/data
-      - vidsnap_media:/app/media
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 30s
@@ -53,5 +52,3 @@ services:
 volumes:
   vidsnap_data:
     name: vidsnap_data
-  vidsnap_media:
-    name: vidsnap_media

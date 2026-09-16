@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app/backend \
     DATA_DIR=/app/data \
-    MEDIA_DIR=/app/media
+    MEDIA_DIR=/app/data/media
 
 # Install native dependencies: FFmpeg, FFprobe, and TrueType fonts for ASS subtitles
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,8 +33,8 @@ COPY backend /app/backend/
 COPY media/templates /app/default_media/templates/
 COPY media/songs /app/default_media/songs/
 
-# Create persistent storage mount directories
-RUN mkdir -p /app/data /app/media
+# Create single persistent storage mount directory
+RUN mkdir -p /app/data/media
 
 # Expose backend port
 EXPOSE 8000
