@@ -194,6 +194,20 @@ const IDEA_CHIPS = [
   "The biggest mistake early founders make when pitching.",
 ];
 
+async function parseResponseError(res: Response, fallback: string): Promise<string> {
+  try {
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text);
+      return data.detail || data.message || fallback;
+    } catch {
+      return text && text.length < 300 ? text : `${fallback} (HTTP ${res.status})`;
+    }
+  } catch {
+    return `${fallback} (HTTP ${res.status})`;
+  }
+}
+
 function CreatePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -517,8 +531,8 @@ function CreatePageContent() {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to submit Quick Reel.");
+        const errorDetail = await parseResponseError(res, "Failed to submit Quick Reel.");
+        throw new Error(errorDetail);
       }
 
       const data = await res.json();
@@ -568,8 +582,8 @@ function CreatePageContent() {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to generate AI story.");
+        const errorDetail = await parseResponseError(res, "Failed to generate AI story.");
+        throw new Error(errorDetail);
       }
 
       const data = await res.json();
@@ -618,8 +632,8 @@ function CreatePageContent() {
         method: "POST",
       });
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to regenerate story.");
+        const errorDetail = await parseResponseError(res, "Failed to regenerate story.");
+        throw new Error(errorDetail);
       }
       const data = await res.json();
       const enrichedScenes: StorySceneItem[] = data.story.scenes.map((s: any, idx: number) => {
@@ -687,8 +701,8 @@ function CreatePageContent() {
         method: "POST",
       });
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to enqueue video render.");
+        const errorDetail = await parseResponseError(res, "Failed to enqueue video render.");
+        throw new Error(errorDetail);
       }
       const data = await res.json();
       setActiveJobId(data.job_id);

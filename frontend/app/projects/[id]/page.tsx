@@ -138,6 +138,20 @@ const CREATOR_COMMAND_CHIPS = [
   { label: "🧹 Deduplicate", cmd: "Remove unnecessary repetition" },
 ];
 
+async function parseResponseError(res: Response, fallback: string): Promise<string> {
+  try {
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text);
+      return data.detail || data.message || fallback;
+    } catch {
+      return text && text.length < 300 ? text : `${fallback} (HTTP ${res.status})`;
+    }
+  } catch {
+    return `${fallback} (HTTP ${res.status})`;
+  }
+}
+
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -216,8 +230,8 @@ export default function ProjectDetailPage() {
         setAssistantFeedback(`✨ Custom B-Roll uploaded for Scene #${sceneOrder}!`);
         setTimeout(() => setAssistantFeedback(null), 3500);
       } else {
-        const err = await res.json();
-        alert(err.detail || "Failed to upload asset.");
+        const errorDetail = await parseResponseError(res, "Failed to upload asset.");
+        alert(errorDetail);
       }
     } catch (err) {
       console.error("Upload error", err);
@@ -497,8 +511,8 @@ export default function ProjectDetailPage() {
         method: "POST",
       });
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Failed to start render.");
+        const errorDetail = await parseResponseError(res, "Failed to start render.");
+        throw new Error(errorDetail);
       }
       const data = await res.json();
       const jobId = data.job_id;

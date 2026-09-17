@@ -154,3 +154,30 @@ def test_story_edit_and_rerender_flow():
     assert del_res.status_code == 200
     assert client.get(f"/api/projects/{project_id}").status_code == 404
 
+
+def test_unhandled_exception_returns_json_error(monkeypatch):
+    """
+    Regression Test for Railway 500 JSON parse error:
+    Verifies that unhandled backend exceptions are intercepted by the global
+    exception handler and return structured JSON with 'detail' rather than
+    plain text 'Internal Server Error', preventing frontend JSON parse crashes.
+    """
+    from app.database import db
+
+    def mock_broken_get_project(*args, **kwargs):
+        raise RuntimeError("Simulated unexpected backend database failure")
+
+    monkeypatch.setattr(db, "get_project", mock_broken_get_project)
+
+    # Use raise_server_exceptions=False so TestClient does not re-raise unhandled exception in test
+    from fastapi.testclient import TestClient as CustomTestClient
+    safe_client = CustomTestClient(app, raise_server_exceptions=False)
+
+    response = safe_client.get("/api/projects/simulate-error-id")
+    assert response.status_code == 500
+    assert "application/json" in response.headers.get("content-type", "")
+    data = response.json()
+    assert "detail" in data
+    assert "Simulated unexpected backend database failure" in data["detail"]
+    assert data.get("error") is True
+

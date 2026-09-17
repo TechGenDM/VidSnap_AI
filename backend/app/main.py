@@ -1,7 +1,8 @@
 import shutil
 import subprocess
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import settings, PROJECT_ROOT
@@ -14,6 +15,15 @@ app = FastAPI(
     description="VidSnap AI 2026 Engine - Turn your ideas into polished short-form videos.",
     debug=settings.DEBUG,
 )
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    import traceback
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}", "error": True},
+    )
 
 # Seed default media assets if mounted volume is new / empty
 def _seed_default_media():
@@ -67,6 +77,7 @@ if "*" in cors_origins:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
+    allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=allow_creds,
     allow_methods=["*"],
     allow_headers=["*"],
