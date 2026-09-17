@@ -114,3 +114,79 @@ def test_all_motions_render_without_loop(high_res_image: Path, tmp_path: Path, m
 
     assert rendered_path.exists()
     assert rendered_path.stat().st_size > 5000
+
+
+def test_composite_render_plan_multi_scene_memory_safety(high_res_image: Path, tmp_path: Path):
+    from app.services.render_plan import RenderPlan, AudioRenderPlan
+    from app.services.video import composite_render_plan
+
+    audio_file = tmp_path / "test_audio.aac"
+    subprocess.run([
+        "ffmpeg", "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+        "-t", "8", "-c:a", "aac", str(audio_file)
+    ], capture_output=True, check=True)
+
+    scenes = [
+        SceneRenderItem(
+            scene_id="s1",
+            order=1,
+            image_path=high_res_image,
+            duration=2.5,
+            caption="SCENE ONE",
+            motion="slow_zoom_in",
+            transition="fade",
+        ),
+        SceneRenderItem(
+            scene_id="s2",
+            order=2,
+            image_path=high_res_image,
+            duration=2.5,
+            caption="SCENE TWO",
+            motion="pan_left",
+            transition="directional_slide",
+        ),
+        SceneRenderItem(
+            scene_id="s3",
+            order=3,
+            image_path=high_res_image,
+            duration=2.5,
+            caption="SCENE THREE",
+            motion="slow_zoom_out",
+            transition="cut",
+        ),
+    ]
+
+    out_reel = tmp_path / "final_composite_reel.mp4"
+    plan = RenderPlan(
+        project_id="test_mem_proj",
+        scenes=scenes,
+        audio=AudioRenderPlan(
+            audio_path=audio_file,
+            total_duration=7.5,
+        ),
+        output_path=out_reel,
+        width=1080,
+        height=1920,
+        fps=30,
+    )
+
+    temp_dir = tmp_path / "render_tmp"
+    rendered_path, durations = composite_render_plan(plan, temp_dir)
+
+    assert rendered_path.exists()
+    assert rendered_path.stat().st_size > 10000
+
+    # Probe final output for yuv420p
+    probe_cmd = [
+        "ffprobe", "-v", "error",
+        "-select_streams", "v:0",
+        "-show_entries", "stream=pix_fmt,width,height",
+        "-of", "default=noprint_wrappers=1",
+        str(rendered_path),
+    ]
+    res = subprocess.run(probe_cmd, capture_output=True, text=True)
+    assert res.returncode == 0
+    assert "420p" in res.stdout
+    assert "width=1080" in res.stdout
+    assert "height=1920" in res.stdout
+

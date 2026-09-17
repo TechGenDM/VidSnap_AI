@@ -258,7 +258,7 @@ def composite_render_plan(
         if not has_active_xfade or num_scenes == 1:
             # Clean direct concatenation
             filter_inputs = "".join([f"[{i}:v]" for i in range(num_scenes)])
-            filter_complex = f"{filter_inputs}concat=n={num_scenes}:v=1:a=0[vconcat]"
+            filter_complex = f"{filter_inputs}concat=n={num_scenes}:v=1:a=0,format=yuv420p[vconcat]"
             video_stream_label = "[vconcat]"
         else:
             # Chained xfade filters
@@ -280,7 +280,7 @@ def composite_render_plan(
                     xfade_trans = "fade"
 
                 next_stream = f"[{i+1}:v]"
-                out_label = f"[vx{i}]" if i < num_scenes - 2 else "[vconcat]"
+                out_label = f"[vx{i}]"
                 filter_parts.append(
                     f"{current_stream}{next_stream}xfade=transition={xfade_trans}:duration={td:.3f}:offset={offset:.3f}{out_label}"
                 )
@@ -289,13 +289,16 @@ def composite_render_plan(
                 next_seg_dur = plan.scenes[i + 1].duration + (trans_durations[i + 1] if i + 1 < len(trans_durations) else 0.0)
                 current_stream_duration = offset + next_seg_dur
 
+            # Force yuv420p to prevent 4:4:4 chroma memory bloating
+            filter_parts.append(f"{current_stream}format=yuv420p[vconcat]")
             filter_complex = ";".join(filter_parts)
             video_stream_label = "[vconcat]"
 
         # Step 3: Final compositing with audio plan
-        cmd = ["ffmpeg", "-y", "-threads", "2"]
+        # Bounded threads and explicit yuv420p to prevent memory spikes in 512MB containers
+        cmd = ["ffmpeg", "-y", "-filter_complex_threads", "2"]
         for seg in segment_paths:
-            cmd.extend(["-i", str(seg)])
+            cmd.extend(["-threads", "1", "-i", str(seg)])
         cmd.extend(["-i", str(plan.audio.audio_path)])
 
         cmd.extend([
@@ -303,8 +306,9 @@ def composite_render_plan(
             "-map", video_stream_label,
             "-map", f"{num_scenes}:a",
             "-c:v", "libx264",
+            "-pix_fmt", "yuv420p",
             "-threads", "2",
-            "-preset", "medium",
+            "-preset", "fast",
             "-crf", "19",
             "-c:a", "aac",
             "-b:a", "192k",
