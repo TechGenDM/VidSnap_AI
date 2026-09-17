@@ -55,6 +55,43 @@ def wrap_caption(text: str, max_words_per_line: int = 5) -> str:
     return "\n".join(lines)
 
 
+def safe_prepare_image(
+    src_path: Path,
+    temp_dir: Path,
+    max_w: int = 1620,
+    max_h: int = 2880,
+) -> Path:
+    """
+    Ensures input image dimensions do not exceed portrait canvas requirements (1620x2880).
+    Pre-scaling oversized assets (e.g. 5K/4K photos) with PIL prevents massive FFmpeg demuxer
+    memory spikes in constrained container environments (e.g. Railway 512MB RAM).
+    """
+    try:
+        with Image.open(src_path) as im:
+            im_w, im_h = im.size
+            if im_w <= max_w and im_h <= max_h:
+                return src_path
+
+            # Scale so image fully covers max_w x max_h
+            ratio = max(max_w / im_w, max_h / im_h)
+            new_w = max(1, int(im_w * ratio))
+            new_h = max(1, int(im_h * ratio))
+            im_scaled = im.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+            # Center crop to max_w x max_h
+            left = max(0, (new_w - max_w) // 2)
+            top = max(0, (new_h - max_h) // 2)
+            im_cropped = im_scaled.crop((left, top, left + max_w, top + max_h))
+
+            temp_dir.mkdir(parents=True, exist_ok=True)
+            prep_file = temp_dir / f"prep_{src_path.stem}.jpg"
+            im_cropped.save(prep_file, format="JPEG", quality=95)
+            return prep_file
+    except Exception as e:
+        logger.warning(f"Failed pre-scaling image {src_path} ({e}), using original.")
+        return src_path
+
+
 def render_scene_segment(
     item: SceneRenderItem,
     output_segment_path: Path,
@@ -69,6 +106,9 @@ def render_scene_segment(
     """
     output_segment_path.parent.mkdir(parents=True, exist_ok=True)
     total_segment_duration = item.duration + padding_duration
+
+    # 0. Pre-scale oversized source image to prevent FFmpeg memory spikes
+    prep_img = safe_prepare_image(item.image_path, output_segment_path.parent)
 
     # 1. Build motion filter
     motion_filter = MotionEngine.build_motion_filter(
@@ -121,13 +161,17 @@ def render_scene_segment(
 
     full_filter = f"{motion_filter}{caption_filter}"
 
+    # Notice: -loop 1 is intentionally omitted. zoompan generates d frames from a single
+    # still image input. -loop 1 fed an infinite demuxer queue that caused severe RAM exhaustion.
+    # -threads 2 bounds thread buffers for memory safety in 512MB container environments.
     cmd = [
         "ffmpeg", "-y",
-        "-loop", "1",
-        "-i", str(item.image_path),
+        "-threads", "2",
+        "-i", str(prep_img),
         "-vf", full_filter,
         "-t", f"{total_segment_duration:.3f}",
         "-c:v", "libx264",
+        "-threads", "2",
         "-preset", "veryfast",
         "-crf", "19",
         "-pix_fmt", "yuv420p",
@@ -138,13 +182,20 @@ def render_scene_segment(
     try:
         res = subprocess.run(cmd, shell=False, capture_output=True, text=True)
         if res.returncode != 0:
-            error_details = res.stderr[-600:] if res.stderr else "Unknown error"
-            raise RuntimeError(f"FFmpeg failed rendering scene {item.order} ({item.motion}): {error_details}")
+            exit_code = res.returncode
+            stderr_snippet = res.stderr.strip() if res.stderr else "No stderr output"
+            if len(stderr_snippet) > 1200:
+                stderr_snippet = f"...{stderr_snippet[-1200:]}"
+            raise RuntimeError(
+                f"FFmpeg failed rendering scene {item.order} ({item.motion}) [exit code {exit_code}]: {stderr_snippet}"
+            )
     finally:
         if caption_file and caption_file.exists():
             caption_file.unlink(missing_ok=True)
         if ass_file and ass_file.exists():
             ass_file.unlink(missing_ok=True)
+        if prep_img != item.image_path and prep_img.exists():
+            prep_img.unlink(missing_ok=True)
 
     return output_segment_path
 
@@ -242,7 +293,7 @@ def composite_render_plan(
             video_stream_label = "[vconcat]"
 
         # Step 3: Final compositing with audio plan
-        cmd = ["ffmpeg", "-y"]
+        cmd = ["ffmpeg", "-y", "-threads", "2"]
         for seg in segment_paths:
             cmd.extend(["-i", str(seg)])
         cmd.extend(["-i", str(plan.audio.audio_path)])
@@ -252,6 +303,7 @@ def composite_render_plan(
             "-map", video_stream_label,
             "-map", f"{num_scenes}:a",
             "-c:v", "libx264",
+            "-threads", "2",
             "-preset", "medium",
             "-crf", "19",
             "-c:a", "aac",
@@ -264,8 +316,11 @@ def composite_render_plan(
         logger.info(f"Compositing final Reel with synced audio ({plan.audio.total_duration:.2f}s)...")
         res = subprocess.run(cmd, shell=False, capture_output=True, text=True)
         if res.returncode != 0:
-            err_details = res.stderr[-600:] if res.stderr else "Unknown error"
-            raise RuntimeError(f"FFmpeg final composition failed: {err_details}")
+            exit_code = res.returncode
+            err_details = res.stderr.strip() if res.stderr else "No stderr output"
+            if len(err_details) > 1200:
+                err_details = f"...{err_details[-1200:]}"
+            raise RuntimeError(f"FFmpeg final composition failed [exit code {exit_code}]: {err_details}")
 
     finally:
         # Step 4: Cleanup temporary scene segment files
