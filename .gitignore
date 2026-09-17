@@ -61,3 +61,8 @@ Thumbs.db
 # Scratch and test artifacts
 scratch/
 scratch_test/
+
+# Local database & storage
+data/
+*.tmp
+

@@ -17,6 +17,7 @@ class Database:
     def _init_db(self):
         with _lock:
             if not self.db_path.exists():
+                self.db_path.parent.mkdir(parents=True, exist_ok=True)
                 initial_data = {"projects": {}, "jobs": {}}
                 with open(self.db_path, "w", encoding="utf-8") as f:
                     json.dump(initial_data, f, indent=2)
